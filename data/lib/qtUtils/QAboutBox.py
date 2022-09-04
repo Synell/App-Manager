@@ -1,0 +1,81 @@
+#----------------------------------------------------------------------
+
+    # Libraries
+from PyQt6.QtWidgets import QGridLayout, QDialog, QDialogButtonBox, QLabel, QPushButton
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import Qt
+from PyQt6.QtSvgWidgets import QSvgWidget
+
+from .QBaseApplication import QBaseApplication
+from .QGridWidget import QGridWidget
+from .QGridFrame import QGridFrame
+#----------------------------------------------------------------------
+
+    # Class
+class QAboutBox(QDialog):
+    def __init__(self, app: QBaseApplication = None, title: str = '', logo: str = '', texts: list[QLabel] = []):
+        super().__init__(parent = app.window)
+        self.setWindowFlag(Qt.WindowType.MSWindowsFixedSizeDialogHint, True)
+
+        self._layout = QGridLayout(self)
+        self._layout.setSpacing(0)
+        self._layout.setContentsMargins(0, 0, 0, 0)
+
+        self.left = QGridWidget()
+
+        self.right = QGridWidget()
+        self.right.grid_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.right.grid_layout.setSpacing(20)
+        self.right.grid_layout.setContentsMargins(20, 20, 20, 20)
+
+        self.__down__ = QGridWidget()
+
+        self._layout.addWidget(self.left, 0, 0)
+        self._layout.addWidget(self.right, 0, 1)
+
+
+        pixmap = QSvgWidget(logo)
+        pixmap.setFixedSize(128, 128)
+
+        self.left.grid_layout.addWidget(pixmap)
+        self.left.grid_layout.setAlignment(pixmap, Qt.AlignmentFlag.AlignTop)
+        self.left.grid_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        self.setWindowTitle(title)
+
+
+        text = QLabel(title)
+        text.setProperty('class', 'bold')
+        self.right.grid_layout.addWidget(text, 0, 0)
+        self.right.grid_layout.setAlignment(text, Qt.AlignmentFlag.AlignTop)
+
+        self.right.grid_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+        for textID in range(len(texts)):
+            texts[textID].setOpenExternalLinks(True)
+            self.right.grid_layout.addWidget(texts[textID], textID + 1, 0)
+            self.right.grid_layout.setAlignment(texts[textID], Qt.AlignmentFlag.AlignTop)
+
+
+        right_buttons = QGridWidget()
+        right_buttons.grid_layout.setSpacing(16)
+        right_buttons.grid_layout.setContentsMargins(0, 0, 0, 0)
+
+        button = QPushButton('Ok')
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.clicked.connect(self.accept)
+        button.setProperty('class', 'gray')
+        right_buttons.grid_layout.addWidget(button, 0, 1)
+
+        self.frame = QGridFrame()
+        self.frame.grid_layout.addWidget(right_buttons, 0, 0)
+        self.frame.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
+        self.frame.grid_layout.setSpacing(0)
+        self.frame.grid_layout.setContentsMargins(16, 16, 16, 16)
+        self.frame.setProperty('border-top', True)
+        self.frame.setProperty('border-bottom', True)
+        self.frame.setProperty('border-left', True)
+        self.frame.setProperty('border-right', True)
+
+        self._layout.addWidget(self.frame, 1, 0, 1, 2)
+#----------------------------------------------------------------------

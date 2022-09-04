@@ -1,0 +1,24 @@
+{
+    "info": {
+        "name": "2D",
+        "version": "1.0.0",
+        "description": "This is an empty project configured for 2D apps. It uses PyLite's built-in renderer.",
+        "renderPipeline": "Built-in",
+        "platforms": [
+            "Windows"
+        ]
+    },
+    "data": {
+        "packages": {
+            "Python": {
+                "version": "3.10.0"
+            },
+            "PyQt6": {
+                "version": "6.2.3"
+            },
+            "colorama": {
+                "version": "0.4.4"
+            }
+        }
+    }
+}

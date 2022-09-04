@@ -1,0 +1,17 @@
+
+/* QDropDownWidget */
+
+QPushButton[QDropDownWidget=true] {
+	background-color: transparent;
+	color: #fefefe;
+	border: none;
+	margin: 0 0 0 0;
+	spacing: 0;
+	qproperty-icon: url({path}dropdownwidget/rightArrow.png) off,
+        			url({path}dropdownwidget/downArrow.png) on;
+	qproperty-iconSize: 30px;
+}
+
+QPushButton[QDropDownWidget=true]:pressed {
+	color: #fefefe;
+}

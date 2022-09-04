@@ -1,0 +1,188 @@
+{
+    "info": {
+        "name": "English",
+        "version": 1.0,
+        "description": "English language for App Manager."
+    },
+    "data": {
+        "QMainWindow": {
+            "title": "App Manager",
+            "mainPage": {
+                "QSidePanel": {
+                    "apps": {
+                        "title": "Apps",
+                        "QPushButton": {
+                            "locate": "Locate",
+                            "installApp": "Install App"
+                        },
+                        "QLineEdit": {
+                            "search": "Search"
+                        },
+                        "QTabWidget": {
+                            "all": "All",
+                            "official": "Official Releases",
+                            "pre": "Pre-Releases",
+                            "custom": "Custom Releases"
+                        },
+                        "InstalledButton": {
+                            "QAction": {
+                                "showInExplorer": "Show in Explorer",
+                                "edit": "Edit",
+                                "removeFromList": "Remove from List",
+                                "uninstall": "Uninstall"
+                            },
+                            "QPushButton": {
+                                "update": "Update"
+                            }
+                        }
+                    },
+                    "downloads": {
+                        "title": "Downloads",
+                        "QLabel": {
+                            "noDownload": {
+                                "title": "No downloads, yet",
+                                "text": "Recent and in-progress downloads\nwill display here"
+                            },
+                            "download": "Download",
+                            "install": "Install"
+                        }
+                    }
+                }
+            },
+            "installAppPage": {
+                "QLabel": {
+                    "installApp": "Install App"
+                },
+                "QTabWidget": {
+                    "officialReleases": {
+                        "title": "Official releases"
+                    },
+                    "preReleases": {
+                        "title": "Pre-releases"
+                    }
+                },
+                "QPushButton": {
+                    "cancel": "Cancel",
+                    "install": "Install"
+                },
+                "QLineEdit": {
+                    "search": "Search"
+                }
+            }
+        },
+        "QSettingsDialog": {
+            "title": "App Manager > Settings",
+            "QSidePanel": {
+                "appearance": {
+                    "title": "Appearance",
+                    "QLabel": {
+                        "language": {
+                            "title": "Language",
+                            "description": "Select a display language for App Manager."
+                        },
+                        "theme": {
+                            "title": "Theme",
+                            "description": "Select a display theme for App Manager."
+                        }
+                    },
+                    "QNamedComboBox": {
+                        "language": "Language",
+                        "theme": "Theme",
+                        "themeVariant": "Theme Variant"
+                    }
+                },
+                "installs": {
+                    "title": "Installs",
+                    "QLabel": {
+                        "installsLocation": {
+                            "title": "Installs Location",
+                            "description": "Select a location for new installs. Existing installs will not be affected."
+                        },
+                        "downloadsLocation": {
+                            "title": "Downloads Location",
+                            "description": "Select a location for new downloads."
+                        }
+                    },
+                    "QFileButton": {
+                        "installsLocation": {
+                            "title": "Installs Location",
+                            "dialog": "App Manager > Settings > Installs Location"
+                        },
+                        "downloadsLocation": {
+                            "title": "Downloads Location",
+                            "dialog": "App Manager > Settings > Downloads Location"
+                        }
+                    }
+                },
+                "updatesAndStartup": {
+                    "title": "Updates && Startup",
+                    "QLabel": {
+                        "checkForUpdates": {
+                            "title": "Check for Updates",
+                            "description": "Determines how often App Manager checks for updates."
+                        }
+                    },
+                    "QNamedComboBox": {
+                        "checkForUpdates": {
+                            "title": "Check for Updates",
+                            "values": {
+                                "never": "Never",
+                                "daily": "Daily",
+                                "weekly": "Weekly",
+                                "monthly": "Monthly",
+                                "atLaunch": "At Launch"
+                            }
+                        }
+                    }
+                }
+            },
+            "QPushButton": {
+                "cancel": "Cancel",
+                "apply": "Apply"
+            }
+        },
+        "QMessageBox": {
+            "critical": {
+                "notImplemented": {
+                    "title": "App Manager > Not Implemented Feature",
+                    "text": "This functionality doesn't exist yet and will be\navailable in a later version of the software.",
+                    "details": "Details"
+                }
+            },
+            "warning": {},
+            "information": {
+                "settingsReload": {
+                    "title": "App Manager > Settings",
+                    "text": "A restart of the software is necessary in order\nto correctly apply all the settings."
+                }
+            }
+        },
+        "QAbout": {
+            "AppManager": {
+                "title": "About App Manager",
+                "texts": [
+                    "App Manager is TODO",
+                    "App Manager was programmed by %s.",
+                    "Go to the %s for more information."
+                ]
+            }
+        },
+        "QFileDialog": {
+            "locateApp": "App Manager > Locate App"
+        },
+        "QLoginDialog": {
+            "title": "App Manager > Login to GitHub",
+            "QNamedLineEdit": {
+                "username": "Username",
+                "password": "Password"
+            },
+            "QPushButton": {
+                "login": "Login",
+                "cancel": "Cancel"
+            },
+            "QCheckBox": {
+                "remember": "Remember me"
+            }
+        }
+    }
+}

@@ -152,6 +152,25 @@
                             }
                         }
                     }
+                },
+                "interface": {
+                    "title": "Interface",
+                    "QLabel": {
+                        "compactPaths": {
+                            "title": "Compact Paths",
+                            "description": "Determines whether App Manager compacts paths in the interface."
+                        }
+                    },
+                    "QNamedComboBox": {
+                        "compactPaths": {
+                            "title": "Compact Paths",
+                            "values": {
+                                "auto": "Auto",
+                                "disabled": "Disabled",
+                                "enabled": "Enabled"
+                            }
+                        }
+                    }
                 }
             },
             "QPushButton": {

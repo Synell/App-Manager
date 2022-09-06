@@ -43,11 +43,12 @@ class Application(QBaseApplication):
 
         self.install_page_worker = None
         self.install_page_buttons = [[], []]
+        self.app_buttons = []
 
         self.save_data.setStyleSheet(self)
         self.window.setProperty('color', 'cyan')
 
-        self.setWindowIcon(QIcon('./data/icons/PyLiteHub.svg'))
+        self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
 
         self.create_widgets()
         self.load_colors()
@@ -621,6 +622,7 @@ class Application(QBaseApplication):
         self.refresh_apps_list()
 
     def refresh_apps_list(self, event: str|int = None):
+        self.app_buttons = []
         self.clear_layout(self.main_page.apps_widget.notebook_tabs.scroll_layout)
 
         match self.main_page.apps_widget.notebook.currentIndex():
@@ -632,10 +634,11 @@ class Application(QBaseApplication):
         for i, app in enumerate(self.save_data.apps[k] if k != 'all' else [*self.save_data.apps['official'], *self.save_data.apps['pre'], *self.save_data.apps['custom']]):
             name = app.split('/')[-1]
             if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/questionMark.svg', False, name in self.updates)
+                b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/questionMark.svg', False, name in self.updates, (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1))
                 b.remove_from_list.connect(self.remove_from_install_list)
                 b.uninstall.connect(self.add_to_uninstall_list)
                 self.main_page.apps_widget.notebook_tabs.scroll_layout.addWidget(b, i, 0)
+                self.app_buttons.append(b)
 
 
 
@@ -651,10 +654,10 @@ class ApplicationError(QApplication):
     def __init__(self, err: str = ''):
         super().__init__(argv)
         self.window = QMainWindow()
-        self.window.setWindowTitle('PyLiteEngine - Error')
+        self.window.setWindowTitle('App Manager - Error')
         QMessageBoxWithWidget(
             app = self,
-            title = 'PyLiteEngine - Error',
+            title = 'App Manager - Error',
             text = 'Oups, something went wrong...',
             informativeText = str(err),
             icon = QMessageBoxWithWidget.Icon.Critical

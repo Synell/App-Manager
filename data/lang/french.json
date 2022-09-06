@@ -152,6 +152,25 @@
                             }
                         }
                     }
+                },
+                "interface": {
+                    "title": "Interface",
+                    "QLabel": {
+                        "compactPaths": {
+                            "title": "Chemins Compacts",
+                            "description": "Détermine si App Manager compacte les chemins des applications dans la liste des installations."
+                        }
+                    },
+                    "QNamedComboBox": {
+                        "compactPaths": {
+                            "title": "Chemins Compacts",
+                            "values": {
+                                "auto": "Automatique",
+                                "disabled": "Désactivé",
+                                "enabled": "Activé"
+                            }
+                        }
+                    }
                 }
             },
             "QPushButton": {

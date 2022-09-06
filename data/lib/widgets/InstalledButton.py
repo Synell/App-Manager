@@ -2,7 +2,7 @@
 
     # Libraries
 from collections import namedtuple
-from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar, QSizePolicy
+from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
 from PyQt6.QtGui import QAction, QIcon, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint
 from PyQt6.QtSvgWidgets import QSvgWidget
@@ -24,7 +24,7 @@ class InstalledButton(QGridFrame):
     update_app = pyqtSignal(str)
     uninstall = pyqtSignal(str)
 
-    def __init__(self, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: bool = False) -> None:
+    def __init__(self, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: bool = False, compact_mode: bool = False) -> None:
         super().__init__()
 
         self.name = name
@@ -41,7 +41,7 @@ class InstalledButton(QGridFrame):
         self.setFixedHeight(60)
         self.setProperty('color', 'main')
 
-        widget = self.widget_icon_couple(icon, self.generate_text())
+        widget = self.widget_icon_couple(icon, self.generate_text(compact_mode))
         self.grid_layout.addWidget(widget, 0, 0)
         self.grid_layout.setAlignment(widget, Qt.AlignmentFlag.AlignLeft)
 
@@ -76,15 +76,28 @@ class InstalledButton(QGridFrame):
             if self.has_update and self.release in ['official', 'prerelease']:
                 button_group = self.widget_couple(4, self.update_button, self.settings_button)
 
-                self.grid_layout.addWidget(button_group, 0, 1) # 0, 1
+                self.grid_layout.addWidget(button_group, 0, 1)
                 self.grid_layout.setAlignment(button_group, Qt.AlignmentFlag.AlignRight)
 
             else:
-                self.grid_layout.addWidget(self.settings_button, 0, 1) # 0, 1
+                self.grid_layout.addWidget(self.settings_button, 0, 1)
                 self.grid_layout.setAlignment(self.settings_button, Qt.AlignmentFlag.AlignRight)
 
 
-    def generate_text(self) -> QGridWidget:
+    def small_path(self, path: str) -> str:
+        limit = 5
+        folders = path.split('/')
+        if len(folders) > limit:
+            start = ''
+            end = ''
+            for i in range(limit // 2):
+                start += f'{folders[i]}/'
+                end = f'/{folders[-i - 1] + end}'
+            return f'{start}{(folders[i + 1] + "/") if limit % 2 else ""}...{end}'
+
+        return path
+
+    def generate_text(self, compact_mode: bool) -> QGridWidget:
         widget = QGridWidget()
         widget.grid_layout.setSpacing(4)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
@@ -94,9 +107,8 @@ class InstalledButton(QGridFrame):
         label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 0, 1)
 
-        label = QLabel(self.path) #self.path.split('/')[0] + '/.../' + self.path.split('/')[-1]
+        label = QLabel(self.small_path(self.path) if compact_mode else self.path) #self.path.split('/')[0] + '/.../' + self.path.split('/')[-1]
         label.setProperty('smallbrightnormal', True)
-        label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 1, 1)
         widget.grid_layout.setRowStretch(2, 1)
 

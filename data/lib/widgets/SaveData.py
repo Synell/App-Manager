@@ -25,13 +25,16 @@ class SaveData(QSaveData):
         self.check_for_apps_updates = 4
         self.start_at_launch = True
 
+        self.compact_paths = 0
+
         super().__init__(save_path)
 
 
     def settings_menu_extra(self):
         return {
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png')
+            self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png')
         }, self.get_extra
 
 
@@ -153,12 +156,44 @@ class SaveData(QSaveData):
         return widget
 
 
+    def settings_menu_interface(self):
+        lang = self.language_data['QSettingsDialog']['QSidePanel']['interface']
+        widget = QScrollableGridWidget()
+        widget.scroll_layout.setSpacing(0)
+        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        root_frame = QGridFrame()
+        root_frame.grid_layout.setSpacing(16)
+        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
+        widget.scroll_layout.addWidget(root_frame, 0, 0)
+        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['compactPaths']['title'], lang['QLabel']['compactPaths']['description'])
+        root_frame.grid_layout.addWidget(label, 0, 0)
+
+        widget.compact_paths_combobox = QNamedComboBox(None, lang['QNamedComboBox']['compactPaths']['title'])
+        widget.compact_paths_combobox.combo_box.addItems([
+            lang['QNamedComboBox']['compactPaths']['values']['auto'],
+            lang['QNamedComboBox']['compactPaths']['values']['enabled'],
+            lang['QNamedComboBox']['compactPaths']['values']['disabled']
+        ])
+        widget.compact_paths_combobox.combo_box.setCurrentIndex(self.compact_paths)
+        root_frame.grid_layout.addWidget(widget.compact_paths_combobox, 1, 0)
+        root_frame.grid_layout.setAlignment(widget.compact_paths_combobox, Qt.AlignmentFlag.AlignLeft)
+
+
+        return widget
+
+
     def get_extra(self, extra_tabs: dict = {}):
         self.apps_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].installs_folder_button.path()
         self.downloads_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].downloads_folder_button.path()
         self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_updates_combobox.combo_box.currentIndex()
         self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
         #TODO: checkbox
+
+        self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
 
 
     def save_extra_data(self) -> dict:
@@ -172,7 +207,9 @@ class SaveData(QSaveData):
 
             'checkForUpdates': self.check_for_updates,
             'checkForAppsUpdates': self.check_for_apps_updates,
-            'startAtLaunch': self.start_at_launch
+            'startAtLaunch': self.start_at_launch,
+
+            'compactPaths': self.compact_paths
         }
 
     def load_extra_data(self, extra_data: dict = ...) -> None:
@@ -189,6 +226,8 @@ class SaveData(QSaveData):
             self.check_for_updates = extra_data['checkForUpdates']
             self.check_for_apps_updates = extra_data['checkForAppsUpdates']
             self.start_at_launch = extra_data['startAtLaunch']
+
+            self.compact_paths = extra_data['compactPaths']
 
         except: self.save()
 #----------------------------------------------------------------------

@@ -23,7 +23,9 @@ class RequestWorker(QThread):
         # installed_releases = [f'{folder}' for folder in os.listdir(self.apps_folder) if os.path.isdir(os.path.join(self.apps_folder, folder))]
 
         for app in self.followed_apps:
-            response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases').json()
+            response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases')
+            if response.status_code != 200: continue
+            response = response.json()
             if type(response) is not list: return self.signals.failed.emit()
 
             name = f'{app.replace("https://github.com/", "").split("/")[-1].replace("-", " ")}'

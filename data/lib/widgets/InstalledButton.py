@@ -2,8 +2,7 @@
 
     # Libraries
 from collections import namedtuple
-from platform import release
-from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
+from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar, QSizePolicy
 from PyQt6.QtGui import QAction, QIcon, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint
 from PyQt6.QtSvgWidgets import QSvgWidget
@@ -77,11 +76,11 @@ class InstalledButton(QGridFrame):
             if self.has_update and self.release in ['official', 'prerelease']:
                 button_group = self.widget_couple(4, self.update_button, self.settings_button)
 
-                self.grid_layout.addWidget(button_group, 0, 1)
+                self.grid_layout.addWidget(button_group, 0, 1) # 0, 1
                 self.grid_layout.setAlignment(button_group, Qt.AlignmentFlag.AlignRight)
 
             else:
-                self.grid_layout.addWidget(self.settings_button, 0, 1)
+                self.grid_layout.addWidget(self.settings_button, 0, 1) # 0, 1
                 self.grid_layout.setAlignment(self.settings_button, Qt.AlignmentFlag.AlignRight)
 
 
@@ -95,12 +94,11 @@ class InstalledButton(QGridFrame):
         label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 0, 1)
 
-        if self.path:
-            label = QLabel(self.path)
-            label.setProperty('smallbrightnormal', True)
-            label.setFixedSize(label.sizeHint())
-            widget.grid_layout.addWidget(label, 1, 1)
-            widget.grid_layout.setRowStretch(2, 1)
+        label = QLabel(self.path) #self.path.split('/')[0] + '/.../' + self.path.split('/')[-1]
+        label.setProperty('smallbrightnormal', True)
+        label.setFixedSize(label.sizeHint())
+        widget.grid_layout.addWidget(label, 1, 1)
+        widget.grid_layout.setRowStretch(2, 1)
 
         return widget
 

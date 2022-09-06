@@ -254,6 +254,8 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook, 2, 0)
 
         self.main_page.apps_widget.notebook_tabs = QScrollableGridWidget()
+        # self.main_page.apps_widget.notebook_tabs.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        # self.main_page.apps_widget.notebook_tabs.horizontalScrollBar().setEnabled(False)
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook_tabs, 3, 0)
         self.main_page.apps_widget.notebook_tabs.scroll_layout.setAlignment(self.main_page.apps_widget.notebook_tabs, Qt.AlignmentFlag.AlignTop)
         self.main_page.apps_widget.notebook_tabs.scroll_layout.setSpacing(1)
@@ -278,7 +280,8 @@ class Application(QBaseApplication):
 
         self.main_page.right.grid_layout.addWidget(self.main_page.apps_widget, 0, 0)
         self.main_page.apps_widget.setVisible(False)
-    
+
+
     def create_downloads_widget(self):
         self.main_page.downloads_widget = QGridWidget()
 
@@ -545,13 +548,17 @@ class Application(QBaseApplication):
         else: self.locate_app(path)
 
     def create_app(self, path: str) -> None:
+        filename = os.path.basename(path)
         path = os.path.dirname(path).replace('\\', '/')
         if os.path.exists(f'{path}/manifest.json'): return self.locate_app(f'{path}/manifest.json')
 
         with open(f'{path}/manifest.json', 'w', encoding = 'utf-8') as f:
             json.dump({
                 'release': 'custom',
-                'tag_name': None
+                'tag_name': None,
+                'command': f'{path}/{filename}',
+                'url': None,
+                'created_at': None
             }, f, indent = 4, sort_keys = True, ensure_ascii = False)
 
         self.save_data.apps['custom'].append(path)
@@ -625,7 +632,7 @@ class Application(QBaseApplication):
         for i, app in enumerate(self.save_data.apps[k] if k != 'all' else [*self.save_data.apps['official'], *self.save_data.apps['pre'], *self.save_data.apps['custom']]):
             name = app.split('/')[-1]
             if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/PyLiteEngine.svg', False, name in self.updates)
+                b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/questionMark.svg', False, name in self.updates)
                 b.remove_from_list.connect(self.remove_from_install_list)
                 b.uninstall.connect(self.add_to_uninstall_list)
                 self.main_page.apps_widget.notebook_tabs.scroll_layout.addWidget(b, i, 0)

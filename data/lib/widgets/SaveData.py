@@ -21,7 +21,9 @@ class SaveData(QSaveData):
             "https://github.com/CLF78/Reggie-Next",
             "https://github.com/RoadrunnerWMC/Level-Info-Editor"
         ]
-        self.check_for_updates = 0
+        self.check_for_updates = 4
+        self.check_for_apps_updates = 4
+        self.start_at_launch = True
 
         super().__init__(save_path)
 
@@ -45,6 +47,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.addWidget(root_frame, 0, 0)
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
+
         label = QSettingsDialog.textGroup(lang['QLabel']['installsLocation']['title'], lang['QLabel']['installsLocation']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
 
@@ -58,6 +61,7 @@ class SaveData(QSaveData):
         widget.installs_folder_button.setFixedWidth(350)
         root_frame.grid_layout.addWidget(widget.installs_folder_button, 1, 0)
         root_frame.grid_layout.setAlignment(widget.installs_folder_button, Qt.AlignmentFlag.AlignLeft)
+
 
         frame = QFrame()
         frame.setProperty('border-top', True)
@@ -78,6 +82,7 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(widget.downloads_folder_button, 4, 0)
         root_frame.grid_layout.setAlignment(widget.downloads_folder_button, Qt.AlignmentFlag.AlignLeft)
 
+
         return widget
 
 
@@ -86,6 +91,7 @@ class SaveData(QSaveData):
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
 
         root_frame = QGridFrame()
         root_frame.grid_layout.setSpacing(16)
@@ -105,9 +111,44 @@ class SaveData(QSaveData):
             lang['QNamedComboBox']['checkForUpdates']['values']['atLaunch']
         ])
         widget.check_for_updates_combobox.combo_box.setCurrentIndex(self.check_for_updates)
-        # widget.check_for_updates_combobox.setFixedWidth(350)
         root_frame.grid_layout.addWidget(widget.check_for_updates_combobox, 1, 0)
         root_frame.grid_layout.setAlignment(widget.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 2, 0)
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
+        root_frame.grid_layout.addWidget(label, 3, 0)
+
+        widget.check_for_apps_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForAppsUpdates']['title'])
+        widget.check_for_apps_updates_combobox.combo_box.addItems([
+            lang['QNamedComboBox']['checkForAppsUpdates']['values']['never'],
+            lang['QNamedComboBox']['checkForAppsUpdates']['values']['daily'],
+            lang['QNamedComboBox']['checkForAppsUpdates']['values']['weekly'],
+            lang['QNamedComboBox']['checkForAppsUpdates']['values']['monthly'],
+            lang['QNamedComboBox']['checkForAppsUpdates']['values']['atLaunch']
+        ])
+        widget.check_for_apps_updates_combobox.combo_box.setCurrentIndex(self.check_for_apps_updates)
+        root_frame.grid_layout.addWidget(widget.check_for_apps_updates_combobox, 4, 0)
+        root_frame.grid_layout.setAlignment(widget.check_for_apps_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+
+
+        # frame = QFrame()
+        # frame.setProperty('border-top', True)
+        # frame.setFixedHeight(1)
+        # root_frame.grid_layout.addWidget(frame, 5, 0)
+
+        # label = QSettingsDialog.textGroup(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
+        # root_frame.grid_layout.addWidget(label, 6, 0)
+
+        # widget.start_at_launch_checkbox = QNamedComboBox(None, lang['QNamedComboBox']['checkForAppsUpdates']['title'])
+        # widget.start_at_launch_checkbox.combo_box.setCurrentIndex(self.check_for_apps_updates)
+        # root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, 7, 0)
+        # root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
+
 
         return widget
 
@@ -116,6 +157,8 @@ class SaveData(QSaveData):
         self.apps_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].installs_folder_button.path()
         self.downloads_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].downloads_folder_button.path()
         self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_updates_combobox.combo_box.currentIndex()
+        self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
+        #TODO: checkbox
 
 
     def save_extra_data(self) -> dict:
@@ -126,7 +169,10 @@ class SaveData(QSaveData):
                 'downloads': self.downloads_folder
             },
             'followedApps': self.followed_apps,
-            'checkForUpdates': self.check_for_updates
+
+            'checkForUpdates': self.check_for_updates,
+            'checkForAppsUpdates': self.check_for_apps_updates,
+            'startAtLaunch': self.start_at_launch
         }
 
     def load_extra_data(self, extra_data: dict = ...) -> None:
@@ -141,6 +187,8 @@ class SaveData(QSaveData):
             self.followed_apps = extra_data['followedApps']
 
             self.check_for_updates = extra_data['checkForUpdates']
+            self.check_for_apps_updates = extra_data['checkForAppsUpdates']
+            self.start_at_launch = extra_data['startAtLaunch']
 
         except: self.save()
 #----------------------------------------------------------------------

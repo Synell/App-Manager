@@ -120,11 +120,29 @@
                         "checkForUpdates": {
                             "title": "Check for Updates",
                             "description": "Determines how often App Manager checks for updates."
+                        },
+                        "checkForAppsUpdates": {
+                            "title": "Check for Apps Updates",
+                            "description": "Determines how often App Manager checks for apps updates."
+                        },
+                        "startAtLauch": {
+                            "title": "Start at Launch",
+                            "description": "Determines whether App Manager starts at launch."
                         }
                     },
                     "QNamedComboBox": {
                         "checkForUpdates": {
                             "title": "Check for Updates",
+                            "values": {
+                                "never": "Never",
+                                "daily": "Daily",
+                                "weekly": "Weekly",
+                                "monthly": "Monthly",
+                                "atLaunch": "At Launch"
+                            }
+                        },
+                        "checkForAppsUpdates": {
+                            "title": "Check for Apps Updates",
                             "values": {
                                 "never": "Never",
                                 "daily": "Daily",

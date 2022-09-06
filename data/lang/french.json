@@ -118,13 +118,31 @@
                     "title": "Mises à Jour && Démarrage",
                     "QLabel": {
                         "checkForUpdates": {
-                            "title": "Vérifier les mises à jour",
+                            "title": "Vérifier les Mises à Jour",
                             "description": "Détermine la fréquence de vérification des mises à jour de App Manager."
+                        },
+                        "checkForAppsUpdates": {
+                            "title": "Vérifier les Mises à Jour des Applications",
+                            "description": "Détermine la fréquence de vérification des mises à jour des applications."
+                        },
+                        "startAtLaunch": {
+                            "title": "Démarrer au Lancement",
+                            "description": "Détermine si App Manager démarre automatiquement au lancement de l'ordinateur."
                         }
                     },
                     "QNamedComboBox": {
                         "checkForUpdates": {
-                            "title": "Vérifier les mises à jour",
+                            "title": "Vérifier les Mises à Jour",
+                            "values": {
+                                "never": "Jamais",
+                                "daily": "Quotidienne",
+                                "weekly": "Hebdomadaire",
+                                "monthly": "Mensuelle",
+                                "atLaunch": "Au lancement"
+                            }
+                        },
+                        "checkForAppsUpdates": {
+                            "title": "Vérifier les Mises à Jour des Applications",
                             "values": {
                                 "never": "Jamais",
                                 "daily": "Quotidienne",

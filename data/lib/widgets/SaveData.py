@@ -7,7 +7,7 @@ from PyQt6.QtCore import Qt
 from .PlatformType import PlatformType
 import os
 
-from data.lib.qtUtils import QFiles, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox
+from data.lib.qtUtils import QFiles, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QToggleButton, QNamedToggleButton
 #----------------------------------------------------------------------
 
     # Class
@@ -23,7 +23,9 @@ class SaveData(QSaveData):
         ]
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
+
         self.start_at_launch = True
+        self.minimize_in_taskbar = False
 
         self.compact_paths = 0
 
@@ -71,6 +73,7 @@ class SaveData(QSaveData):
         frame.setFixedHeight(1)
         root_frame.grid_layout.addWidget(frame, 2, 0)
 
+
         label = QSettingsDialog.textGroup(lang['QLabel']['downloadsLocation']['title'], lang['QLabel']['downloadsLocation']['description'])
         root_frame.grid_layout.addWidget(label, 3, 0)
 
@@ -102,6 +105,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.addWidget(root_frame, 0, 0)
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
+
         label = QSettingsDialog.textGroup(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
 
@@ -123,6 +127,7 @@ class SaveData(QSaveData):
         frame.setFixedHeight(1)
         root_frame.grid_layout.addWidget(frame, 2, 0)
 
+
         label = QSettingsDialog.textGroup(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
         root_frame.grid_layout.addWidget(label, 3, 0)
 
@@ -137,20 +142,6 @@ class SaveData(QSaveData):
         widget.check_for_apps_updates_combobox.combo_box.setCurrentIndex(self.check_for_apps_updates)
         root_frame.grid_layout.addWidget(widget.check_for_apps_updates_combobox, 4, 0)
         root_frame.grid_layout.setAlignment(widget.check_for_apps_updates_combobox, Qt.AlignmentFlag.AlignLeft)
-
-
-        # frame = QFrame()
-        # frame.setProperty('border-top', True)
-        # frame.setFixedHeight(1)
-        # root_frame.grid_layout.addWidget(frame, 5, 0)
-
-        # label = QSettingsDialog.textGroup(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
-        # root_frame.grid_layout.addWidget(label, 6, 0)
-
-        # widget.start_at_launch_checkbox = QNamedComboBox(None, lang['QNamedComboBox']['checkForAppsUpdates']['title'])
-        # widget.start_at_launch_checkbox.combo_box.setCurrentIndex(self.check_for_apps_updates)
-        # root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, 7, 0)
-        # root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -169,8 +160,40 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['compactPaths']['title'], lang['QLabel']['compactPaths']['description'])
+        label = QSettingsDialog.textGroup(lang['QLabel']['startAtLaunch']['title'], lang['QLabel']['startAtLaunch']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
+
+        widget.start_at_launch_checkbox = QNamedToggleButton()
+        widget.start_at_launch_checkbox.setText(lang['QToggleButton']['startAtLaunch'])
+        widget.start_at_launch_checkbox.setChecked(self.start_at_launch)
+        root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, 1, 0)
+        root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 2, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['minimizeInTaskbar']['title'], lang['QLabel']['minimizeInTaskbar']['description'])
+        root_frame.grid_layout.addWidget(label, 3, 0)
+
+        widget.minimize_in_taskbar_checkbox = QNamedToggleButton()
+        widget.minimize_in_taskbar_checkbox.setText(lang['QToggleButton']['minimizeInTaskbar'])
+        widget.minimize_in_taskbar_checkbox.setChecked(self.minimize_in_taskbar)
+        root_frame.grid_layout.addWidget(widget.minimize_in_taskbar_checkbox, 4, 0)
+        root_frame.grid_layout.setAlignment(widget.minimize_in_taskbar_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 5, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['compactPaths']['title'], lang['QLabel']['compactPaths']['description'])
+        root_frame.grid_layout.addWidget(label, 6, 0)
 
         widget.compact_paths_combobox = QNamedComboBox(None, lang['QNamedComboBox']['compactPaths']['title'])
         widget.compact_paths_combobox.combo_box.addItems([
@@ -179,7 +202,7 @@ class SaveData(QSaveData):
             lang['QNamedComboBox']['compactPaths']['values']['disabled']
         ])
         widget.compact_paths_combobox.combo_box.setCurrentIndex(self.compact_paths)
-        root_frame.grid_layout.addWidget(widget.compact_paths_combobox, 1, 0)
+        root_frame.grid_layout.addWidget(widget.compact_paths_combobox, 7, 0)
         root_frame.grid_layout.setAlignment(widget.compact_paths_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
@@ -191,7 +214,9 @@ class SaveData(QSaveData):
         self.downloads_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].downloads_folder_button.path()
         self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_updates_combobox.combo_box.currentIndex()
         self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
-        #TODO: checkbox
+
+        self.start_at_launch = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].start_at_launch_checkbox.isChecked()
+        self.minimize_in_taskbar = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].minimize_in_taskbar_checkbox.isChecked()
 
         self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
 
@@ -207,7 +232,9 @@ class SaveData(QSaveData):
 
             'checkForUpdates': self.check_for_updates,
             'checkForAppsUpdates': self.check_for_apps_updates,
+
             'startAtLaunch': self.start_at_launch,
+            'minimizeInTaskbar': self.minimize_in_taskbar,
 
             'compactPaths': self.compact_paths
         }
@@ -225,7 +252,9 @@ class SaveData(QSaveData):
 
             self.check_for_updates = extra_data['checkForUpdates']
             self.check_for_apps_updates = extra_data['checkForAppsUpdates']
+
             self.start_at_launch = extra_data['startAtLaunch']
+            self.minimize_in_taskbar = extra_data['minimizeInTaskbar']
 
             self.compact_paths = extra_data['compactPaths']
 

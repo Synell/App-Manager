@@ -124,6 +124,11 @@ class Application(QBaseApplication):
         QFileButton.normal_color = self.load_color(data, 'QWidget[QFileButton=true]QLabel', 'color')
         QFileButton.hover_color = self.load_color(data, 'QWidget[QFileButton=true]QLabel[hover=true]', 'color')
 
+        QToggleButton.normal_color = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox', 'color')
+        QToggleButton.normal_color_handle = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox::handle', 'color')
+        QToggleButton.checked_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QToggleButton=true]QCheckBox:checked', 'color')
+        QToggleButton.checked_color_handle = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox:checked::handle', 'color')
+
     def settingsMenu(self):
         self.save_data.settings_menu(self)
         self.load_colors()

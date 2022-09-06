@@ -13,19 +13,21 @@ class QToggleButton(QCheckBox):
 
     checked_color = '#0466C7'
     checked_color_handle = '#FBFEFB'
-    unchecked_color = '#44999999'
-    unchecked_color_handle = '#5D5D5D'
+    normal_color = '#44999999'
+    normal_color_handle = '#5D5D5D'
 
     def __init__(self, parent = None):
         super().__init__(parent)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setProperty('QToggleButton', True)
 
         self.setFixedWidth(58)
         self.setFixedHeight(45)
 
-        self._bar_brush = QBrush(QColor(self.unchecked_color))
+        self._bar_brush = QBrush(QColor(self.normal_color))
         self._bar_checked_brush = QBrush(QColor(self.checked_color))
 
-        self._handle_brush = QBrush(QColor(self.unchecked_color_handle))
+        self._handle_brush = QBrush(QColor(self.normal_color_handle))
         self._handle_checked_brush = QBrush(QColor(self.checked_color_handle))
 
         self.setContentsMargins(8, 0, 8, 0)

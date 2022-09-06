@@ -42,6 +42,8 @@
         "QIconWidget",
         "QFileZone",
         "QColorButton",
-        "QColorPicker"
+        "QColorPicker",
+        "QToggleButton",
+        "QNamedToggleButton"
     ]
 }

@@ -33,4 +33,5 @@ from .QUtilsColor import QUtilsColor
 from .QLoginWidget import QLoginWidget
 from .QLoginDialog import QLoginDialog
 from .QToggleButton import QToggleButton
+from .QNamedToggleButton import QNamedToggleButton
 #----------------------------------------------------------------------

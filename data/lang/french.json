@@ -124,10 +124,6 @@
                         "checkForAppsUpdates": {
                             "title": "Vérifier les Mises à Jour des Applications",
                             "description": "Détermine la fréquence de vérification des mises à jour des applications."
-                        },
-                        "startAtLaunch": {
-                            "title": "Démarrer au Lancement",
-                            "description": "Détermine si App Manager démarre automatiquement au lancement de l'ordinateur."
                         }
                     },
                     "QNamedComboBox": {
@@ -156,6 +152,14 @@
                 "interface": {
                     "title": "Interface",
                     "QLabel": {
+                        "startAtLaunch": {
+                            "title": "Démarrer au Lancement",
+                            "description": "Détermine si App Manager démarre automatiquement au lancement de l'ordinateur."
+                        },
+                        "minimizeInTaskbar": {
+                            "title": "Minimiser dans la Barre des Tâches",
+                            "description": "Détermine si App Manager est minimisé dans la barre des tâches au lieu d'être fermé."
+                        },
                         "compactPaths": {
                             "title": "Chemins Compacts",
                             "description": "Détermine si App Manager compacte les chemins des applications dans la liste des installations."
@@ -170,6 +174,10 @@
                                 "enabled": "Activé"
                             }
                         }
+                    },
+                    "QToggleButton": {
+                        "startAtLaunch": "Démarrer au Lancement",
+                        "minimizeInTaskbar": "Minimiser dans la Barre des Tâches"
                     }
                 }
             },

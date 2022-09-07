@@ -25,7 +25,7 @@ class SaveData(QSaveData):
         self.check_for_apps_updates = 4
 
         self.start_at_launch = True
-        self.minimize_in_taskbar = False
+        self.minimize_to_tray = True
 
         self.compact_paths = 0
 
@@ -35,7 +35,7 @@ class SaveData(QSaveData):
     def settings_menu_extra(self):
         return {
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png')
         }, self.get_extra
 
@@ -93,7 +93,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_updates_and_startup(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']
+        lang = self.language_data['QSettingsDialog']['QSidePanel']['updates']
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -176,14 +176,14 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, 2, 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['minimizeInTaskbar']['title'], lang['QLabel']['minimizeInTaskbar']['description'])
+        label = QSettingsDialog.textGroup(lang['QLabel']['minimizeToTray']['title'], lang['QLabel']['minimizeToTray']['description'])
         root_frame.grid_layout.addWidget(label, 3, 0)
 
-        widget.minimize_in_taskbar_checkbox = QNamedToggleButton()
-        widget.minimize_in_taskbar_checkbox.setText(lang['QToggleButton']['minimizeInTaskbar'])
-        widget.minimize_in_taskbar_checkbox.setChecked(self.minimize_in_taskbar)
-        root_frame.grid_layout.addWidget(widget.minimize_in_taskbar_checkbox, 4, 0)
-        root_frame.grid_layout.setAlignment(widget.minimize_in_taskbar_checkbox, Qt.AlignmentFlag.AlignLeft)
+        widget.minimize_to_tray_checkbox = QNamedToggleButton()
+        widget.minimize_to_tray_checkbox.setText(lang['QToggleButton']['minimizeToTray'])
+        widget.minimize_to_tray_checkbox.setChecked(self.minimize_to_tray)
+        root_frame.grid_layout.addWidget(widget.minimize_to_tray_checkbox, 4, 0)
+        root_frame.grid_layout.setAlignment(widget.minimize_to_tray_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
@@ -212,11 +212,11 @@ class SaveData(QSaveData):
     def get_extra(self, extra_tabs: dict = {}):
         self.apps_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].installs_folder_button.path()
         self.downloads_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].downloads_folder_button.path()
-        self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_updates_combobox.combo_box.currentIndex()
-        self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updatesAndStartup']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
+        self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].check_for_updates_combobox.combo_box.currentIndex()
+        self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
 
         self.start_at_launch = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].start_at_launch_checkbox.isChecked()
-        self.minimize_in_taskbar = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].minimize_in_taskbar_checkbox.isChecked()
+        self.minimize_to_tray = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].minimize_to_tray_checkbox.isChecked()
 
         self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
 
@@ -234,7 +234,7 @@ class SaveData(QSaveData):
             'checkForAppsUpdates': self.check_for_apps_updates,
 
             'startAtLaunch': self.start_at_launch,
-            'minimizeInTaskbar': self.minimize_in_taskbar,
+            'minimizeToTray': self.minimize_to_tray,
 
             'compactPaths': self.compact_paths
         }
@@ -254,7 +254,7 @@ class SaveData(QSaveData):
             self.check_for_apps_updates = extra_data['checkForAppsUpdates']
 
             self.start_at_launch = extra_data['startAtLaunch']
-            self.minimize_in_taskbar = extra_data['minimizeInTaskbar']
+            self.minimize_to_tray = extra_data['minimizeToTray']
 
             self.compact_paths = extra_data['compactPaths']
 

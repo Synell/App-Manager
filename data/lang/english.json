@@ -114,8 +114,8 @@
                         }
                     }
                 },
-                "updatesAndStartup": {
-                    "title": "Updates && Startup",
+                "updates": {
+                    "title": "Updates",
                     "QLabel": {
                         "checkForUpdates": {
                             "title": "Check for Updates",
@@ -156,7 +156,7 @@
                             "title": "Start at Launch",
                             "description": "Determines whether App Manager starts at launch."
                         },
-                        "minimizeInTaskbar": {
+                        "minimizeToTray": {
                             "title": "Minimize in Taskbar",
                             "description": "Determines whether App Manager minimizes to the taskbar when closed."
                         },
@@ -177,7 +177,7 @@
                     },
                     "QToggleButton": {
                         "startAtLaunch": "Start at Launch",
-                        "minimizeInTaskbar": "Minimize in Taskbar"
+                        "minimizeToTray": "Minimize in Taskbar"
                     }
                 }
             },
@@ -227,6 +227,11 @@
             },
             "QCheckBox": {
                 "remember": "Remember me"
+            }
+        },
+        "QSystemTrayIcon": {
+            "QMenu": {
+                "exit": "Exit"
             }
         }
     }

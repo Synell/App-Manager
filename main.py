@@ -57,6 +57,8 @@ class Application(QBaseApplication):
         self.check_updates()
         self.refresh_apps()
 
+        self.create_tray_icon()
+
         self.window.setMinimumSize(int(self.primaryScreen().size().width() * (8 / 15)), int(self.primaryScreen().size().height() * (14 / 27))) # 128x71 -> 1022x568
 
 
@@ -646,12 +648,39 @@ class Application(QBaseApplication):
                 self.app_buttons.append(b)
 
 
-
     def login(self):
         result = QLoginDialog(self.window, self.save_data.language_data['QLoginDialog'], '', '', True, True).exec()
         print(result)
 
 
+    def create_tray_icon(self):
+        self.window.closeEvent = self.close_event
+
+        self.sys_tray = QSystemTrayIcon(self)
+        self.sys_tray.setToolTip('App Manager')
+        self.sys_tray.setIcon(QIcon('./data/icons/AppManager.svg'))
+        self.sys_tray.setVisible(True)
+        self.sys_tray.activated.connect(self.on_sys_tray_activated)
+
+        self.sys_tray_menu = QMenu(self.window)
+        self.sys_tray_menu.setProperty('QSystemTrayIcon', True)
+        act = self.sys_tray_menu.addAction(self.save_data.getIcon('popup/exit.png'), self.save_data.language_data['QSystemTrayIcon']['QMenu']['exit'])
+        act.triggered.connect(self.exit)
+
+
+    def on_sys_tray_activated(self, reason):
+        match reason:
+            case QSystemTrayIcon.ActivationReason.Trigger:
+                self.window.show()
+                self.window.raise_()
+                self.window.setWindowState(Qt.WindowState.WindowActive)
+            case QSystemTrayIcon.ActivationReason.Context:
+                self.sys_tray_menu.popup(QCursor.pos())
+
+
+    def close_event(self, event: QCloseEvent):
+        self.window.hide()
+        event.ignore() if self.save_data.minimize_to_tray else event.accept()
 
 
 

@@ -114,8 +114,8 @@
                         }
                     }
                 },
-                "updatesAndStartup": {
-                    "title": "Mises à Jour && Démarrage",
+                "updates": {
+                    "title": "Mises à Jour",
                     "QLabel": {
                         "checkForUpdates": {
                             "title": "Vérifier les Mises à Jour",
@@ -156,7 +156,7 @@
                             "title": "Démarrer au Lancement",
                             "description": "Détermine si App Manager démarre automatiquement au lancement de l'ordinateur."
                         },
-                        "minimizeInTaskbar": {
+                        "minimizeToTray": {
                             "title": "Minimiser dans la Barre des Tâches",
                             "description": "Détermine si App Manager est minimisé dans la barre des tâches au lieu d'être fermé."
                         },
@@ -177,7 +177,7 @@
                     },
                     "QToggleButton": {
                         "startAtLaunch": "Démarrer au Lancement",
-                        "minimizeInTaskbar": "Minimiser dans la Barre des Tâches"
+                        "minimizeToTray": "Minimiser dans la Barre des Tâches"
                     }
                 }
             },
@@ -227,6 +227,11 @@
             },
             "QCheckBox": {
                 "remember": "Se souvenir de moi"
+            }
+        },
+        "QSystemTrayIcon": {
+            "QMenu": {
+                "exit": "Quitter"
             }
         }
     }

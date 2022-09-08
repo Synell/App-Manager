@@ -12,7 +12,7 @@ from data.lib import *
 
 
 class Application(QBaseApplication):
-    BUILD = '07e6bf10'
+    BUILD = '07e6bf41'
     VERSION = 'Experimental'
 
     COLOR_LINK = Color()
@@ -43,7 +43,7 @@ class Application(QBaseApplication):
 
         self.install_page_worker = None
         self.install_page_buttons = [[], []]
-        self.app_buttons = []
+        self.app_buttons = {}
 
         self.save_data.setStyleSheet(self)
         self.window.setProperty('color', 'cyan')
@@ -652,28 +652,42 @@ class Application(QBaseApplication):
             for app in self.save_data.apps[k].copy():
                 if not os.path.exists(f'{app}/manifest.json'):
                     self.save_data.apps[k].remove(app)
+                    if app in self.app_buttons:
+                        self.app_buttons[app].setParent(None)
+                        del self.app_buttons[app]
                     continue
 
         self.refresh_apps_list()
 
     def refresh_apps_list(self, event: str|int = None):
-        self.app_buttons = []
-        self.clear_layout(self.main_page.apps_widget.notebook_tabs.scroll_layout)
-
         match self.main_page.apps_widget.notebook.currentIndex():
             case 0: k = 'all'
             case 1: k = 'official'
             case 2: k = 'pre'
             case 3: k = 'custom'
 
+        app_keys = list(self.app_buttons.keys())
+
+        for button in self.app_buttons.values():
+            button.setParent(None)
+
         for i, app in enumerate(self.save_data.apps[k] if k != 'all' else [*self.save_data.apps['official'], *self.save_data.apps['pre'], *self.save_data.apps['custom']]):
             name = app.split('/')[-1]
+            has_update = name in self.updates
+            compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
+
             if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/questionMark.svg', False, name in self.updates, (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1))
-                b.remove_from_list.connect(self.remove_from_install_list)
-                b.uninstall.connect(self.add_to_uninstall_list)
+                if app in app_keys:
+                    b: InstalledButton = self.app_buttons[app]
+                    if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
+                    if b.has_update != has_update: b.set_update(has_update)
+
+                else:
+                    b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/questionMark.svg', False, has_update, compact_mode)
+                    b.remove_from_list.connect(self.remove_from_install_list)
+                    b.uninstall.connect(self.add_to_uninstall_list)
+                    self.app_buttons[app] = b
                 self.main_page.apps_widget.notebook_tabs.scroll_layout.addWidget(b, i, 0)
-                self.app_buttons.append(b)
 
 
     def login(self) -> None:

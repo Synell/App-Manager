@@ -80,8 +80,10 @@ class InstallWorker(QThread):
             d['release'] = 'pre' if self.data.prerelease else 'official'
             d['tag_name'] = self.data.tag_name
             d['url'] = self.data.link
-            d['command'] = self.get_file()
+            file = self.get_file()
+            d['command'] = f'"{file}"'
             d['created_at'] = self.data.created_at
+            d['icon'] = file
 
             with open(manifest, 'w', encoding = 'utf-8') as f:
                 json.dump(d, f, indent = 4, sort_keys = True, ensure_ascii = False)
@@ -97,7 +99,7 @@ class InstallWorker(QThread):
         for format in ['exe', 'bat']:
                 for file in os.listdir(self.out_path):
                     if file.endswith(f'.{format}'):
-                        return f'"{self.out_path}/{file}"'
+                        return f'{self.out_path}/{file}'
         return None
 
 

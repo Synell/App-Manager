@@ -1,15 +1,12 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from collections import namedtuple
 from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
-from PyQt6.QtGui import QAction, QIcon, QMouseEvent
-from PyQt6.QtCore import Qt, pyqtSignal, QPoint
-from PyQt6.QtSvgWidgets import QSvgWidget
-from .PlatformType import PlatformType
-import subprocess, json, os
+from PyQt6.QtGui import QAction, QMouseEvent, QIcon
+from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize, QThread
+import subprocess, json
 
-from data.lib.qtUtils import QGridWidget, QGridFrame
+from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
 #----------------------------------------------------------------------
 
     # Class
@@ -31,57 +28,84 @@ class InstalledButton(QGridFrame):
         self.path = path
         self.lang = lang
         self.has_update = has_update
+        self.is_disabled = disabled
+        self.compact_mode = compact_mode
+
         with open(f'{path}/manifest.json', 'r', encoding = 'utf-8') as file:
             data = json.load(file)
             self.release = data['release']
             self.tag_name = data['tag_name'] if data['tag_name'] else 'Custom'
             self.command = data['command']
             self.url = data['url']
+            self.icon = QIconWidget(None, icon, QSize(40, 40))
+            self.icon_thread = __IconWorker__(data['icon'])
+            self.icon_thread.done.connect(self.icon_loaded)
 
         self.setFixedHeight(60)
         self.setProperty('color', 'main')
 
-        widget = self.widget_icon_couple(icon, self.generate_text(compact_mode))
-        self.grid_layout.addWidget(widget, 0, 0)
-        self.grid_layout.setAlignment(widget, Qt.AlignmentFlag.AlignLeft)
+        self.icon_couple = self.widget_icon_couple(self.icon, self.generate_text(compact_mode))
+        self.grid_layout.addWidget(self.icon_couple, 0, 0)
+        self.grid_layout.setAlignment(self.icon_couple, Qt.AlignmentFlag.AlignLeft)
 
-        # self.mousePressEvent.connect(self.launch_app)
 
-        if disabled:
-            self.progress_bar = QProgressBar()
-            self.progress_bar.setRange(0, 100)
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setVisible(False)
 
-            self.grid_layout.addWidget(self.progress_bar, 0, 1)
-            self.grid_layout.setAlignment(self.progress_bar, Qt.AlignmentFlag.AlignRight)
+        self.grid_layout.addWidget(self.progress_bar, 0, 1)
+        self.grid_layout.setAlignment(self.progress_bar, Qt.AlignmentFlag.AlignRight)
 
-            self.setProperty('side', 'all')
-        else:
-            self.setCursor(Qt.CursorShape.PointingHandCursor)
-            self.setProperty('side', 'all-hover')
 
-            self.update_button = QPushButton()
-            self.update_button.setText(lang['QPushButton']['update'])
-            self.update_button.setCursor(Qt.CursorShape.PointingHandCursor)
-            self.update_button.setProperty('color', 'main')
-            self.update_button.setProperty('transparent', True)
-            self.update_button.setProperty('small', 'true')
-            self.update_button.clicked.connect(lambda: self.update_app.emit(self.path))
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setProperty('side', 'all-hover')
 
-            self.settings_button = QPushButton()
-            self.settings_button.setIcon(self.settings_icon)
-            self.settings_button.setCursor(Qt.CursorShape.PointingHandCursor)
-            self.settings_button.setProperty('color', 'main')
-            self.settings_button.clicked.connect(self.button_click)
+        self.update_button = QPushButton()
+        self.update_button.setText(lang['QPushButton']['update'])
+        self.update_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.update_button.setProperty('color', 'main')
+        self.update_button.setProperty('transparent', True)
+        self.update_button.setProperty('small', 'true')
+        self.update_button.clicked.connect(lambda: self.update_app.emit(self.path))
+        self.update_button.setVisible(False)
 
-            if self.has_update and self.release in ['official', 'prerelease']:
-                button_group = self.widget_couple(4, self.update_button, self.settings_button)
+        self.settings_button = QPushButton()
+        self.settings_button.setIcon(self.settings_icon)
+        self.settings_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.settings_button.setProperty('color', 'main')
+        self.settings_button.clicked.connect(self.button_click)
 
-                self.grid_layout.addWidget(button_group, 0, 1)
-                self.grid_layout.setAlignment(button_group, Qt.AlignmentFlag.AlignRight)
+        self.button_group = self.widget_couple(4, self.update_button, self.settings_button)
 
-            else:
-                self.grid_layout.addWidget(self.settings_button, 0, 1)
-                self.grid_layout.setAlignment(self.settings_button, Qt.AlignmentFlag.AlignRight)
+        self.grid_layout.addWidget(self.button_group, 0, 1)
+        self.grid_layout.setAlignment(self.button_group, Qt.AlignmentFlag.AlignRight)
+
+
+        self.set_update(self.has_update)
+        self.set_disabled(self.is_disabled)
+
+        self.icon_thread.start()
+
+
+    def icon_loaded(self, icon: QIcon) -> None:
+        self.icon.icon = icon
+
+
+    def set_update(self, has_update: bool) -> None:
+        self.has_update = has_update
+        self.update_button.setVisible(self.has_update and self.release in ['official', 'prerelease'])
+
+
+    def set_disabled(self, disabled: bool) -> None:
+        self.is_disabled = disabled
+        self.progress_bar.setVisible(disabled)
+        self.button_group.setVisible(not disabled)
+        self.setCursor(Qt.CursorShape.ArrowCursor if disabled else Qt.CursorShape.PointingHandCursor)
+        self.setProperty('side', 'all' if disabled else 'all-hover')
+
+    def set_compact_mode(self, compact_mode: bool) -> None:
+        self.compact_mode = compact_mode
+        self.icon_couple.text_widget.widgets[1].desc.setText(self.small_path(self.path) if compact_mode else self.path)
 
 
     def small_path(self, path: str) -> str:
@@ -102,27 +126,28 @@ class InstalledButton(QGridFrame):
         widget.grid_layout.setSpacing(4)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        label = QLabel(f'{self.name} ({self.tag_name})')
-        label.setProperty('brighttitle', True)
-        label.setFixedSize(label.sizeHint())
-        widget.grid_layout.addWidget(label, 0, 1)
+        widget.title = QLabel(f'{self.name} ({self.tag_name})')
+        widget.title.setProperty('brighttitle', True)
+        widget.title.setFixedSize(widget.title.sizeHint())
+        widget.grid_layout.addWidget(widget.title, 0, 1)
 
-        label = QLabel(self.small_path(self.path) if compact_mode else self.path) #self.path.split('/')[0] + '/.../' + self.path.split('/')[-1]
-        label.setProperty('smallbrightnormal', True)
-        widget.grid_layout.addWidget(label, 1, 1)
+        widget.desc = QLabel(self.small_path(self.path) if compact_mode else self.path)
+        widget.desc.setProperty('smallbrightnormal', True)
+        widget.grid_layout.addWidget(widget.desc, 1, 1)
         widget.grid_layout.setRowStretch(2, 1)
 
         return widget
 
-    def widget_icon_couple(self, icon: str = None, text_widget: QGridWidget = None) -> QGridWidget:
+    def widget_icon_couple(self, icon: QIconWidget = None, text_widget: QGridWidget = None) -> QGridWidget:
         widget = QGridWidget()
         widget.grid_layout.setSpacing(16)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        pixmap = QSvgWidget(icon)
-        pixmap.setFixedSize(40, 40)
+        icon.setFixedSize(40, 40)
 
-        widget.grid_layout.addWidget(pixmap, 0, 0)
+        widget.text_widget = text_widget
+
+        widget.grid_layout.addWidget(icon, 0, 0)
         widget.grid_layout.addWidget(text_widget, 0, 1)
 
         widget.grid_layout.setColumnStretch(2, 1)
@@ -133,6 +158,7 @@ class InstalledButton(QGridFrame):
         widget = QGridWidget()
         widget.grid_layout.setSpacing(spacing)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.widgets = list(widgets)
 
         i = 0
         for i, widget_ in enumerate(widgets):
@@ -177,13 +203,27 @@ class InstalledButton(QGridFrame):
         subprocess.Popen(rf'explorer /select, "{path}"')
 
     def edit(self) -> None:
-        print('edit')
+        print('edit') #todo
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         try:
             subprocess.Popen(rf'{self.command}')
         except:
-            print('oof')
+            print('oof') #todo
 
         return super().mousePressEvent(a0)
+
+#----------------------------------------------------------------------
+
+    # Worker
+class __IconWorker__(QThread):
+    done = pyqtSignal(QIcon)
+    def __init__(self, path: str) -> None:
+        super(__IconWorker__, self).__init__()
+
+        self.path = path
+
+    def run(self) -> None:
+        iw = QIconWidget().file_icon(self.path)
+        if iw: self.done.emit(iw)
 #----------------------------------------------------------------------

@@ -59,6 +59,32 @@ class Application(QBaseApplication):
 
         self.create_tray_icon()
 
+        if self.save_data.check_for_apps_updates == 4: self.install_app_page_refresh_template(True)
+        elif self.save_data.check_for_apps_updates > 0 and self.save_data.check_for_apps_updates < 4:
+            deltatime = datetime.now() - self.save_data.last_check_for_apps_updates
+
+            match self.save_data.check_for_apps_updates:
+                case 1:
+                    if deltatime > timedelta(days = 1): self.install_app_page_refresh_template(True)
+                case 2:
+                    if deltatime > timedelta(weeks = 1): self.install_app_page_refresh_template(True)
+                case 3:
+                    if deltatime > timedelta(weeks = 4): self.install_app_page_refresh_template(True)
+                case _: print('not time²')
+
+        if self.save_data.check_for_updates == 4: self.check_updates()
+        elif self.save_data.check_for_updates > 0 and self.save_data.check_for_updates < 4:
+            deltatime = datetime.now() - self.save_data.last_check_for_updates
+
+            match self.save_data.check_for_updates:
+                case 1:
+                    if deltatime > timedelta(days = 1): self.check_updates()
+                case 2:
+                    if deltatime > timedelta(weeks = 1): self.check_updates()
+                case 3:
+                    if deltatime > timedelta(weeks = 4): self.check_updates()
+                case _: print('not time²')
+
         self.window.setMinimumSize(int(self.primaryScreen().size().width() * (8 / 15)), int(self.primaryScreen().size().height() * (14 / 27))) # 128x71 -> 1022x568
 
 
@@ -131,7 +157,7 @@ class Application(QBaseApplication):
         QToggleButton.checked_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QToggleButton=true]QCheckBox:checked', 'color')
         QToggleButton.checked_color_handle = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox:checked::handle', 'color')
 
-    def settingsMenu(self):
+    def settings_menu(self):
         self.save_data.settings_menu(self)
         self.load_colors()
 
@@ -204,7 +230,7 @@ class Application(QBaseApplication):
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setIcon(self.save_data.getIcon('/pushbutton/settings.png'))
-        button.clicked.connect(self.settingsMenu)
+        button.clicked.connect(self.settings_menu)
         #button.setProperty('transparent', True)
         left_top.grid_layout.addWidget(button, 0, 1)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
@@ -442,6 +468,8 @@ class Application(QBaseApplication):
         self.install_page_worker.signals.failed.connect(self.release_failed)
         self.install_page_worker.start()
 
+        self.save_data.last_check_for_apps_updates = datetime.now()
+
     def get_installed_releases(self) -> list[str]:
         return [folder.split('/')[-1] for k in ['official', 'pre'] for folder in self.save_data.apps[k]]
 
@@ -648,12 +676,12 @@ class Application(QBaseApplication):
                 self.app_buttons.append(b)
 
 
-    def login(self):
+    def login(self) -> None:
         result = QLoginDialog(self.window, self.save_data.language_data['QLoginDialog'], '', '', True, True).exec()
         print(result)
 
 
-    def create_tray_icon(self):
+    def create_tray_icon(self) -> None:
         self.window.closeEvent = self.close_event
 
         self.sys_tray = QSystemTrayIcon(self)
@@ -668,7 +696,7 @@ class Application(QBaseApplication):
         act.triggered.connect(self.exit)
 
 
-    def on_sys_tray_activated(self, reason):
+    def on_sys_tray_activated(self, reason: QSystemTrayIcon.ActivationReason) -> None:
         match reason:
             case QSystemTrayIcon.ActivationReason.Trigger:
                 self.window.show()
@@ -678,7 +706,7 @@ class Application(QBaseApplication):
                 self.sys_tray_menu.popup(QCursor.pos())
 
 
-    def close_event(self, event: QCloseEvent):
+    def close_event(self, event: QCloseEvent) -> None:
         self.window.hide()
         event.ignore() if self.save_data.minimize_to_tray else event.accept()
 

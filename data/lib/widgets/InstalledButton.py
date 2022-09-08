@@ -177,7 +177,7 @@ class InstalledButton(QGridFrame):
         subprocess.Popen(rf'explorer /select, "{path}"')
 
     def edit(self) -> None:
-        pass
+        print('edit')
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         try:

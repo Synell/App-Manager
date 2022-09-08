@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QFrame, QCheckBox
 from PyQt6.QtCore import Qt
 
 from .PlatformType import PlatformType
+from datetime import datetime
 import os
 
 from data.lib.qtUtils import QFiles, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QToggleButton, QNamedToggleButton
@@ -12,6 +13,7 @@ from data.lib.qtUtils import QFiles, QSaveData, QGridFrame, QScrollableGridWidge
 
     # Class
 class SaveData(QSaveData):
+    dateformat = '%Y-%m-%d %H:%M:%S'
     def __init__(self, save_path: str = './data/save.dat') -> None:
         self.platform = PlatformType.Windows
         self.apps_folder = os.path.abspath('./data/apps/').replace('\\', '/')
@@ -23,6 +25,9 @@ class SaveData(QSaveData):
         ]
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
+
+        self.last_check_for_updates = datetime.now()
+        self.last_check_for_apps_updates = datetime.now()
 
         self.start_at_launch = True
         self.minimize_to_tray = True
@@ -233,6 +238,9 @@ class SaveData(QSaveData):
             'checkForUpdates': self.check_for_updates,
             'checkForAppsUpdates': self.check_for_apps_updates,
 
+            'lastCheckForUpdates': self.last_check_for_updates.strftime(self.dateformat),
+            'lastCheckForAppsUpdates': self.last_check_for_apps_updates.strftime(self.dateformat),
+
             'startAtLaunch': self.start_at_launch,
             'minimizeToTray': self.minimize_to_tray,
 
@@ -252,6 +260,9 @@ class SaveData(QSaveData):
 
             self.check_for_updates = extra_data['checkForUpdates']
             self.check_for_apps_updates = extra_data['checkForAppsUpdates']
+
+            self.last_check_for_updates = datetime.strptime(extra_data['lastCheckForUpdates'], self.dateformat)
+            self.last_check_for_apps_updates = datetime.strptime(extra_data['lastCheckForAppsUpdates'], self.dateformat)
 
             self.start_at_launch = extra_data['startAtLaunch']
             self.minimize_to_tray = extra_data['minimizeToTray']

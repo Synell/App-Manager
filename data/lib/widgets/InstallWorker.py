@@ -5,6 +5,7 @@ from PyQt6.QtWidgets import QProgressBar, QLabel
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
 import os, zipfile, shutil, json
 from urllib.request import urlopen
+from datetime import datetime, timedelta
 
 from .InstallButton import InstallButton
 from data.lib.qtUtils import QGridFrame, QGridWidget
@@ -35,13 +36,16 @@ class InstallWorker(QThread):
             file_path = os.path.join(self.dest_path, filename)
             exclude_path = ['MACOSX', '__MACOSX']
 
-            readBytes = 0
-            chunkSize = 1024
+            read_bytes = 0
+            chunk_size = 1024
+            time = datetime.now()
+            timed_chunk = 0
+
             with urlopen(self.data.link) as r:
                 total = int(r.info()['Content-Length'])
                 with open(file_path, 'ab') as f:
                     while True:
-                        chunk = r.read(chunkSize)
+                        chunk = r.read(chunk_size)
 
                         if chunk is None:
                             continue
@@ -50,9 +54,16 @@ class InstallWorker(QThread):
                             break
 
                         f.write(chunk)
-                        readBytes += chunkSize
+                        read_bytes += chunk_size
+                        timed_chunk += chunk_size
 
-                        self.signals.download_progress_changed.emit(readBytes / total)
+                        deltatime = datetime.now() - time
+                        time = datetime.now()
+                        if deltatime >= timedelta(milliseconds = 500):
+                            print(f'download: {timed_chunk / deltatime.seconds} o/s')
+                            timed_chunk = 0
+
+                        self.signals.download_progress_changed.emit(read_bytes / total)
 
             self.signals.download_done.emit()
 
@@ -93,6 +104,7 @@ class InstallWorker(QThread):
             self.signals.install_done.emit()
 
         except Exception as e:
+            print(e)
             self.signals.failed.emit(str(e))
 
     def get_file(self) -> str|None:

@@ -3,9 +3,10 @@
     # Libraries
 from PyQt6.QtWidgets import QProgressBar, QLabel
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
-import os, zipfile, shutil, json
-from urllib.request import urlopen
-from datetime import datetime, timedelta
+import os, zipfile, shutil, json, traceback
+from urllib.request import urlopen, Request
+from datetime import timedelta
+from time import process_time
 
 from .InstallButton import InstallButton
 from data.lib.qtUtils import QGridFrame, QGridWidget
@@ -15,6 +16,8 @@ from data.lib.qtUtils import QGridFrame, QGridWidget
 class __WorkerSignals__(QObject):
         download_progress_changed = pyqtSignal(float)
         install_progress_changed = pyqtSignal(float)
+        download_speed_changed = pyqtSignal(float)
+        install_speed_changed = pyqtSignal(float)
         download_done = pyqtSignal()
         install_done = pyqtSignal()
         failed = pyqtSignal(str)
@@ -38,10 +41,10 @@ class InstallWorker(QThread):
 
             read_bytes = 0
             chunk_size = 1024
-            time = datetime.now()
+            time = process_time()
             timed_chunk = 0
 
-            with urlopen(self.data.link) as r:
+            with urlopen(Request(self.data.link, headers = {'Authorization': f'token {self.data.token}'}) if self.data.token else self.data.link) as r:
                 total = int(r.info()['Content-Length'])
                 with open(file_path, 'ab') as f:
                     while True:
@@ -57,15 +60,16 @@ class InstallWorker(QThread):
                         read_bytes += chunk_size
                         timed_chunk += chunk_size
 
-                        deltatime = datetime.now() - time
-                        time = datetime.now()
+                        deltatime = timedelta(seconds = process_time() - time)
                         if deltatime >= timedelta(milliseconds = 500):
-                            print(f'download: {timed_chunk / deltatime.seconds} o/s')
+                            self.signals.download_speed_changed.emit(timed_chunk / deltatime.total_seconds())
                             timed_chunk = 0
+                            time = process_time()
 
                         self.signals.download_progress_changed.emit(read_bytes / total)
 
             self.signals.download_done.emit()
+            self.signals.download_speed_changed.emit(-1)
 
             if not os.path.exists(self.out_path):
                 os.makedirs(self.out_path)
@@ -74,12 +78,21 @@ class InstallWorker(QThread):
 
             items = self.zipfile.infolist()
             total_n = len(items)
+            time = process_time()
+            timed_items = 0
 
             for n, item in enumerate(items, 1):
                 if not any(item.filename.startswith(p) for p in exclude_path):
                     self.zipfile.extract(item, self.out_path)
 
                 self.signals.install_progress_changed.emit(n / total_n)
+                timed_items += 1
+
+                deltatime = timedelta(seconds = process_time() - time)
+                if deltatime >= timedelta(milliseconds = 500):
+                    self.signals.install_speed_changed.emit(timed_items / deltatime.total_seconds())
+                    timed_items = 0
+                    time = process_time()
 
             self.zipfile.close()
 
@@ -102,9 +115,10 @@ class InstallWorker(QThread):
             shutil.rmtree(self.dest_path)
 
             self.signals.install_done.emit()
+            self.signals.install_speed_changed.emit(-1)
 
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
             self.signals.failed.emit(str(e))
 
     def get_file(self) -> str|None:
@@ -121,6 +135,7 @@ class Installer(QGridFrame):
     def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps'):
         super(Installer, self).__init__(parent)
 
+        self.lang = lang
         self.data = data
         self.download_folder = download_folder
         self.install_folder = install_folder
@@ -137,9 +152,9 @@ class Installer(QGridFrame):
 
         widget = QGridWidget()
 
-        label = QLabel(lang['QLabel']['download'])
-        label.setProperty('smallbrightnormal', True)
-        widget.grid_layout.addWidget(label, 0, 0)
+        self.download_label = QLabel(f'{self.lang["QLabel"]["download"]} - {self.lang["QLabel"]["waiting"]}')
+        self.download_label.setProperty('smallbrightnormal', True)
+        widget.grid_layout.addWidget(self.download_label, 0, 0)
 
         self.download_progress = QProgressBar()
         self.download_progress.setProperty('class', 'small')
@@ -154,9 +169,9 @@ class Installer(QGridFrame):
 
         widget = QGridWidget()
 
-        label = QLabel(lang['QLabel']['install'])
+        self.install_label = QLabel(f'{self.lang["QLabel"]["install"]} - {self.lang["QLabel"]["waiting"]}')
         label.setProperty('smallbrightnormal', True)
-        widget.grid_layout.addWidget(label, 0, 0)
+        widget.grid_layout.addWidget(self.install_label, 0, 0)
 
         self.install_progress = QProgressBar()
         self.install_progress.setProperty('class', 'small')
@@ -179,10 +194,22 @@ class Installer(QGridFrame):
         self.iw = InstallWorker(self.data, self.download_folder, self.install_folder)
         self.iw.signals.download_progress_changed.connect(self.download_progress_changed)
         self.iw.signals.install_progress_changed.connect(self.install_progress_changed)
+        self.iw.signals.download_speed_changed.connect(self.download_speed_changed)
+        self.iw.signals.install_speed_changed.connect(self.install_speed_changed)
         self.iw.signals.download_done.connect(self.download_done)
         self.iw.signals.install_done.connect(self.install_done)
         self.iw.signals.failed.connect(self.failed)
         self.iw.start()
+
+    def convert(self, bytes: float) -> str:
+        step_unit = 1024
+        units = ['B', 'KB', 'MB', 'GB', 'TB']
+
+        for x in units[:-1]:
+            if bytes < step_unit:
+                return f'{bytes:.2f} {x}'
+            bytes /= step_unit
+        return f'{bytes:.2f} {units[-1]}'
 
     def update_main(self):
         self.main_progress.setValue(int((self.download_progress.value() / 2) + (self.install_progress.value() / 2)))
@@ -191,6 +218,9 @@ class Installer(QGridFrame):
         self.download_progress.setValue(int(value * 100))
         self.update_main()
 
+    def download_speed_changed(self, value: float):
+        self.download_label.setText(f'{self.lang["QLabel"]["download"]} - {self.lang["QLabel"]["bytes"].replace("%s", self.convert(value)) if value >= 0 else self.lang["QLabel"]["done"]}')
+
     def download_done(self):
         self.download_progress.setValue(100)
         self.update_main()
@@ -198,6 +228,9 @@ class Installer(QGridFrame):
     def install_progress_changed(self, value: float):
         self.install_progress.setValue(int(value * 100))
         self.update_main()
+
+    def install_speed_changed(self, value: float):
+        self.install_label.setText(f'{self.lang["QLabel"]["install"]} - ' + self.lang['QLabel']['items'].replace('%s', f'{value:.1f}') if value >= 0 else self.lang['QLabel']['done'])
 
     def install_done(self):
         self.install_progress.setValue(100)

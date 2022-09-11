@@ -13,8 +13,9 @@ from data.lib.qtUtils import QGridWidget, QGridFrame
     # Class
 class InstallButton(QGridFrame):
     lang = {}
-    download_data = namedtuple('download_data', ['name', 'tag_name', 'link', 'prerelease', 'created_at'])
+    download_data = namedtuple('download_data', ['name', 'tag_name', 'link', 'prerelease', 'created_at', 'token'])
     platform = PlatformType.Windows
+    token: str = None
 
     download = pyqtSignal(download_data)
 
@@ -111,7 +112,7 @@ class InstallButton(QGridFrame):
         def better_file(files: list) -> str:
             for i in self.platform.value:
                 for j in files:
-                    if i in j: return j
+                    if i.lower() in j.lower(): return j
 
 
         files = [asset['browser_download_url'] for asset in self.data['assets'] if is_content_type(asset['content_type']) if in_platform(asset['name'].lower())]
@@ -120,7 +121,7 @@ class InstallButton(QGridFrame):
             print(better_file(files))
             self.push_button.setDisabled(True)
             self.setCursor(Qt.CursorShape.ForbiddenCursor)
-            self.download.emit(self.download_data(self.data['name'], self.data['tag_name'], better_file(files), self.data['prerelease'], self.data['created_at']))
+            self.download.emit(self.download_data(self.data['name'], self.data['tag_name'], better_file(files), self.data['prerelease'], self.data['created_at'], self.token))
         else: print('Unable to download')
 
     def set_disabled(self, b: bool) -> None:

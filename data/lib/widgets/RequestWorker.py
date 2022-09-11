@@ -12,6 +12,8 @@ class __WorkerSignals__(QObject):
     failed = pyqtSignal()
 
 class RequestWorker(QThread):
+    token: str = None
+
     def __init__(self, followed_apps: list[str] = [], app_folder: str = ''):
         super(RequestWorker, self).__init__()
         self.signals = __WorkerSignals__()
@@ -23,7 +25,7 @@ class RequestWorker(QThread):
         # installed_releases = [f'{folder}' for folder in os.listdir(self.apps_folder) if os.path.isdir(os.path.join(self.apps_folder, folder))]
 
         for app in self.followed_apps:
-            response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases')
+            response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases', headers = {'Authorization': self.token} if self.token else None)
             if response.status_code != 200: continue
             response = response.json()
             if type(response) is not list: return self.signals.failed.emit()

@@ -44,7 +44,11 @@
                                 "text": "Les téléchargements récents et en\ncours apparaîtront ici"
                             },
                             "download": "Téléchargement",
-                            "install": "Installation"
+                            "install": "Installation",
+                            "waiting": "En attente",
+                            "done": "Terminé",
+                            "bytes": "%s/s",
+                            "items": "%s éléments/s"
                         }
                     }
                 }

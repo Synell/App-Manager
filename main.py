@@ -23,6 +23,8 @@ class Application(QBaseApplication):
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
 
         InstallButton.platform = PlatformType.Windows
+        InstallButton.token = self.save_data.token
+        RequestWorker.token = self.save_data.token
 
         InstalledButton.settings_icon = self.save_data.getIcon('pushbutton/settings.png')
         InstalledButton.remove_from_list_icon = self.save_data.getIcon('popup/removeFromList.png')

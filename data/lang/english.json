@@ -44,7 +44,11 @@
                                 "text": "Recent and in-progress downloads\nwill display here"
                             },
                             "download": "Download",
-                            "install": "Install"
+                            "install": "Install",
+                            "waiting": "Waiting",
+                            "done": "Done",
+                            "bytes": "%s/s",
+                            "items": "%s packages/s"
                         }
                     }
                 }

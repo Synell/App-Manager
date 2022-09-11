@@ -34,6 +34,8 @@ class SaveData(QSaveData):
 
         self.compact_paths = 0
 
+        self.token = None
+
         super().__init__(save_path)
 
 
@@ -244,7 +246,9 @@ class SaveData(QSaveData):
             'startAtLaunch': self.start_at_launch,
             'minimizeToTray': self.minimize_to_tray,
 
-            'compactPaths': self.compact_paths
+            'compactPaths': self.compact_paths,
+
+            'token': self.token
         }
 
     def load_extra_data(self, extra_data: dict = ...) -> None:
@@ -268,6 +272,8 @@ class SaveData(QSaveData):
             self.minimize_to_tray = extra_data['minimizeToTray']
 
             self.compact_paths = extra_data['compactPaths']
+
+            self.token = extra_data['token']
 
         except: self.save()
 #----------------------------------------------------------------------

@@ -47,6 +47,7 @@ class InstallWorker(QThread):
             with urlopen(Request(self.data.link, headers = {'Authorization': f'token {self.data.token}'}) if self.data.token else self.data.link) as r:
                 total = int(r.info()['Content-Length'])
                 with open(file_path, 'ab') as f:
+                    self.signals.download_speed_changed.emit(0)
                     while True:
                         chunk = r.read(chunk_size)
 
@@ -80,6 +81,8 @@ class InstallWorker(QThread):
             total_n = len(items)
             time = process_time()
             timed_items = 0
+
+            self.signals.install_speed_changed.emit(0)
 
             for n, item in enumerate(items, 1):
                 if not any(item.filename.startswith(p) for p in exclude_path):

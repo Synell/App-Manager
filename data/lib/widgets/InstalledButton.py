@@ -37,6 +37,7 @@ class InstalledButton(QGridFrame):
             self.tag_name = data['tag_name'] if data['tag_name'] else 'Custom'
             self.command = data['command']
             self.url = data['url']
+            self.cwd = data['cwd']
             self.icon = QIconWidget(None, icon, QSize(40, 40))
             self.icon_thread = __IconWorker__(data['icon'])
             self.icon_thread.done.connect(self.icon_loaded)
@@ -207,7 +208,7 @@ class InstalledButton(QGridFrame):
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         try:
-            subprocess.Popen(rf'{self.command}', cwd = rf'{self.path}')
+            subprocess.Popen(rf'{self.command}', cwd = rf'{self.cwd}')
         except Exception as e:
             print('oof: ' + str(e)) #todo
 

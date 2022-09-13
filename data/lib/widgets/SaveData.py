@@ -1,19 +1,21 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QFrame, QCheckBox
+from PyQt6.QtWidgets import QFrame, QLabel
 from PyQt6.QtCore import Qt
 
 from .PlatformType import PlatformType
 from datetime import datetime
 import os
 
-from data.lib.qtUtils import QFiles, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QToggleButton, QNamedToggleButton
+from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QToggleButton, QNamedToggleButton, QUtilsColor
 #----------------------------------------------------------------------
 
     # Class
 class SaveData(QSaveData):
     dateformat = '%Y-%m-%d %H:%M:%S'
+    COLOR_LINK = QUtilsColor()
+
     def __init__(self, save_path: str = './data/save.dat') -> None:
         self.platform = PlatformType.Windows
         self.apps_folder = os.path.abspath('./data/apps/').replace('\\', '/')
@@ -43,7 +45,8 @@ class SaveData(QSaveData):
         return {
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png')
+            self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/interface.png')
         }, self.get_extra
 
 
@@ -211,6 +214,38 @@ class SaveData(QSaveData):
         widget.compact_paths_combobox.combo_box.setCurrentIndex(self.compact_paths)
         root_frame.grid_layout.addWidget(widget.compact_paths_combobox, 7, 0)
         root_frame.grid_layout.setAlignment(widget.compact_paths_combobox, Qt.AlignmentFlag.AlignLeft)
+
+
+        return widget
+
+
+    def settings_menu_github(self):
+        lang = self.language_data['QSettingsDialog']['QSidePanel']['github']
+        widget = QScrollableGridWidget()
+        widget.scroll_layout.setSpacing(0)
+        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        root_frame = QGridFrame()
+        root_frame.grid_layout.setSpacing(16)
+        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
+        widget.scroll_layout.addWidget(root_frame, 0, 0)
+        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['token']['title'], lang['QLabel']['token']['description'])
+        root_frame.grid_layout.addWidget(label, 0, 0)
+
+        label = QLabel(f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex};\">test</a>')
+        label.setOpenExternalLinks(True)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        label.setProperty('brightnormal', True)
+        label.setWordWrap(True)
+        root_frame.grid_layout.addWidget(label, 1, 0)
+
+        widget.token_lineedit = QNamedLineEdit(None, '', lang['QNamedLineEdit']['token'])
+        widget.token_lineedit.setFixedWidth(350)
+        root_frame.grid_layout.addWidget(widget.token_lineedit, 2, 0)
+        root_frame.grid_layout.setAlignment(widget.token_lineedit, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget

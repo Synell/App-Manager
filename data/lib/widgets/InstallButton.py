@@ -76,16 +76,17 @@ class InstallButton(QGridFrame):
 
         return widget
 
-    def install_click(self) -> None:
+
+    @staticmethod
+    def get_release(platform: PlatformType, data: dict, token: str = None) -> download_data:
         def in_platform(s: str) -> bool:
-            for i in self.platform.value:
+            for i in platform.value:
                 if i in s: return True
             return False
 
-
         def is_content_type(s: str) -> bool:
             types = []
-            match self.platform:
+            match platform:
                 case PlatformType.Windows:
                     types = [
                         'application/x-zip-compressed', # .zip
@@ -108,20 +109,25 @@ class InstallButton(QGridFrame):
                 if i == s: return True
             return False
 
-
         def better_file(files: list) -> str:
-            for i in self.platform.value:
+            for i in platform.value:
                 for j in files:
                     if i.lower() in j.lower(): return j
 
+        files = [asset['browser_download_url'] for asset in data['assets'] if is_content_type(asset['content_type']) if in_platform(asset['name'].lower())]
+        if files: return InstallButton.download_data(data['name'], data['tag_name'], better_file(files), data['prerelease'], data['created_at'], token)
 
-        files = [asset['browser_download_url'] for asset in self.data['assets'] if is_content_type(asset['content_type']) if in_platform(asset['name'].lower())]
 
-        if files:
-            print(better_file(files))
+    def install_click(self) -> None:
+        rel = InstallButton.get_release(self.platform, self.data, self.token)
+        # files = [asset['browser_download_url'] for asset in self.data['assets'] if InstallButton.is_content_type(self.platform, asset['content_type']) if InstallButton.in_platform(asset['name'].lower())]
+
+        # if files:
+        if rel:
             self.push_button.setDisabled(True)
             self.setCursor(Qt.CursorShape.ForbiddenCursor)
-            self.download.emit(self.download_data(self.data['name'], self.data['tag_name'], better_file(files), self.data['prerelease'], self.data['created_at'], self.token))
+            # self.download.emit(self.download_data(self.data['name'], self.data['tag_name'], InstallButton.better_file(self.platform, files), self.data['prerelease'], self.data['created_at'], self.token))
+            self.download.emit(rel)
         else: print('Unable to download')
 
     def set_disabled(self, b: bool) -> None:

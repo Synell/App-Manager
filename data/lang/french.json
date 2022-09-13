@@ -183,6 +183,19 @@
                         "startAtLaunch": "Démarrer au Lancement",
                         "minimizeToTray": "Minimiser dans la Barre des Tâches"
                     }
+                },
+                "github": {
+                    "title": "GitHub",
+                    "QLabel": {
+                        "token": {
+                            "title": "Jeton d'Authentification",
+                            "description": "Utilise un jeton d'authentification qui d'augmenter le nombre de requêtes autorisées."
+                        },
+                        "createToken": "Consulter la documentation pour créer un jeton d'authentification."
+                    },
+                    "QNamedLineEdit": {
+                        "token": "Jeton d'Authentification"
+                    }
                 }
             },
             "QPushButton": {

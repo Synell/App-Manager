@@ -15,7 +15,7 @@ class Application(QBaseApplication):
     BUILD = '07e6bf41'
     VERSION = 'Experimental'
 
-    COLOR_LINK = Color()
+    COLOR_LINK = QUtilsColor()
 
     def __init__(self):
         super().__init__()
@@ -41,7 +41,8 @@ class Application(QBaseApplication):
 
         self.downloads = {}
         self.uninstalls = {}
-        self.updates = []
+        self.updates = {}
+        self.is_updating = []
 
         self.install_page_worker = None
         self.install_page_buttons = [[], []]
@@ -129,7 +130,9 @@ class Application(QBaseApplication):
 
         linkColor = self.load_color(data, 'QLabel::link', 'color')
 
-        if linkColor: self.COLOR_LINK = Color(linkColor)
+        if linkColor:
+            self.COLOR_LINK = QUtilsColor(linkColor)
+            SaveData.COLOR_LINK = self.COLOR_LINK
 
         QNamedLineEdit.normal_color = self.load_color(data, 'QWidget[QNamedLineEdit=true]QLabel', 'color')
         QNamedLineEdit.hover_color = self.load_color(data, 'QWidget[QNamedLineEdit=true]QLabel[hover=true]', 'color')
@@ -502,7 +505,7 @@ class Application(QBaseApplication):
 
             case _: return
 
-        self.updates.append(rel['name'])
+        self.updates[rel['name']] = InstallButton.get_release(InstallButton.platform, rel, self.save_data.token)
         self.refresh_apps()
 
     def release_failed(self) -> None:
@@ -649,6 +652,18 @@ class Application(QBaseApplication):
 
 
 
+    def add_to_update_list(self, path: str) -> None:
+        self.app_buttons[path].init_update(self.save_data.downloads_folder)
+        self.is_updating.append(path)
+        # print(self.updates[path.split('/')[-1]], os.path.dirname(path))
+
+    def remove_from_update_list(self, path: str, success: bool) -> None:
+        if success:
+            del self.updates[path.split('/')[-1]]
+            self.is_updating.remove(path)
+
+
+
     def refresh_apps(self):
         for k in self.save_data.apps:
             for app in self.save_data.apps[k].copy():
@@ -675,19 +690,29 @@ class Application(QBaseApplication):
 
         for i, app in enumerate(self.save_data.apps[k] if k != 'all' else [*self.save_data.apps['official'], *self.save_data.apps['pre'], *self.save_data.apps['custom']]):
             name = app.split('/')[-1]
-            has_update = name in self.updates
+            has_update = name in list(self.updates.keys())
             compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
 
             if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
                 if app in app_keys:
                     b: InstalledButton = self.app_buttons[app]
                     if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
-                    if b.has_update != has_update: b.set_update(has_update)
+                    if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
 
                 else:
-                    b = InstalledButton(name, app, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'], './data/icons/questionMark.svg', False, has_update, compact_mode)
+                    b = InstalledButton(
+                        name,
+                        app,
+                        self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'],
+                        './data/icons/questionMark.svg',
+                        False,
+                        InstallButton.get_release(InstallButton.platform, self.updates[name], self.save_data.token) if has_update else None,
+                        compact_mode
+                    )
                     b.remove_from_list.connect(self.remove_from_install_list)
                     b.uninstall.connect(self.add_to_uninstall_list)
+                    b.update_app.connect(self.add_to_update_list)
+                    b.update_app_done.connect(self.remove_from_update_list)
                     self.app_buttons[app] = b
                 self.main_page.apps_widget.notebook_tabs.scroll_layout.addWidget(b, i, 0)
 
@@ -725,6 +750,10 @@ class Application(QBaseApplication):
     def close_event(self, event: QCloseEvent) -> None:
         self.window.hide()
         event.ignore() if self.save_data.minimize_to_tray else event.accept()
+
+    def exit(self) -> None:
+        if self.downloads or self.uninstalls or self.is_updating: return print('cannot exit')
+        super().exit()
 
 
 

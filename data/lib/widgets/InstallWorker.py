@@ -108,10 +108,10 @@ class InstallWorker(QThread):
             d['tag_name'] = self.data.tag_name
             d['url'] = self.data.link
             file = self.get_file()
-            d['command'] = f'"{file}"'
+            if (not ('command' in d)): d['command'] = f'"{file}"'
             d['created_at'] = self.data.created_at
-            d['icon'] = file
-            d['cwd'] = self.out_path
+            if (not ('icon' in d)): d['icon'] = file
+            if (not ('cwd' in d)): d['cwd'] = self.out_path
 
             with open(manifest, 'w', encoding = 'utf-8') as f:
                 json.dump(d, f, indent = 4, sort_keys = True, ensure_ascii = False)

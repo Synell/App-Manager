@@ -4,9 +4,10 @@
 from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
 from PyQt6.QtGui import QAction, QMouseEvent, QIcon
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize, QThread
-import subprocess, json
+import subprocess, json, os
 
 from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
+from data.lib.widgets import InstallButton, InstallWorker
 #----------------------------------------------------------------------
 
     # Class
@@ -19,9 +20,10 @@ class InstalledButton(QGridFrame):
 
     remove_from_list = pyqtSignal(str)
     update_app = pyqtSignal(str)
+    update_app_done = pyqtSignal(str, bool)
     uninstall = pyqtSignal(str)
 
-    def __init__(self, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: bool = False, compact_mode: bool = False) -> None:
+    def __init__(self, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: InstallButton.download_data = False, compact_mode: bool = False) -> None:
         super().__init__()
 
         self.name = name
@@ -30,6 +32,8 @@ class InstalledButton(QGridFrame):
         self.has_update = has_update
         self.is_disabled = disabled
         self.compact_mode = compact_mode
+        self.download_data = has_update
+        self.install_worker = None
 
         with open(f'{path}/manifest.json', 'r', encoding = 'utf-8') as file:
             data = json.load(file)
@@ -82,7 +86,7 @@ class InstalledButton(QGridFrame):
         self.grid_layout.setAlignment(self.button_group, Qt.AlignmentFlag.AlignRight)
 
 
-        self.set_update(self.has_update)
+        self.set_update(self.has_update != None)
         self.set_disabled(self.is_disabled)
 
         self.icon_thread.start()
@@ -92,8 +96,10 @@ class InstalledButton(QGridFrame):
         self.icon.icon = icon
 
 
-    def set_update(self, has_update: bool) -> None:
+    def set_update(self, has_update: bool, download_data: InstallButton.download_data = None) -> None:
         self.has_update = has_update
+        self.download_data = download_data
+        self.progress_bar.setValue(0)
         self.update_button.setVisible(self.has_update and self.release in ['official', 'prerelease'])
 
 
@@ -103,6 +109,7 @@ class InstalledButton(QGridFrame):
         self.button_group.setVisible(not disabled)
         self.setCursor(Qt.CursorShape.ArrowCursor if disabled else Qt.CursorShape.PointingHandCursor)
         self.setProperty('side', 'all' if disabled else 'all-hover')
+        self.setDisabled(disabled)
 
     def set_compact_mode(self, compact_mode: bool) -> None:
         self.compact_mode = compact_mode
@@ -214,6 +221,26 @@ class InstalledButton(QGridFrame):
 
         return super().mousePressEvent(a0)
 
+    def init_update(self, download_path: str) -> None:
+        if not self.download_data: return print('missing dl data')
+        self.set_disabled(True)
+        self.install_worker = InstallWorker(self.download_data, download_path, os.path.dirname(self.path))
+        self.install_worker.signals.download_progress_changed.connect(lambda val: self.progress_changed(val / 2))
+        self.install_worker.signals.install_progress_changed.connect(lambda val: self.progress_changed(0.5 + (val / 2)))
+        self.install_worker.signals.install_done.connect(lambda: self.progress_done(True))
+        self.install_worker.signals.failed.connect(lambda: self.progress_done(False))
+        self.install_worker.start()
+
+    def progress_changed(self, value: float) -> None:
+        self.progress_bar.setValue(int(value * 100))
+
+    def progress_done(self, success: bool) -> None:
+        self.set_disabled(False)
+        if success:
+            self.set_update(False)
+            self.download_data = None
+        self.install_worker = None
+        self.update_app_done.emit(self.path, success)
 #----------------------------------------------------------------------
 
     # Worker

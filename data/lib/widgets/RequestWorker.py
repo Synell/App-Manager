@@ -25,31 +25,34 @@ class RequestWorker(QThread):
         # installed_releases = [f'{folder}' for folder in os.listdir(self.apps_folder) if os.path.isdir(os.path.join(self.apps_folder, folder))]
 
         for app in self.followed_apps:
-            response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases', headers = {'Authorization': self.token} if self.token else None)
-            if response.status_code != 200: continue
-            response = response.json()
-            if type(response) is not list: return self.signals.failed.emit()
+            try:
+                response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases', headers = {'Authorization': self.token} if self.token else None)
+                if response.status_code != 200: continue
+                response = response.json()
+                if type(response) is not list: return self.signals.failed.emit()
 
-            name = f'{app.replace("https://github.com/", "").split("/")[-1].replace("-", " ")}'
+                name = f'{app.replace("https://github.com/", "").split("/")[-1].replace("-", " ")}'
 
-            official_release = None
-            for i in response:
-                if not i['prerelease']:
-                    i['name'] = name
-                    official_release = i
-                    break
+                official_release = None
+                for i in response:
+                    if not i['prerelease']:
+                        i['name'] = name
+                        official_release = i
+                        break
 
-            pre_release = None
-            for i in response:
-                if i['prerelease']:
-                    i['name'] = name
-                    pre_release = i
-                    break
+                pre_release = None
+                for i in response:
+                    if i['prerelease']:
+                        i['name'] = name
+                        pre_release = i
+                        break
 
-            if official_release and pre_release:
-                self.signals.received.emit(official_release)
-            elif official_release:
-                self.signals.received.emit(official_release)
-            elif pre_release:
-                self.signals.received.emit(pre_release)
+                if official_release and pre_release:
+                    self.signals.received.emit(official_release)
+                elif official_release:
+                    self.signals.received.emit(official_release)
+                elif pre_release:
+                    self.signals.received.emit(pre_release)
+            except Exception as e:
+                print(f'request error: {e}')
 #----------------------------------------------------------------------

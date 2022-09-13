@@ -183,6 +183,19 @@
                         "startAtLaunch": "Start at Launch",
                         "minimizeToTray": "Minimize in Taskbar"
                     }
+                },
+                "github": {
+                    "title": "GitHub",
+                    "QLabel": {
+                        "token": {
+                            "title": "Token",
+                            "description": "The GitHub token used to increase the rate limit."
+                        },
+                        "createToken": "Check out the documentation to learn how to create a token."
+                    },
+                    "QNamedLineEdit": {
+                        "token": "Token"
+                    }
                 }
             },
             "QPushButton": {

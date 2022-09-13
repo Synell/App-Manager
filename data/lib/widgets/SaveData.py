@@ -1,14 +1,14 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QFrame, QLabel
+from PyQt6.QtWidgets import QFrame, QLabel, QLineEdit
 from PyQt6.QtCore import Qt
 
 from .PlatformType import PlatformType
 from datetime import datetime
 import os
 
-from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QToggleButton, QNamedToggleButton, QUtilsColor
+from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor
 #----------------------------------------------------------------------
 
     # Class
@@ -46,7 +46,7 @@ class SaveData(QSaveData):
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/interface.png')
+            self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/github.png')
         }, self.get_extra
 
 
@@ -235,14 +235,16 @@ class SaveData(QSaveData):
         label = QSettingsDialog.textGroup(lang['QLabel']['token']['title'], lang['QLabel']['token']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
 
-        label = QLabel(f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex};\">test</a>')
+        label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex};\">{lang["QLabel"]["createToken"]}</a>')
         label.setOpenExternalLinks(True)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('brightnormal', True)
         label.setWordWrap(True)
         root_frame.grid_layout.addWidget(label, 1, 0)
 
-        widget.token_lineedit = QNamedLineEdit(None, '', lang['QNamedLineEdit']['token'])
+        widget.token_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit']['token'])
+        widget.token_lineedit.line_edit.setEchoMode(QLineEdit.EchoMode.Password)
+        widget.token_lineedit.setText(self.token)
         widget.token_lineedit.setFixedWidth(350)
         root_frame.grid_layout.addWidget(widget.token_lineedit, 2, 0)
         root_frame.grid_layout.setAlignment(widget.token_lineedit, Qt.AlignmentFlag.AlignLeft)
@@ -261,6 +263,8 @@ class SaveData(QSaveData):
         self.minimize_to_tray = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].minimize_to_tray_checkbox.isChecked()
 
         self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
+
+        self.token = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['github']['title']].token_lineedit.text()
 
 
     def save_extra_data(self) -> dict:

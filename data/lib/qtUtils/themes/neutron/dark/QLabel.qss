@@ -7,10 +7,6 @@ QLabel {
 	/*font-family: "Arial";*/
 }
 
-QLabel::link {
-	color: #4cff00;
-}
-
 QLabel[small=true] {
 	font-size: 12px;
 	padding-left: 4px;

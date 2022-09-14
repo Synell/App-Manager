@@ -128,7 +128,7 @@ class Application(QBaseApplication):
             self.save_data.getStyleSheet(app = self, mode = QSaveData.StyleSheetMode.Global)
         ).replace(' ', '').replace('\t', '').replace('\n', '')
 
-        linkColor = self.load_color(data, 'QLabel::link', 'color')
+        linkColor = self.load_color(data, f'QLabel[color=\'{self.window.property("color")}\']::link', 'color')
 
         if linkColor:
             self.COLOR_LINK = QUtilsColor(linkColor)

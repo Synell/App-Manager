@@ -47,11 +47,11 @@ QWidget[QNamedDoubleSpinBox=true][dark=true] QDoubleSpinBox {
 
 /* QNamedDoubleSpinBox - Blue */
 
-QWidget[color='blue'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='blue'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #1B80FC;
 }
 
-QWidget[color='blue'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='blue'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #1B80FC;
 }
 
@@ -59,11 +59,11 @@ QWidget[color='blue'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Red */
 
-QWidget[color='red'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='red'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #FC271B;
 }
 
-QWidget[color='red'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='red'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #FC271B;
 }
 
@@ -71,11 +71,11 @@ QWidget[color='red'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Green */
 
-QWidget[color='green'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='green'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #07E813;
 }
 
-QWidget[color='green'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='green'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #07E813;
 }
 
@@ -83,11 +83,11 @@ QWidget[color='green'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Yellow */
 
-QWidget[color='yellow'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='yellow'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #E8BC07;
 }
 
-QWidget[color='yellow'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='yellow'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #E8BC07;
 }
 
@@ -95,11 +95,11 @@ QWidget[color='yellow'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Magenta */
 
-QWidget[color='magenta'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='magenta'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #FC1BF1;
 }
 
-QWidget[color='magenta'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='magenta'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #FC1BF1;
 }
 
@@ -107,11 +107,11 @@ QWidget[color='magenta'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Cyan */
 
-QWidget[color='cyan'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='cyan'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #00C8D4;
 }
 
-QWidget[color='cyan'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='cyan'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #00C8D4;
 }
 
@@ -119,11 +119,11 @@ QWidget[color='cyan'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Orange */
 
-QWidget[color='orange'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='orange'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #E88307;
 }
 
-QWidget[color='orange'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='orange'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #E88307;
 }
 
@@ -131,11 +131,11 @@ QWidget[color='orange'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Pink */
 
-QWidget[color='pink'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='pink'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #E8076C;
 }
 
-QWidget[color='pink'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='pink'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #E8076C;
 }
 
@@ -143,11 +143,11 @@ QWidget[color='pink'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Lime */
 
-QWidget[color='lime'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='lime'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #6CE807;
 }
 
-QWidget[color='lime'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='lime'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #6CE807;
 }
 
@@ -155,11 +155,11 @@ QWidget[color='lime'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
 
 /* QNamedDoubleSpinBox - Turquoise */
 
-QWidget[color='turquoise'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='turquoise'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #07E8BC;
 }
 
-QWidget[color='turquoise'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='turquoise'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #07E8BC;
 }
 
@@ -167,10 +167,10 @@ QWidget[color='turquoise'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] 
 
 /* QNamedDoubleSpinBox - White */
 
-QWidget[color='white'] QWidget[QNamedDoubleSpinBox=true] QDoubleSpinBox:focus {
+QWidget[color='white'] QWidget[QNamedDoubleSpinBox=true][color='main'] QDoubleSpinBox:focus {
 	border-bottom-color: #EFEFEF;
 }
 
-QWidget[color='white'] QWidget[QNamedDoubleSpinBox=true] QLabel[focus=true] {
+QWidget[color='white'] QWidget[QNamedDoubleSpinBox=true][color='main'] QLabel[focus=true] {
 	color: #EFEFEF;
 }

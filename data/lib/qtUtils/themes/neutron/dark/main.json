@@ -6,6 +6,7 @@
         "QStatusBar",
         "QProgressBar",
         "QLabel",
+        "QLinkLabel",
         "QGroupBox",
         "QLineEdit",
         "QTextEdit",

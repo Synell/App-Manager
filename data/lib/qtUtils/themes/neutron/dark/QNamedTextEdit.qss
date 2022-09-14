@@ -48,11 +48,11 @@ QWidget[QNamedTextEdit=true][dark=true] QTextEdit {
 
 /* QNamedTextEdit - Blue */
 
-QWidget[color='blue'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='blue'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='blue'] QTextEdit:focus {
 	border-bottom-color: #1B80FC;
 }
 
-QWidget[color='blue'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='blue'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='blue'] QLabel[focus=true] {
 	color: #1B80FC;
 }
 
@@ -60,11 +60,11 @@ QWidget[color='blue'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=tr
 
 /* QNamedTextEdit - Red */
 
-QWidget[color='red'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='red'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='red'] QTextEdit:focus {
 	border-bottom-color: #FC271B;
 }
 
-QWidget[color='red'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='red'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='red'] QLabel[focus=true] {
 	color: #FC271B;
 }
 
@@ -72,11 +72,11 @@ QWidget[color='red'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=tru
 
 /* QNamedTextEdit - Green */
 
-QWidget[color='green'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='green'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='green'] QTextEdit:focus {
 	border-bottom-color: #07E813;
 }
 
-QWidget[color='green'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='green'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='green'] QLabel[focus=true] {
 	color: #07E813;
 }
 
@@ -84,11 +84,11 @@ QWidget[color='green'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=t
 
 /* QNamedTextEdit - Yellow */
 
-QWidget[color='yellow'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='yellow'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='yellow'] QTextEdit:focus {
 	border-bottom-color: #E8BC07;
 }
 
-QWidget[color='yellow'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='yellow'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='yellow'] QLabel[focus=true] {
 	color: #E8BC07;
 }
 
@@ -96,11 +96,11 @@ QWidget[color='yellow'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=
 
 /* QNamedTextEdit - Magenta */
 
-QWidget[color='magenta'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='magenta'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='magenta'] QTextEdit:focus {
 	border-bottom-color: #FC1BF1;
 }
 
-QWidget[color='magenta'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='magenta'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='magenta'] QLabel[focus=true] {
 	color: #FC1BF1;
 }
 
@@ -108,11 +108,11 @@ QWidget[color='magenta'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus
 
 /* QNamedTextEdit - Cyan */
 
-QWidget[color='cyan'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='cyan'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='cyan'] QTextEdit:focus {
 	border-bottom-color: #00C8D4;
 }
 
-QWidget[color='cyan'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='cyan'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='cyan'] QLabel[focus=true] {
 	color: #00C8D4;
 }
 
@@ -120,11 +120,11 @@ QWidget[color='cyan'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=tr
 
 /* QNamedTextEdit - Orange */
 
-QWidget[color='orange'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='orange'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='orange'] QTextEdit:focus {
 	border-bottom-color: #E88307;
 }
 
-QWidget[color='orange'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='orange'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='orange'] QLabel[focus=true] {
 	color: #E88307;
 }
 
@@ -132,11 +132,11 @@ QWidget[color='orange'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=
 
 /* QNamedTextEdit - Pink */
 
-QWidget[color='pink'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='pink'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='pink'] QTextEdit:focus {
 	border-bottom-color: #E8076C;
 }
 
-QWidget[color='pink'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='pink'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='pink'] QLabel[focus=true] {
 	color: #E8076C;
 }
 
@@ -144,11 +144,11 @@ QWidget[color='pink'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=tr
 
 /* QNamedTextEdit - Lime */
 
-QWidget[color='lime'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='lime'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='lime'] QTextEdit:focus {
 	border-bottom-color: #6CE807;
 }
 
-QWidget[color='lime'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='lime'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='lime'] QLabel[focus=true] {
 	color: #6CE807;
 }
 
@@ -156,11 +156,11 @@ QWidget[color='lime'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=tr
 
 /* QNamedTextEdit - Turquoise */
 
-QWidget[color='turquoise'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='turquoise'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='turquoise'] QTextEdit:focus {
 	border-bottom-color: #07E8BC;
 }
 
-QWidget[color='turquoise'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='turquoise'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='turquoise'] QLabel[focus=true] {
 	color: #07E8BC;
 }
 
@@ -168,10 +168,10 @@ QWidget[color='turquoise'] QWidget[QNamedTextEdit=true][color='main'] QLabel[foc
 
 /* QNamedTextEdit - White */
 
-QWidget[color='white'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus {
+QWidget[color='white'] QWidget[QNamedTextEdit=true][color='main'] QTextEdit:focus, QWidget[QNamedTextEdit=true][color='white'] QTextEdit:focus {
 	border-bottom-color: #EFEFEF;
 }
 
-QWidget[color='white'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true] {
+QWidget[color='white'] QWidget[QNamedTextEdit=true][color='main'] QLabel[focus=true], QWidget[QNamedTextEdit=true][color='white'] QLabel[focus=true] {
 	color: #EFEFEF;
 }

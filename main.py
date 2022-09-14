@@ -136,23 +136,23 @@ class Application(QBaseApplication):
 
         QNamedLineEdit.normal_color = self.load_color(data, 'QWidget[QNamedLineEdit=true]QLabel', 'color')
         QNamedLineEdit.hover_color = self.load_color(data, 'QWidget[QNamedLineEdit=true]QLabel[hover=true]', 'color')
-        QNamedLineEdit.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedLineEdit=true]QLabel[focus=true]', 'color')
+        QNamedLineEdit.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedLineEdit=true][color=\'main\']QLabel[focus=true]', 'color')
 
         QNamedTextEdit.normal_color = self.load_color(data, 'QWidget[QNamedTextEdit=true]QLabel', 'color')
         QNamedTextEdit.hover_color = self.load_color(data, 'QWidget[QNamedTextEdit=true]QLabel[hover=true]', 'color')
-        QNamedTextEdit.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedTextEdit=true]QLabel[focus=true]', 'color')
+        QNamedTextEdit.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedTextEdit=true][color=\'main\']QLabel[focus=true]', 'color')
 
         QNamedComboBox.normal_color = self.load_color(data, 'QWidget[QNamedComboBox=true]QLabel', 'color')
         QNamedComboBox.hover_color = self.load_color(data, 'QWidget[QNamedComboBox=true]QLabel[hover=true]', 'color')
-        QNamedComboBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedComboBox=true]QLabel[focus=true]', 'color')
+        QNamedComboBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedComboBox=true][color=\'main\']QLabel[focus=true]', 'color')
 
         QNamedSpinBox.normal_color = self.load_color(data, 'QWidget[QNamedSpinBox=true]QLabel', 'color')
         QNamedSpinBox.hover_color = self.load_color(data, 'QWidget[QNamedSpinBox=true]QLabel[hover=true]', 'color')
-        QNamedSpinBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedSpinBox=true]QLabel[focus=true]', 'color')
+        QNamedSpinBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedSpinBox=true][color=\'main\']QLabel[focus=true]', 'color')
 
         QNamedDoubleSpinBox.normal_color = self.load_color(data, 'QWidget[QNamedDoubleSpinBox=true]QLabel', 'color')
         QNamedDoubleSpinBox.hover_color = self.load_color(data, 'QWidget[QNamedDoubleSpinBox=true]QLabel[hover=true]', 'color')
-        QNamedDoubleSpinBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedDoubleSpinBox=true]QLabel[focus=true]', 'color')
+        QNamedDoubleSpinBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedDoubleSpinBox=true][color=\'main\']QLabel[focus=true]', 'color')
 
         QFileButton.normal_color = self.load_color(data, 'QWidget[QFileButton=true]QLabel', 'color')
         QFileButton.hover_color = self.load_color(data, 'QWidget[QFileButton=true]QLabel[hover=true]', 'color')

@@ -232,18 +232,10 @@
         "QFileDialog": {
             "locateApp": "App Manager > Localiser une Application"
         },
-        "QLoginDialog": {
-            "title": "App Manager > Connexion à GitHub",
-            "QNamedLineEdit": {
-                "username": "Nom d'utilisateur",
-                "password": "Mot de passe"
-            },
-            "QPushButton": {
-                "login": "Connexion",
-                "cancel": "Annuler"
-            },
-            "QCheckBox": {
-                "remember": "Se souvenir de moi"
+        "QMenu": {
+            "about": {
+                "Qt": "A Propos de Qt...",
+                "AppManager": "A Propos de App Manager..."
             }
         },
         "QSystemTrayIcon": {

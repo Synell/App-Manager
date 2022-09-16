@@ -53,6 +53,7 @@ class QAboutBox(QDialog):
 
         for textID in range(len(texts)):
             texts[textID].setOpenExternalLinks(True)
+            texts[textID].setWordWrap(True)
             self.right.grid_layout.addWidget(texts[textID], textID + 1, 0)
             self.right.grid_layout.setAlignment(texts[textID], Qt.AlignmentFlag.AlignTop)
 
@@ -61,7 +62,7 @@ class QAboutBox(QDialog):
         right_buttons.grid_layout.setSpacing(16)
         right_buttons.grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        button = QPushButton('Ok')
+        button = QPushButton('OK')
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.accept)
         button.setProperty('class', 'gray')

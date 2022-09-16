@@ -60,6 +60,7 @@ class Application(QBaseApplication):
         self.check_updates()
         self.refresh_apps()
 
+        self.create_about_menu()
         self.create_tray_icon()
 
         if self.save_data.check_for_apps_updates == 4: self.install_app_page_refresh_template(True)
@@ -226,8 +227,8 @@ class Application(QBaseApplication):
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
-        button.setIcon(self.save_data.getIcon('/pushbutton/user.png'))
-        button.clicked.connect(self.login)
+        button.setIcon(self.save_data.getIcon('/pushbutton/note.png'))
+        button.clicked.connect(self.about_menu_clicked)
         #button.setProperty('transparent', True)
         left_top.grid_layout.addWidget(button, 0, 0)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
@@ -717,9 +718,36 @@ class Application(QBaseApplication):
                 self.main_page.apps_widget.notebook_tabs.scroll_layout.addWidget(b, i, 0)
 
 
-    def login(self) -> None:
-        result = QLoginDialog(self.window, self.save_data.language_data['QLoginDialog'], '', '', True, True).exec()
-        print(result)
+    def create_about_menu(self) -> None:
+        self.about_menu = QMenu(self.window)
+        self.about_menu.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        act = self.about_menu.addAction(self.save_data.getIcon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.save_data.language_data['QMenu']['about']['Qt'])
+        act.triggered.connect(self.aboutQt)
+
+        act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.save_data.language_data['QMenu']['about']['AppManager'])
+        act.triggered.connect(self.about_clicked)
+
+    def about_menu_clicked(self) -> None:
+        self.about_menu.popup(QCursor.pos())
+
+    def about_clicked(self) -> None:
+        lang = self.save_data.language_data['QAbout']['AppManager']
+        supports = '\n'.join(f' • <a href=\"{link}\" style=\"color: {self.COLOR_LINK.hex};\">{name}</a>' for name, link in [
+            ('GitHub', 'https://github.com')
+        ])
+        print(type(supports))
+        QAboutBox(
+            app = self,
+            title = lang['title'],
+            logo = './data/icons/AppManager.svg',
+            texts = [
+                QLabel(lang['texts'][0]),
+                QLabel(lang['texts'][1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex};\">Synel</a>')),
+                QLabel(lang['texts'][2].replace('%s', supports)),
+                QLabel(lang['texts'][3].replace('%s', f'<a href=\"https://github.com/PERT-Maker\" style=\"color: {self.COLOR_LINK.hex};\">App Manager Github</a>'))
+            ]
+        ).exec()
 
 
     def create_tray_icon(self) -> None:
@@ -732,6 +760,7 @@ class Application(QBaseApplication):
         self.sys_tray.activated.connect(self.on_sys_tray_activated)
 
         self.sys_tray_menu = QMenu(self.window)
+        self.sys_tray_menu.setCursor(Qt.CursorShape.PointingHandCursor)
         self.sys_tray_menu.setProperty('QSystemTrayIcon', True)
         act = self.sys_tray_menu.addAction(self.save_data.getIcon('popup/exit.png'), self.save_data.language_data['QSystemTrayIcon']['QMenu']['exit'])
         act.triggered.connect(self.exit)

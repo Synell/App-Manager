@@ -223,8 +223,9 @@
             "AppManager": {
                 "title": "About App Manager",
                 "texts": [
-                    "App Manager is TODO",
-                    "App Manager was programmed by %s.",
+                    "App Manager is an open-source software that allows you to install, update and manage apps in a simple and intuitive way, without the need to use the command line and without the need to manually download and install the apps.",
+                    "App Manager was programmed by %s, is written in Python, uses Qt for the interface and is available for Windows, macOS and Linux.",
+                    "Right now, App Manager supports the installation of apps from the following sources:\n%s",
                     "Go to the %s for more information."
                 ]
             }
@@ -232,18 +233,10 @@
         "QFileDialog": {
             "locateApp": "App Manager > Locate App"
         },
-        "QLoginDialog": {
-            "title": "App Manager > Login to GitHub",
-            "QNamedLineEdit": {
-                "username": "Username",
-                "password": "Password"
-            },
-            "QPushButton": {
-                "login": "Login",
-                "cancel": "Cancel"
-            },
-            "QCheckBox": {
-                "remember": "Remember me"
+        "QMenu": {
+            "about": {
+                "Qt": "About Qt...",
+                "AppManager": "About App Manager..."
             }
         },
         "QSystemTrayIcon": {

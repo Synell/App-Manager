@@ -8,7 +8,7 @@ import traceback, shutil, os, requests
 
     # Class
 class __WorkerSignals__(QObject):
-    received = pyqtSignal(dict)
+    received = pyqtSignal(dict, str)
     failed = pyqtSignal()
 
 class RequestWorker(QThread):
@@ -48,11 +48,11 @@ class RequestWorker(QThread):
                         break
 
                 if official_release and pre_release:
-                    self.signals.received.emit(official_release)
+                    self.signals.received.emit(official_release, app)
                 elif official_release:
-                    self.signals.received.emit(official_release)
+                    self.signals.received.emit(official_release, app)
                 elif pre_release:
-                    self.signals.received.emit(pre_release)
+                    self.signals.received.emit(pre_release, app)
             except Exception as e:
-                print(f'request error: {e}')
+                print(f'Request error: {e}')
 #----------------------------------------------------------------------

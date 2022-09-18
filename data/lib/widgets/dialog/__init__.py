@@ -2,5 +2,5 @@
 
     # Libraries
 from .ChangeAppDialog import ChangeAppDialog
-from .EditProjectDialog import EditProjectDialog
+from .EditAppDialog import EditAppDialog
 #----------------------------------------------------------------------

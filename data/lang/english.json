@@ -33,6 +33,115 @@
                             },
                             "QPushButton": {
                                 "update": "Update"
+                            },
+                            "EditAppDialog": {
+                                "title": "App Manager > Edit App (%s)",
+                                "QPushButton": {
+                                    "apply": "Apply",
+                                    "cancel": "Cancel"
+                                },
+                                "QSidePanel": {
+                                    "general": {
+                                        "title": "General",
+                                        "QLabel": {
+                                            "name": {
+                                                "title": "Name",
+                                                "description": "The name of the app."
+                                            },
+                                            "version": {
+                                                "title": "Version",
+                                                "description": "The version of the app."
+                                            },
+                                            "release": {
+                                                "title": "Release",
+                                                "description": "The release type of the app.",
+                                                "official": "Official",
+                                                "pre": "Pre-Release",
+                                                "custom": "Custom"
+                                            },
+                                            "releaseDate": {
+                                                "title": "Release Date",
+                                                "description": "The release date of the app."
+                                            },
+                                            "location": {
+                                                "title": "Location",
+                                                "description": "The location of the app."
+                                            }
+                                        }
+                                    },
+                                    "advanced": {
+                                        "title": "Advanced",
+                                        "QLabel": {
+                                            "cwd": {
+                                                "title": "Current Working Directory",
+                                                "description": "The current working directory of the app."
+                                            },
+                                            "command": {
+                                                "title": "Command",
+                                                "description": "The command to run the app with (relative to the current working directory)."
+                                            }
+                                        },
+                                        "QNamedLineEdit": {
+                                            "cwd": "Current Working Directory",
+                                            "command": "Command"
+                                        },
+                                        "QFileButton": {
+                                            "cwd": {
+                                                "title": "Current Working Directory",
+                                                "dialog": "App Manager > Edit App > Current Working Directory"
+                                            }
+                                        }
+                                    },
+                                    "updates": {
+                                        "title": "Updates",
+                                        "QLabel": {
+                                            "checkForUpdates": {
+                                                "title": "Check for Updates",
+                                                "description": "How often to check for updates, depending on the general update settings."
+                                            },
+                                            "autoUpdate": {
+                                                "title": "Auto Update",
+                                                "description": "Whether to automatically update the app when an update is available."
+                                            }
+                                        },
+                                        "QNamedComboBox": {
+                                            "checkForUpdates": {
+                                                "title": "Check for Updates",
+                                                "values": {
+                                                    "never": "Never",
+                                                    "daily": "Daily",
+                                                    "weekly": "Weekly",
+                                                    "monthly": "Monthly",
+                                                    "atLaunch": "At Launch"
+                                                }
+                                                
+                                            }
+                                        },
+                                        "QToggleButton": {
+                                            "autoUpdate": "Auto Update"
+                                        }
+                                    },
+                                    "icon": {
+                                        "title": "Icon",
+                                        "QLabel": {
+                                            "icon": {
+                                                "title": "Icon",
+                                                "description": "The icon of the app."
+                                            },
+                                            "predefinedIcons": {
+                                                "title": "Predefined Icons",
+                                                "description": "A list of predefined icons available for the app."
+                                            },
+                                            "currentIcon": "Current Icon"
+                                        },
+                                        "QFileButton": {
+                                            "icon": {
+                                                "title": "Icon",
+                                                "dialog":"App Manager > Edit App > Icon"
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     },
@@ -205,8 +314,10 @@
                             "description": "Select apps to follow that will show in the install menu. These apps will also be checked for updates."
                         }
                     },
-                    "QListWidget": {
-                        "followedApps": "Followed Apps"
+                    "SettingsListNamedItem": {
+                        "QNamedLineEdit": {
+                            "url": "URL"
+                        }
                     }
                 }
             },
@@ -237,7 +348,7 @@
                 "texts": [
                     "App Manager is an open-source software that allows you to install, update and manage apps in a simple and intuitive way, without the need to use the command line or even having to manually download and install the apps.",
                     "App Manager was programmed by %s, is written in Python, uses Qt for the interface and is available for Windows, MacOS and Linux.",
-                    "Right now, App Manager only supports the installation of apps from the following sources:\n%s",
+                    "Right now, App Manager supports the installation of apps from the following sources:\n%s",
                     "Go to the %s for more information."
                 ]
             }

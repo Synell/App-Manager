@@ -106,7 +106,7 @@ class InstallWorker(QThread):
             else: d = {}
             d['release'] = 'pre' if self.data.prerelease else 'official'
             d['tag_name'] = self.data.tag_name
-            d['url'] = self.data.link
+            # d['url'] = self.data.link
             file = self.get_file()
             if (not ('command' in d)): d['command'] = f'"{file}"'
             d['created_at'] = self.data.created_at

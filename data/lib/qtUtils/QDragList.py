@@ -10,8 +10,12 @@ from .QGridFrame import QGridFrame
 
     # Class
 class QDragListItem(QGridFrame):
+    normal_cursor = Qt.CursorShape.ArrowCursor
+    drag_cursor = Qt.CursorShape.ClosedHandCursor
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.setCursor(self.normal_cursor)
 
     def mouseMoveEvent(self, event: QMouseEvent) -> None:
         if (not (event.buttons() == Qt.MouseButton.LeftButton)): return
@@ -38,6 +42,7 @@ class QDragListItem(QGridFrame):
         self.old_y = self.geometry().y()
         self.mouse_click_x = event.globalPosition().x()
         self.mouse_click_y = event.globalPosition().y()
+        self.setCursor(self.drag_cursor)
 
     def isMinimumDistanceRiched(self, event: QMouseEvent) -> bool:
         return False
@@ -61,6 +66,8 @@ class QDragListItem(QGridFrame):
         self.style().drawPrimitive(QStyle.PrimitiveElement.PE_Widget, o, p, self)
 
     def mouseReleaseEvent(self, _: QMouseEvent) -> None:
+        self.setCursor(self.normal_cursor)
+
         if self.isVertical():
             y = self.geometry().y()
             direct = ''
@@ -125,4 +132,8 @@ class QDragList(QWidget):
 
     def add_item(self, item: QDragListItem):
         self._layout.addWidget(item)
+
+    @property
+    def items(self) -> list:
+        return self.findChildren(QDragListItem)
 #----------------------------------------------------------------------

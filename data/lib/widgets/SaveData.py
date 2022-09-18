@@ -1,7 +1,8 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QFrame, QLabel, QLineEdit, QListWidget, QListWidgetItem, QAbstractItemView
+from urllib.parse import urlparse
+from PyQt6.QtWidgets import QFrame, QLabel, QLineEdit, QPushButton
 from PyQt6.QtCore import Qt
 
 from .PlatformType import PlatformType
@@ -14,7 +15,7 @@ from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScr
 
     # Class
 class SaveData(QSaveData):
-    dateformat = '%Y-%m-%d %H:%M:%S'
+    dateformat = '%Y-%m-%dT%H:%M:%SZ'
     COLOR_LINK = QUtilsColor()
 
     def __init__(self, save_path: str = './data/save.dat') -> None:
@@ -271,15 +272,18 @@ class SaveData(QSaveData):
         label = QSettingsDialog.textGroup(lang['QLabel']['followedApps']['title'], lang['QLabel']['followedApps']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
 
-        # widget.followed_apps_list = QListWidget()
-        # widget.followed_apps_list.setDragDropMode(QAbstractItemView.DragDropMode.InternalMove)
         widget.followed_apps_list = QDragList()
         root_frame.grid_layout.addWidget(widget.followed_apps_list, 1, 0)
 
-        for index, app in enumerate(self.followed_apps):
-            # widget.followed_apps_list.addItem(app)
-            # widget.followed_apps_list.item(index).setFlags(Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsDragEnabled | Qt.ItemFlag.ItemIsEditable)
-            widget.followed_apps_list.add_item(SettingsListNamedItem({}, app))
+        for app in self.followed_apps:
+            widget.followed_apps_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], app))
+
+        button = QPushButton()
+        button.setIcon(self.getIcon('pushbutton/plus.png'))
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: widget.followed_apps_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], '')))
+        root_frame.grid_layout.addWidget(button, 2, 0)
 
 
         return widget
@@ -297,6 +301,16 @@ class SaveData(QSaveData):
         self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
 
         self.token = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['github']['title']].token_lineedit.text()
+
+        self.followed_apps = [item.url for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']].followed_apps_list.items if self.valid_url(item.url)]
+
+
+    def valid_url(self, url: str) -> bool:
+        try:
+            result = urlparse(url)
+            return all([result.scheme, result.netloc])
+        except:
+            return False
 
 
     def save_extra_data(self) -> dict:

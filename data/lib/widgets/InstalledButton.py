@@ -4,10 +4,13 @@
 from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
 from PyQt6.QtGui import QAction, QMouseEvent, QIcon
 from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize, QThread
+from datetime import datetime
 import subprocess, json, os
 
 from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
 from data.lib.widgets import InstallButton, InstallWorker
+
+from .dialog import EditAppDialog
 #----------------------------------------------------------------------
 
     # Class
@@ -29,6 +32,7 @@ class InstalledButton(QGridFrame):
         self.name = name
         self.path = path
         self.lang = lang
+        self.base_icon = icon
         self.has_update = has_update
         self.is_disabled = disabled
         self.compact_mode = compact_mode
@@ -40,11 +44,12 @@ class InstalledButton(QGridFrame):
             self.release = data['release']
             self.tag_name = data['tag_name'] if data['tag_name'] else 'Custom'
             self.command = data['command']
-            self.url = data['url']
+            self.created_at = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%SZ')
             self.cwd = data['cwd']
+            self.raw_icon = data['icon']
             self.icon = QIconWidget(None, icon, QSize(40, 40))
-            self.icon_thread = __IconWorker__(data['icon'])
-            self.icon_thread.done.connect(self.icon_loaded)
+            self.check_for_updates = data['checkForUpdates']
+            self.auto_update = data['autoUpdate']
 
         self.setFixedHeight(60)
         self.setProperty('color', 'main')
@@ -89,10 +94,21 @@ class InstalledButton(QGridFrame):
         self.set_update(self.has_update != None)
         self.set_disabled(self.is_disabled)
 
-        self.icon_thread.start()
+        self.set_icon(self.raw_icon)
 
+
+    def set_icon(self, icon: str) -> None:
+        self.raw_icon = icon
+        if QIconWidget.is_file_icon(self.raw_icon):
+            self.icon.icon = self.base_icon
+            self.icon_thread = __IconWorker__(icon)
+            self.icon_thread.done.connect(self.icon_loaded)
+            self.icon_thread.start()
+        else:
+            self.icon.icon = icon
 
     def icon_loaded(self, icon: QIcon) -> None:
+        self.icon_thread = None
         self.icon.icon = icon
 
 
@@ -211,7 +227,9 @@ class InstalledButton(QGridFrame):
         subprocess.Popen(rf'explorer /select, "{path}"')
 
     def edit(self) -> None:
-        print('edit') #todo
+        edit_dialog = EditAppDialog(self, self.lang['EditAppDialog'], self.name, self.tag_name, self.release, self.created_at, self.raw_icon, self.cwd, self.command, self.path, self.check_for_updates, self.auto_update)
+        edit_dialog.refresh_app_info.connect(self.refresh_info)
+        edit_dialog.exec()
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         try:
@@ -241,6 +259,16 @@ class InstalledButton(QGridFrame):
             self.download_data = None
         self.install_worker = None
         self.update_app_done.emit(self.path, success)
+
+    def refresh_info(self):
+        with open(f'{self.path}/manifest.json', 'r', encoding = 'utf-8') as file:
+            data = json.load(file)
+            self.command = data['command']
+            self.cwd = data['cwd']
+            self.raw_icon = data['icon']
+            self.set_icon(self.raw_icon)
+            self.check_for_updates = data['checkForUpdates']
+            self.auto_update = data['autoUpdate']
 #----------------------------------------------------------------------
 
     # Worker

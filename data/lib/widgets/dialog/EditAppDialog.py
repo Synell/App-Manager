@@ -2,23 +2,27 @@
 
     # Libraries
 from PyQt6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QSize
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtSvgWidgets import QSvgWidget
-from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget
-import yaml, os
+from datetime import datetime
+from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
+import json, os
 #----------------------------------------------------------------------
 
     # Class
-class EditProjectDialog(QDialog):
+class EditAppDialog(QDialog):
     general_tab_icon = None
+    advanced_tab_icon = None
+    updates_tab_icon = None
     icon_tab_icon = None
     icon_file_button_icon = None
+    folder_file_button_icon = None
     icon_path = None
     icon_size = 64
-    refresh_projects = pyqtSignal()
+    refresh_app_info = pyqtSignal()
 
-    def __init__(self, parent = None, path: str = '', lang = {}):
+    def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True):
         super().__init__(parent)
 
         self.layout = QGridLayout()
@@ -27,9 +31,15 @@ class EditProjectDialog(QDialog):
 
         self.path = path
         self.lang = lang
-
-        with open(f'{self.path}/ProjectSettings/ProjectSettings.pylite-asset', 'r', encoding = 'utf-8') as infile:
-            self.data = yaml.load(infile, Loader = yaml.FullLoader)
+        self.name = name
+        self.tag_name = tag_name
+        self.release = release
+        self.created_at = created_at
+        self.raw_icon = raw_icon
+        self.cwd = cwd
+        self.command = command
+        self.check_for_updates = check_for_updates
+        self.auto_update = auto_update
 
         right_buttons = QGridWidget()
         right_buttons.grid_layout.setSpacing(16)
@@ -48,7 +58,7 @@ class EditProjectDialog(QDialog):
         button.setProperty('color', 'main')
         right_buttons.grid_layout.addWidget(button, 0, 1)
 
-        self.setWindowTitle(lang['title'])
+        self.setWindowTitle(lang['title'].replace('%s', name))
 
         self.frame = QGridFrame()
         self.frame.grid_layout.addWidget(right_buttons, 0, 0)
@@ -73,7 +83,12 @@ class EditProjectDialog(QDialog):
             clear_root_widget(widget)
             self.root.sidepanel.set_current_index(index)
 
-        self.tabs = {self.lang['QSidePanel']['general']['title']: self.general_tab_widget(), self.lang['QSidePanel']['icon']['title']: self.icon_tab_widget()}
+        self.tabs = {
+            self.lang['QSidePanel']['general']['title']: self.general_tab_widget(),
+            self.lang['QSidePanel']['advanced']['title']: self.advanced_tab_widget(),
+            self.lang['QSidePanel']['updates']['title']: self.updates_tab_widget(),
+            self.lang['QSidePanel']['icon']['title']: self.icon_tab_widget()
+        }
 
 
         kLst = list(self.tabs.keys())
@@ -119,10 +134,12 @@ class EditProjectDialog(QDialog):
         label = self.textGroup(lang['QLabel']['name']['title'], lang['QLabel']['name']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
 
-        self.project_name = QNamedLineEdit(name = lang['QNamedLineEdit']['name'], placeholder = self.data['EditorSettings']['name'])
-        self.project_name.setFixedWidth(int(self.project_name.sizeHint().width() * 2))
-        root_frame.grid_layout.addWidget(self.project_name, 1, 0)
-        root_frame.grid_layout.setAlignment(self.project_name, Qt.AlignmentFlag.AlignLeft)
+        app_name = QLabel(self.name)
+        app_name.setProperty('title', True)
+        app_name.setWordWrap(True)
+        app_name.setFixedHeight(app_name.sizeHint().height())
+        root_frame.grid_layout.addWidget(app_name, 1, 0)
+        root_frame.grid_layout.setAlignment(app_name, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
@@ -131,13 +148,15 @@ class EditProjectDialog(QDialog):
         root_frame.grid_layout.addWidget(frame, 2, 0)
 
 
-        label = self.textGroup(lang['QLabel']['description']['title'], lang['QLabel']['description']['description'])
+        label = self.textGroup(lang['QLabel']['version']['title'], lang['QLabel']['version']['description'])
         root_frame.grid_layout.addWidget(label, 3, 0)
 
-        self.project_description = QNamedTextEdit(name = lang['QNamedTextEdit']['description'], placeholder = self.data['EditorSettings']['description'])
-        self.project_description.setFixedWidth(int(self.project_description.sizeHint().width() * 2))
-        root_frame.grid_layout.addWidget(self.project_description, 4, 0)
-        root_frame.grid_layout.setAlignment(self.project_description, Qt.AlignmentFlag.AlignLeft)
+        app_version = QLabel(self.tag_name)
+        app_version.setProperty('title', True)
+        app_version.setWordWrap(True)
+        app_version.setFixedHeight(app_version.sizeHint().height())
+        root_frame.grid_layout.addWidget(app_version, 4, 0)
+        root_frame.grid_layout.setAlignment(app_version, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
@@ -146,13 +165,15 @@ class EditProjectDialog(QDialog):
         root_frame.grid_layout.addWidget(frame, 5, 0)
 
 
-        label = self.textGroup(lang['QLabel']['version']['title'], lang['QLabel']['version']['description'])
+        label = self.textGroup(lang['QLabel']['release']['title'], lang['QLabel']['release']['description'])
         root_frame.grid_layout.addWidget(label, 6, 0)
 
-        self.project_version = QNamedLineEdit(name = lang['QNamedLineEdit']['version'], placeholder = self.data['EditorSettings']['version'])
-        self.project_version.setFixedWidth(int(self.project_version.sizeHint().width() * 2))
-        root_frame.grid_layout.addWidget(self.project_version, 7, 0)
-        root_frame.grid_layout.setAlignment(self.project_version, Qt.AlignmentFlag.AlignLeft)
+        app_release = QLabel(lang['QLabel']['release'][self.release])
+        app_release.setProperty('title', True)
+        app_release.setWordWrap(True)
+        app_release.setFixedHeight(app_release.sizeHint().height())
+        root_frame.grid_layout.addWidget(app_release, 7, 0)
+        root_frame.grid_layout.setAlignment(app_release, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
@@ -161,15 +182,15 @@ class EditProjectDialog(QDialog):
         root_frame.grid_layout.addWidget(frame, 8, 0)
 
 
-        label = self.textGroup(lang['QLabel']['location']['title'], lang['QLabel']['location']['description'])
+        label = self.textGroup(lang['QLabel']['releaseDate']['title'], lang['QLabel']['releaseDate']['description'])
         root_frame.grid_layout.addWidget(label, 9, 0)
 
-        project_path = QLabel(self.path)
-        project_path.setProperty('title', True)
-        project_path.setWordWrap(True)
-        project_path.setFixedHeight(project_path.sizeHint().height())
-        root_frame.grid_layout.addWidget(project_path, 10, 0)
-        root_frame.grid_layout.setAlignment(project_path, Qt.AlignmentFlag.AlignLeft)
+        app_release_date = QLabel(self.created_at.strftime('%d/%m/%Y %H:%M:%S'))
+        app_release_date.setProperty('title', True)
+        app_release_date.setWordWrap(True)
+        app_release_date.setFixedHeight(app_release_date.sizeHint().height())
+        root_frame.grid_layout.addWidget(app_release_date, 10, 0)
+        root_frame.grid_layout.setAlignment(app_release_date, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
@@ -178,35 +199,110 @@ class EditProjectDialog(QDialog):
         root_frame.grid_layout.addWidget(frame, 11, 0)
 
 
-        label = self.textGroup(lang['QLabel']['lastModified']['title'], lang['QLabel']['lastModified']['description'])
+        label = self.textGroup(lang['QLabel']['location']['title'], lang['QLabel']['location']['description'])
         root_frame.grid_layout.addWidget(label, 12, 0)
 
-        project_last_modified = QLabel(self.data['EditorSettings']['lastModified'].strftime('%d/%m/%Y %H:%M:%S'))
-        project_last_modified.setProperty('title', True)
-        project_last_modified.setWordWrap(True)
-        project_last_modified.setFixedHeight(project_last_modified.sizeHint().height())
-        root_frame.grid_layout.addWidget(project_last_modified, 13, 0)
-        root_frame.grid_layout.setAlignment(project_last_modified, Qt.AlignmentFlag.AlignLeft)
+        app_location = QLabel(self.path)
+        app_location.setProperty('title', True)
+        app_location.setWordWrap(True)
+        app_location.setFixedHeight(app_location.sizeHint().height())
+        root_frame.grid_layout.addWidget(app_location, 13, 0)
+        root_frame.grid_layout.setAlignment(app_location, Qt.AlignmentFlag.AlignLeft)
 
+
+        return widget, self.general_tab_icon
+
+
+
+    def advanced_tab_widget(self):
+        lang = self.lang['QSidePanel']['advanced']
+
+        widget = QScrollableGridWidget()
+        widget.scroll_layout.setSpacing(0)
+        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        root_frame = QGridFrame()
+        root_frame.grid_layout.setSpacing(16)
+        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
+        widget.scroll_layout.addWidget(root_frame, 0, 0)
+        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+
+
+        label = self.textGroup(lang['QLabel']['cwd']['title'], lang['QLabel']['cwd']['description'])
+        root_frame.grid_layout.addWidget(label, 0, 0)
+
+        self.cwd_button = QFileButton(
+            self, lang['QFileButton']['cwd'],
+            self.cwd,
+            self.folder_file_button_icon,
+            QFiles.Dialog.ExistingDirectory
+        )
+        root_frame.grid_layout.addWidget(self.cwd_button, 1, 0)
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 14, 0)
+        root_frame.grid_layout.addWidget(frame, 2, 0)
 
 
-        label = self.textGroup(lang['QLabel']['template']['title'], lang['QLabel']['template']['description'])
-        root_frame.grid_layout.addWidget(label, 15, 0)
+        label = self.textGroup(lang['QLabel']['command']['title'], lang['QLabel']['command']['description'])
+        root_frame.grid_layout.addWidget(label, 3, 0)
 
-        project_template = QLabel(self.data['EditorSettings']['template'])
-        project_template.setProperty('title', True)
-        project_template.setWordWrap(True)
-        project_template.setFixedHeight(project_template.sizeHint().height())
-        root_frame.grid_layout.addWidget(project_template, 16, 0)
-        root_frame.grid_layout.setAlignment(project_template, Qt.AlignmentFlag.AlignLeft)
+        self.command_lineedit = QNamedLineEdit(name = lang['QNamedLineEdit']['command'], placeholder = 'null')
+        self.command_lineedit.setText(self.command)
+        root_frame.grid_layout.addWidget(self.command_lineedit, 4, 0)
 
 
-        return widget, self.general_tab_icon
+        return widget, self.advanced_tab_icon
+
+
+
+    def updates_tab_widget(self):
+        lang = self.lang['QSidePanel']['updates']
+
+        widget = QScrollableGridWidget()
+        widget.scroll_layout.setSpacing(0)
+        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        root_frame = QGridFrame()
+        root_frame.grid_layout.setSpacing(16)
+        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
+        widget.scroll_layout.addWidget(root_frame, 0, 0)
+        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+
+
+        label = self.textGroup(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
+        root_frame.grid_layout.addWidget(label, 0, 0)
+
+        self.check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForUpdates']['title'])
+        self.check_for_updates_combobox.combo_box.addItems([
+            lang['QNamedComboBox']['checkForUpdates']['values']['never'],
+            lang['QNamedComboBox']['checkForUpdates']['values']['daily'],
+            lang['QNamedComboBox']['checkForUpdates']['values']['weekly'],
+            lang['QNamedComboBox']['checkForUpdates']['values']['monthly'],
+            lang['QNamedComboBox']['checkForUpdates']['values']['atLaunch']
+        ])
+        self.check_for_updates_combobox.combo_box.setCurrentIndex(self.check_for_updates)
+        root_frame.grid_layout.addWidget(self.check_for_updates_combobox, 1, 0)
+        root_frame.grid_layout.setAlignment(self.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 2, 0)
+
+
+        label = self.textGroup(lang['QLabel']['autoUpdate']['title'], lang['QLabel']['autoUpdate']['description'])
+        root_frame.grid_layout.addWidget(label, 3, 0)
+
+        self.auto_update_checkbox = QNamedToggleButton()
+        self.auto_update_checkbox.setText(lang['QToggleButton']['autoUpdate'])
+        self.auto_update_checkbox.setChecked(self.auto_update)
+        root_frame.grid_layout.addWidget(self.auto_update_checkbox, 4, 0)
+        root_frame.grid_layout.setAlignment(self.auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        return widget, self.updates_tab_icon
 
 
 
@@ -231,15 +327,15 @@ class EditProjectDialog(QDialog):
         label = self.textGroup(lang['QLabel']['icon']['title'], lang['QLabel']['icon']['description'])
         widget.top.grid_layout.addWidget(label, 0, 0, 1, 2)
 
-        widget.top.icon_group = self.icon_with_text(self.data['EditorSettings']['icon'], lang['QLabel']['currentIcon'])
+        widget.top.icon_group = self.icon_with_text(self.raw_icon, lang['QLabel']['currentIcon'])
         widget.top.grid_layout.addWidget(widget.top.icon_group, 1, 0)
 
         self.icon_button = QFileButton(
             self, lang['QFileButton']['icon'],
-            self.data['EditorSettings']['icon'],
+            self.raw_icon,
             self.icon_file_button_icon,
             QFiles.Dialog.OpenFileName,
-            'All supported files (*.svg *.ico *.png *.jpg *.jpeg);;SVG (*.svg);;ICO (*.ico);;PNG (*.png);;JPEG (*.jpg *.jpeg)'
+            'All supported files (*.svg *.ico *.png *.jpg *.jpeg *.exe *.bat *.sh);;SVG (*.svg);;ICO (*.ico);;PNG (*.png);;JPEG (*.jpg *.jpeg);;Executable (*.exe);;Batch (*.bat);;Shell (*.sh)'
         )
         self.icon_button.path_changed.connect(self.icon_file_button_path_changed)
         self.icon_button.setMinimumWidth(int(self.icon_button.sizeHint().width() * 1.25))
@@ -272,10 +368,7 @@ class EditProjectDialog(QDialog):
 
         w = self.tabs[self.lang['QSidePanel']['icon']['title']][0]
         self.icon_button.setPath(path)
-        w.top.icon_group.grid_layout.removeWidget(w.top.icon_group.icon_widget)
-        w.top.icon_group.icon_widget = self.icon_widget(path)
-        w.top.icon_group.grid_layout.addWidget(w.top.icon_group.icon_widget, 1, 0)
-        w.top.icon_group.grid_layout.setAlignment(w.top.icon_group.icon_widget, Qt.AlignmentFlag.AlignCenter)
+        w.top.icon_group.icon_widget.icon = path
 
 
 
@@ -307,25 +400,6 @@ class EditProjectDialog(QDialog):
 
 
 
-    def icon_widget(self, icon: str = None, size: int = 40) -> QSvgWidget|QLabel:
-        if icon:
-            if os.path.isfile(icon):
-                if icon.endswith('.svg'): pixmap = QSvgWidget(icon)
-                else:
-                    pmap = QPixmap(icon).scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
-                    pixmap = QLabel()
-                    pixmap.setPixmap(pmap)
-            else:
-                pixmap = QSvgWidget()
-        else:
-            pixmap = QSvgWidget()
-
-        pixmap.setFixedSize(size, size)
-
-        return pixmap
-
-
-
     def icon_with_text(self, icon: str = None, text: str = ''):
         widget = QGridWidget()
         widget.grid_layout.setSpacing(16)
@@ -337,7 +411,7 @@ class EditProjectDialog(QDialog):
         widget.grid_layout.addWidget(label, 0, 0)
         widget.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
-        widget.icon_widget = self.icon_widget(icon)
+        widget.icon_widget = QIconWidget(None, icon, QSize(40, 40), True)
         widget.grid_layout.addWidget(widget.icon_widget, 1, 0)
         widget.grid_layout.setAlignment(widget.icon_widget, Qt.AlignmentFlag.AlignCenter)
 
@@ -348,7 +422,7 @@ class EditProjectDialog(QDialog):
 
 
     def generate_button(self, path: str = None):
-        button = self.icon_widget(path, self.icon_size)
+        button = QIconWidget(None, path, QSize(self.icon_size, self.icon_size))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('imagebutton', True)
         button.mouseReleaseEvent = lambda _: self.icon_click(os.path.abspath(path))
@@ -367,13 +441,17 @@ class EditProjectDialog(QDialog):
 
     def exec(self):
         if super().exec():
-            if self.project_name.text(): self.data['EditorSettings']['name'] = self.project_name.text()
-            if self.project_description.text(): self.data['EditorSettings']['description'] = self.project_description.text()
-            if self.project_version.text(): self.data['EditorSettings']['version'] = self.project_version.text()
-            if self.icon_button.path(): self.data['EditorSettings']['icon'] = self.icon_button.path()
+            with open(f'{self.path}/manifest.json', 'r', encoding = 'utf-8') as infile:
+                data = json.load(infile)
+            if self.cwd_button.path(): data['cwd'] = self.cwd_button.path()
+            if self.command_lineedit.text(): data['command'] = self.command_lineedit.text()
+            if self.icon_button.path(): data['icon'] = self.icon_button.path()
+            data['checkForUpdates'] = self.check_for_updates_combobox.combo_box.currentIndex()
+            data['autoUpdate'] = self.auto_update_checkbox.isChecked()
 
-            with open(f'{self.path}/ProjectSettings/ProjectSettings.pylite-asset', 'w', encoding = 'utf-8') as infile:
-                yaml.dump(self.data, infile, default_flow_style = False)
-            self.refresh_projects.emit()
+            with open(f'{self.path}/manifest.json', 'w', encoding = 'utf-8') as outfile:
+                json.dump(data, outfile, indent = 4)
+
+            self.refresh_app_info.emit()
         return None
 #----------------------------------------------------------------------

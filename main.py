@@ -17,6 +17,8 @@ class Application(QBaseApplication):
 
     COLOR_LINK = QUtilsColor()
 
+    TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
     def __init__(self):
         super().__init__()
 
@@ -34,10 +36,13 @@ class Application(QBaseApplication):
 
         ChangeAppDialog.install_app_icon = self.save_data.getIcon('pushbutton/InstallApp.png')
 
-        EditProjectDialog.general_tab_icon = self.save_data.getIcon('sidepanel/general.png', False)
-        EditProjectDialog.icon_tab_icon = self.save_data.getIcon('sidepanel/icon.png', False)
-        EditProjectDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/image.png', False)
-        EditProjectDialog.icon_path = './data/icons/sample'
+        EditAppDialog.general_tab_icon = self.save_data.getIcon('sidepanel/general.png', False)
+        EditAppDialog.advanced_tab_icon = self.save_data.getIcon('sidepanel/advanced.png', False)
+        EditAppDialog.updates_tab_icon = self.save_data.getIcon('sidepanel/updates.png', False)
+        EditAppDialog.icon_tab_icon = self.save_data.getIcon('sidepanel/icon.png', False)
+        EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/image.png', False)
+        EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/folder.png', False)
+        EditAppDialog.icon_path = './data/icons/sample'
 
         SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
 
@@ -76,7 +81,6 @@ class Application(QBaseApplication):
                     if deltatime > timedelta(weeks = 1): self.install_app_page_refresh_template(True)
                 case 3:
                     if deltatime > timedelta(weeks = 4): self.install_app_page_refresh_template(True)
-                case _: print('not time²')
 
         if self.save_data.check_for_updates == 4: self.check_updates()
         elif self.save_data.check_for_updates > 0 and self.save_data.check_for_updates < 4:
@@ -89,7 +93,6 @@ class Application(QBaseApplication):
                     if deltatime > timedelta(weeks = 1): self.check_updates()
                 case 3:
                     if deltatime > timedelta(weeks = 4): self.check_updates()
-                case _: print('not time²')
 
         self.window.setMinimumSize(int(self.primaryScreen().size().width() * (8 / 15)), int(self.primaryScreen().size().height() * (14 / 27))) # 128x71 -> 1022x568
 
@@ -461,7 +464,7 @@ class Application(QBaseApplication):
     def install_app_page_refresh_template(self, force: bool = False) -> None:
         if not self.install_page_worker: force = True
         if not force:
-            if datetime.now() < self.install_page_worker.time + timedelta(hours = 1): return print('not time')
+            if datetime.now() < self.install_page_worker.time + timedelta(hours = 1): return # Happened in the last hour
 
         if self.install_page_worker:
             if self.install_page_worker.isRunning():
@@ -471,7 +474,31 @@ class Application(QBaseApplication):
         self.clear_layout(self.install_app_page.tab_widget.official.inside.scroll_layout)
         self.clear_layout(self.install_app_page.tab_widget.pre.inside.scroll_layout)
 
-        self.install_page_worker = RequestWorker(self.save_data.followed_apps, self.save_data.apps_folder)
+        followed_apps_to_update = []
+
+        for fapp in self.save_data.followed_apps:
+            name = fapp.split('/')[-1].replace('-', ' ')
+
+            for app in self.save_data.apps['official'] + self.save_data.apps['pre']:
+                if app.split('/')[-1] == name:
+                    with open(f'{app}/manifest.json', 'r') as infile:
+                        manifest = json.load(infile)
+
+                    if manifest['checkForUpdates'] == 4: followed_apps_to_update.append(fapp)
+                    elif manifest['checkForUpdates'] > 0 and manifest['checkForUpdates'] < 4:
+                        deltatime = datetime.now() - manifest['lastCheckForUpdates']
+
+                        match manifest['checkForUpdates']:
+                            case 1:
+                                if deltatime > timedelta(days = 1): followed_apps_to_update.append(fapp)
+                            case 2:
+                                if deltatime > timedelta(weeks = 1): followed_apps_to_update.append(fapp)
+                            case 3:
+                                if deltatime > timedelta(weeks = 4): followed_apps_to_update.append(fapp)
+
+                    break
+
+        self.install_page_worker = RequestWorker(followed_apps_to_update, self.save_data.apps_folder)
         self.install_page_worker.signals.received.connect(self.release_received)
         self.install_page_worker.signals.failed.connect(self.release_failed)
         self.install_page_worker.start()
@@ -499,7 +526,7 @@ class Application(QBaseApplication):
         with open(os.path.join(self.save_data.apps_folder, rel['name'], 'manifest.json'), 'r', encoding = 'utf-8') as f:
             manifest = json.load(f)
 
-        if datetime.strptime(manifest['created_at'], '%Y-%m-%dT%H:%M:%SZ') >= datetime.strptime(rel['created_at'], '%Y-%m-%dT%H:%M:%SZ'): return
+        if datetime.strptime(manifest['created_at'], self.TIME_FORMAT) >= datetime.strptime(rel['created_at'], self.TIME_FORMAT): return
         match manifest['release']:
             case 'official':
                 if rel['prerelease']: return
@@ -638,7 +665,6 @@ class Application(QBaseApplication):
     def refresh_install_apps_list(self):
         for i in self.install_page_buttons[0] + self.install_page_buttons[1]:
             i.setVisible(self.install_app_page.top.searchbar.text().lower() in i.name.lower())
-
 
 
 

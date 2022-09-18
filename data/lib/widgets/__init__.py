@@ -9,4 +9,5 @@ from .InstallWorker import Installer, InstallWorker
 from .InstalledButton import InstalledButton
 from .UninstallWorker import UninstallWorker
 from .RequestWorker import RequestWorker
+from .SettingsListNamedItem import SettingsListNamedItem
 #----------------------------------------------------------------------

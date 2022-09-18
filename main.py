@@ -12,7 +12,7 @@ from data.lib import *
 
 
 class Application(QBaseApplication):
-    BUILD = '07e6bf41'
+    BUILD = '07e6bf94'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -38,6 +38,8 @@ class Application(QBaseApplication):
         EditProjectDialog.icon_tab_icon = self.save_data.getIcon('sidepanel/icon.png', False)
         EditProjectDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/image.png', False)
         EditProjectDialog.icon_path = './data/icons/sample'
+
+        SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
 
         self.downloads = {}
         self.uninstalls = {}
@@ -733,19 +735,18 @@ class Application(QBaseApplication):
 
     def about_clicked(self) -> None:
         lang = self.save_data.language_data['QAbout']['AppManager']
-        supports = '\n'.join(f' • <a href=\"{link}\" style=\"color: {self.COLOR_LINK.hex};\">{name}</a>' for name, link in [
+        supports = '\n'.join(f'&nbsp;&nbsp;&nbsp;• <a href=\"{link}\" style=\"color: {self.COLOR_LINK.hex};\">{name}</a>' for name, link in [
             ('GitHub', 'https://github.com')
         ])
-        print(type(supports))
         QAboutBox(
             app = self,
             title = lang['title'],
             logo = './data/icons/AppManager.svg',
             texts = [
-                QLabel(lang['texts'][0]),
-                QLabel(lang['texts'][1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex};\">Synel</a>')),
-                QLabel(lang['texts'][2].replace('%s', supports)),
-                QLabel(lang['texts'][3].replace('%s', f'<a href=\"https://github.com/PERT-Maker\" style=\"color: {self.COLOR_LINK.hex};\">App Manager Github</a>'))
+                lang['texts'][0],
+                lang['texts'][1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex};\">Synel</a>'),
+                lang['texts'][2].replace('%s', supports),
+                lang['texts'][3].replace('%s', f'<a href=\"https://github.com/App-Manager\" style=\"color: {self.COLOR_LINK.hex};\">App Manager Github</a>')
             ]
         ).exec()
 

@@ -9,6 +9,10 @@ QListWidget {
 	border: 1px solid transparent;
 }
 
+QListWidget::item {
+	height: 30px;
+}
+
 QListWidget::item:hover {
 	background-color: #16FFFFFF;
 	border-radius: 5px;

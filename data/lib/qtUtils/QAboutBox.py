@@ -13,7 +13,7 @@ from .QGridFrame import QGridFrame
 
     # Class
 class QAboutBox(QDialog):
-    def __init__(self, app: QBaseApplication = None, title: str = '', logo: str = '', texts: list[QLabel] = []):
+    def __init__(self, app: QBaseApplication = None, title: str = '', logo: str = '', texts: list[str] = []):
         super().__init__(parent = app.window)
         self.setWindowFlag(Qt.WindowType.MSWindowsFixedSizeDialogHint, True)
 
@@ -45,17 +45,18 @@ class QAboutBox(QDialog):
 
 
         text = QLabel(title)
-        text.setProperty('class', 'bold')
+        text.setProperty('h', 2)
         self.right.grid_layout.addWidget(text, 0, 0)
         self.right.grid_layout.setAlignment(text, Qt.AlignmentFlag.AlignTop)
 
         self.right.grid_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         for textID in range(len(texts)):
-            texts[textID].setOpenExternalLinks(True)
-            texts[textID].setWordWrap(True)
-            self.right.grid_layout.addWidget(texts[textID], textID + 1, 0)
-            self.right.grid_layout.setAlignment(texts[textID], Qt.AlignmentFlag.AlignTop)
+            lines = texts[textID].split('\n')
+            if len(lines) == 1: label = self.generate_label(texts[textID])
+            else: label = self.generate_label_group(lines)
+            self.right.grid_layout.addWidget(label, textID + 1, 0)
+            self.right.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignTop)
 
 
         right_buttons = QGridWidget()
@@ -79,4 +80,25 @@ class QAboutBox(QDialog):
         self.frame.setProperty('border-right', True)
 
         self._layout.addWidget(self.frame, 1, 0, 1, 2)
+        self._layout.setAlignment(self.frame, Qt.AlignmentFlag.AlignBottom)
+
+        self.right.setFixedWidth(int(self.right.sizeHint().width() * 1.5))
+
+    def generate_label(self, text: str) -> QLabel:
+        label = QLabel(text)
+        label.setOpenExternalLinks(True)
+        label.setWordWrap(True)
+        return label
+
+    def generate_label_group(self, texts: list[str]) -> QGridFrame:
+        frame = QGridFrame()
+        frame.grid_layout.setSpacing(0)
+        frame.grid_layout.setContentsMargins(0, 0, 0, 0)
+
+        for textID in range(len(texts)):
+            label = self.generate_label(texts[textID])
+            frame.grid_layout.addWidget(label, textID, 0)
+            frame.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignTop)
+
+        return frame
 #----------------------------------------------------------------------

@@ -34,4 +34,5 @@ from .QLoginWidget import QLoginWidget
 from .QLoginDialog import QLoginDialog
 from .QToggleButton import QToggleButton
 from .QNamedToggleButton import QNamedToggleButton
+from .QDragList import QDragList, QDragListItem
 #----------------------------------------------------------------------

@@ -220,12 +220,13 @@
             }
         },
         "QAbout": {
-            "App Manager": {
-                "title": "A Propos de App Manager",
+            "AppManager": {
+                "title": "A propos d'App Manager",
                 "texts": [
-                    "App Manager est TODO.",
-                    "App Manager est programmé par %s.",
-                    "Accédez au %s pour plus d'informations."
+                    "App Manager est un logiciel libre qui permet d'installer, de gérer et de mettre à jour des applications d'une manière simple et intuitive, sans l'aide d'une invite de commande ou sans avoir à télécharger et installer manuellement des applications.",
+                    "App Manager est développé par %s, écrit en Python, utilise le framework Qt pour l'interface graphique et est disponible pour Windows, MacOS et Linux.",
+                    "Pour le moment, App Manager ne supporte que les installations d'applications venant des sources suivantes:\n%s",
+                    "Allez sur le %s pour plus d'informations."
                 ]
             }
         },

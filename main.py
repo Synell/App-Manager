@@ -70,6 +70,8 @@ class Application(QBaseApplication):
         self.create_about_menu()
         self.create_tray_icon()
 
+        # self.sys_tray.showMessage('title', 'msg', QSystemTrayIcon.MessageIcon.Information, 1000) #todo: implement this with downloads
+
         if self.save_data.check_for_apps_updates == 4: self.install_app_page_refresh_template(True)
         elif self.save_data.check_for_apps_updates > 0 and self.save_data.check_for_apps_updates < 4:
             deltatime = datetime.now() - self.save_data.last_check_for_apps_updates
@@ -475,12 +477,16 @@ class Application(QBaseApplication):
         self.clear_layout(self.install_app_page.tab_widget.pre.inside.scroll_layout)
 
         followed_apps_to_update = []
+        followed_apps_not_installed = []
 
         for fapp in self.save_data.followed_apps:
             name = fapp.split('/')[-1].replace('-', ' ')
+            app_is_installed = False
 
             for app in self.save_data.apps['official'] + self.save_data.apps['pre']:
                 if app.split('/')[-1] == name:
+                    app_is_installed = True
+
                     with open(f'{app}/manifest.json', 'r') as infile:
                         manifest = json.load(infile)
 
@@ -497,8 +503,9 @@ class Application(QBaseApplication):
                                 if deltatime > timedelta(weeks = 4): followed_apps_to_update.append(fapp)
 
                     break
+            if not app_is_installed: followed_apps_not_installed.append(fapp)
 
-        self.install_page_worker = RequestWorker(followed_apps_to_update, self.save_data.apps_folder)
+        self.install_page_worker = RequestWorker(followed_apps_not_installed + followed_apps_to_update, self.save_data.apps_folder)
         self.install_page_worker.signals.received.connect(self.release_received)
         self.install_page_worker.signals.failed.connect(self.release_failed)
         self.install_page_worker.start()

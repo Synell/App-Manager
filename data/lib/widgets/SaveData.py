@@ -29,6 +29,8 @@ class SaveData(QSaveData):
         ]
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
+        self.new_apps_check_for_updates = 4
+        self.new_apps_auto_update = True
 
         self.last_check_for_updates = datetime.now()
         self.last_check_for_apps_updates = datetime.now()
@@ -46,7 +48,7 @@ class SaveData(QSaveData):
     def settings_menu_extra(self):
         return {
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates_and_startup(), f'{self.getIconsDir()}/sidepanel/updates.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.getIconsDir()}/sidepanel/updates.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/github.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.getIconsDir()}/sidepanel/followedApps.png')
@@ -105,7 +107,8 @@ class SaveData(QSaveData):
         return widget
 
 
-    def settings_menu_updates_and_startup(self):
+
+    def settings_menu_updates(self):
         lang = self.language_data['QSettingsDialog']['QSidePanel']['updates']
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
@@ -157,7 +160,46 @@ class SaveData(QSaveData):
         root_frame.grid_layout.setAlignment(widget.check_for_apps_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 5, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['newAppsCheckForUpdates']['title'], lang['QLabel']['newAppsCheckForUpdates']['description'])
+        root_frame.grid_layout.addWidget(label, 6, 0)
+
+        widget.new_apps_check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['newAppsCheckForUpdates']['title'])
+        widget.new_apps_check_for_updates_combobox.combo_box.addItems([
+            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['never'],
+            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['daily'],
+            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['weekly'],
+            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['monthly'],
+            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['atLaunch']
+        ])
+        widget.new_apps_check_for_updates_combobox.combo_box.setCurrentIndex(self.new_apps_check_for_updates)
+        root_frame.grid_layout.addWidget(widget.new_apps_check_for_updates_combobox, 7, 0)
+        root_frame.grid_layout.setAlignment(widget.new_apps_check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 8, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['newAppsAutoUpdate']['title'], lang['QLabel']['newAppsAutoUpdate']['description'])
+        root_frame.grid_layout.addWidget(label, 9, 0)
+
+        widget.new_apps_auto_update_checkbox = QNamedToggleButton()
+        widget.new_apps_auto_update_checkbox.setText(lang['QToggleButton']['newAppsAutoUpdate'])
+        widget.new_apps_auto_update_checkbox.setChecked(self.new_apps_auto_update)
+        root_frame.grid_layout.addWidget(widget.new_apps_auto_update_checkbox, 10, 0)
+        root_frame.grid_layout.setAlignment(widget.new_apps_auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
         return widget
+
 
 
     def settings_menu_interface(self):
@@ -222,6 +264,7 @@ class SaveData(QSaveData):
         return widget
 
 
+
     def settings_menu_github(self):
         lang = self.language_data['QSettingsDialog']['QSidePanel']['github']
         widget = QScrollableGridWidget()
@@ -254,6 +297,7 @@ class SaveData(QSaveData):
 
 
         return widget
+
 
 
     def settings_menu_followed_apps(self):
@@ -289,11 +333,14 @@ class SaveData(QSaveData):
         return widget
 
 
+
     def get_extra(self, extra_tabs: dict = {}):
         self.apps_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].installs_folder_button.path()
         self.downloads_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].downloads_folder_button.path()
         self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].check_for_updates_combobox.combo_box.currentIndex()
         self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
+        self.new_apps_check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].new_apps_check_for_updates_combobox.combo_box.currentIndex()
+        self.new_apps_auto_update = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].new_apps_auto_update_checkbox.isChecked()
 
         self.start_at_launch = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].start_at_launch_checkbox.isChecked()
         self.minimize_to_tray = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].minimize_to_tray_checkbox.isChecked()
@@ -303,6 +350,7 @@ class SaveData(QSaveData):
         self.token = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['github']['title']].token_lineedit.text()
 
         self.followed_apps = [item.url for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']].followed_apps_list.items if self.valid_url(item.url)]
+
 
 
     def valid_url(self, url: str) -> bool:
@@ -324,6 +372,8 @@ class SaveData(QSaveData):
 
             'checkForUpdates': self.check_for_updates,
             'checkForAppsUpdates': self.check_for_apps_updates,
+            'newAppsCheckForUpdates': self.new_apps_check_for_updates,
+            'newAppsAutoUpdate': self.new_apps_auto_update,
 
             'lastCheckForUpdates': self.last_check_for_updates.strftime(self.dateformat),
             'lastCheckForAppsUpdates': self.last_check_for_apps_updates.strftime(self.dateformat),

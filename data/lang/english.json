@@ -237,6 +237,14 @@
                         "checkForAppsUpdates": {
                             "title": "Check for Apps Updates",
                             "description": "Determines how often App Manager checks for apps updates."
+                        },
+                        "newAppsCheckForUpdates": {
+                            "title": "Check for Updates Frequency Setting for New Apps",
+                            "description": "Determines the check for updates frequency setting for new apps."
+                        },
+                        "newAppsAutoUpdate": {
+                            "title": "Auto Update Setting for New Apps",
+                            "description": "Determines the auto update setting for new apps."
                         }
                     },
                     "QNamedComboBox": {
@@ -259,7 +267,20 @@
                                 "monthly": "Monthly",
                                 "atLaunch": "At Launch"
                             }
+                        },
+                        "newAppsCheckForUpdates": {
+                            "title": "Check for Updates",
+                            "values": {
+                                "never": "Never",
+                                "daily": "Daily",
+                                "weekly": "Weekly",
+                                "monthly": "Monthly",
+                                "atLaunch": "At Launch"
+                            }
                         }
+                    },
+                    "QToggleButton": {
+                        "newAppsAutoUpdate": "Auto Update"
                     }
                 },
                 "interface": {

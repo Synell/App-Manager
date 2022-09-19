@@ -112,6 +112,8 @@ class InstallWorker(QThread):
             d['created_at'] = self.data.created_at
             if (not ('icon' in d)): d['icon'] = file
             if (not ('cwd' in d)): d['cwd'] = self.out_path
+            d['checkForUpdates'] = 4
+            d['autoUpdate'] = True
 
             with open(manifest, 'w', encoding = 'utf-8') as f:
                 json.dump(d, f, indent = 4, sort_keys = True, ensure_ascii = False)

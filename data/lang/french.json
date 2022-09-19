@@ -92,6 +92,35 @@
                                             }
                                         }
                                     },
+                                    "updates": {
+                                        "title": "Mises à Jour",
+                                        "QLabel": {
+                                            "checkForUpdates": {
+                                                "title": "Vérifier les Mises à Jour",
+                                                "description": "Fréquence de vérification des mises à jour de l'application, tout en dépendant des paramètres généraux."
+                                            },
+                                            "autoUpdate": {
+                                                "title": "Mise à Jour Automatique",
+                                                "description": "Mettre à jour automatiquement l'application lorsqu'une mise à jour est disponible."
+                                            }
+                                        },
+                                        "QNamedComboBox": {
+                                            "checkForUpdates": {
+                                                "title": "Vérifier les Mises à Jour",
+                                                "values": {
+                                                    "never": "Jamais",
+                                                    "daily": "Quotidienne",
+                                                    "weekly": "Hebdomadaire",
+                                                    "monthly": "Mensuelle",
+                                                    "atLaunch": "Au Lancement"
+                                                }
+                                                
+                                            }
+                                        },
+                                        "QToggleButton": {
+                                            "autoUpdate": "Mise à Jour Automatique"
+                                        }
+                                    },
                                     "icon": {
                                         "title": "Icône",
                                         "QLabel": {
@@ -208,6 +237,14 @@
                         "checkForAppsUpdates": {
                             "title": "Vérifier les Mises à Jour des Applications",
                             "description": "Détermine la fréquence de vérification des mises à jour des applications."
+                        },
+                        "newAppsCheckForUpdates": {
+                            "title": "Paramètre de fréquence des Mises à Jour pour les Nouvelles Applications",
+                            "description": "Détermine le paramètre de fréquence des mises à jour pour les nouvelles applications."
+                        },
+                        "newAppsAutoUpdate": {
+                            "title": "Paramètre de Mise à Jour Automatique pour les Nouvelles Applications",
+                            "description": "Détermine le paramètre de mise à jour automatique pour les nouvelles applications."
                         }
                     },
                     "QNamedComboBox": {
@@ -230,7 +267,20 @@
                                 "monthly": "Mensuelle",
                                 "atLaunch": "Au lancement"
                             }
+                        },
+                        "newAppsCheckForUpdates": {
+                            "title": "Vérifier les Mises à Jour",
+                            "values": {
+                                "never": "Jamais",
+                                "daily": "Quotidienne",
+                                "weekly": "Hebdomadaire",
+                                "monthly": "Mensuelle",
+                                "atLaunch": "Au lancement"
+                            }
                         }
+                    },
+                    "QToggleButton": {
+                        "newAppsAutoUpdate": "Mise à Jour Automatique"
                     }
                 },
                 "interface": {

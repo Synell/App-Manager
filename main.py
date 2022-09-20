@@ -18,6 +18,7 @@ class Application(QBaseApplication):
     COLOR_LINK = QUtilsColor()
 
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+    MESSAGE_DURATION = 5000
 
     def __init__(self):
         super().__init__()
@@ -69,8 +70,6 @@ class Application(QBaseApplication):
 
         self.create_about_menu()
         self.create_tray_icon()
-
-        # self.sys_tray.showMessage('title', 'msg', QSystemTrayIcon.MessageIcon.Information, 1000) #todo: implement this with downloads
 
         if self.save_data.check_for_apps_updates == 4: self.install_app_page_refresh_template(True)
         elif self.save_data.check_for_apps_updates > 0 and self.save_data.check_for_apps_updates < 4:
@@ -578,6 +577,8 @@ class Application(QBaseApplication):
 
         self.refresh_apps()
         self.save_data.save()
+
+        self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
 
     def remove_from_install_list(self, path: str):
         for i in ['official', 'pre', 'custom']:

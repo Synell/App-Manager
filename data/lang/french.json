@@ -386,6 +386,36 @@
         "QSystemTrayIcon": {
             "QMenu": {
                 "exit": "Quitter"
+            },
+            "showMessage": {
+                "goesToTray": {
+                    "title": "Minimisé dans la Barre des Tâches",
+                    "message": "App Manager est maintenant minimisé dans la barre des tâches."
+                },
+                "updateAvailable": {
+                    "title": "Mise à Jour Disponible",
+                    "message": "Une mise à jour est disponible pour App Manager."
+                },
+                "updateDone": {
+                    "title": "Mise à Jour Terminée",
+                    "message": "App Manager a été mis à jour avec succès."
+                },
+                "updateError": {
+                    "title": "Erreur de Mise à Jour",
+                    "message": "Une erreur est survenue lors de la mise à jour de App Manager.\n%s"
+                },
+                "appInstallDone": {
+                    "title": "Installation de l'Application Terminée",
+                    "message": "%s a été installée avec succès."
+                },
+                "appInstallError": {
+                    "title": "Erreur d'Installation de l'Application",
+                    "message": "Une erreur est survenue lors de l'installation de %s.\n%s"
+                },
+                "appUninstallDone": {
+                    "title": "Désinstallation de l'Application Terminée",
+                    "message": "%s a été désinstallée avec succès."
+                }
             }
         }
     }

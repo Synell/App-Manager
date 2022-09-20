@@ -386,6 +386,36 @@
         "QSystemTrayIcon": {
             "QMenu": {
                 "exit": "Exit"
+            },
+            "showMessage": {
+                "goesToTray": {
+                    "title": "Goes to Tray",
+                    "message": "App Manager is still running in the background."
+                },
+                "updateAvailable": {
+                    "title": "Update Available",
+                    "message": "An update is available."
+                },
+                "updateDone": {
+                    "title": "Update Done",
+                    "message": "The update has been successfully installed."
+                },
+                "updateError": {
+                    "title": "Update Error",
+                    "message": "An error occurred while updating.\n%s"
+                },
+                "appInstallDone": {
+                    "title": "App Install Done",
+                    "message": "%s has been successfully installed."
+                },
+                "appInstallError": {
+                    "title": "App Install Error",
+                    "message": "An error occurred while installing %s.\n%s"
+                },
+                "appUninstallDone": {
+                    "title": "App Uninstall Done",
+                    "message": "%s has been successfully uninstalled."
+                }
             }
         }
     }

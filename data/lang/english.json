@@ -392,10 +392,6 @@
                     "title": "Goes to Tray",
                     "message": "App Manager is still running in the background."
                 },
-                "updateAvailable": {
-                    "title": "Update Available",
-                    "message": "An update is available."
-                },
                 "updateDone": {
                     "title": "Update Done",
                     "message": "The update has been successfully installed."
@@ -415,6 +411,10 @@
                 "appUninstallDone": {
                     "title": "App Uninstall Done",
                     "message": "%s has been successfully uninstalled."
+                },
+                "appUninstallError": {
+                    "title": "App Uninstall Error",
+                    "message": "An error occurred while uninstalling %s.\n%s"
                 }
             }
         }

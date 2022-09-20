@@ -557,6 +557,7 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.list.scroll_layout.addWidget(iw, len(list(self.downloads.keys())), 0)
         self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)
+        iw.failed.connect(self.remove_from_download_list)
         self.downloads[f'{data.name}'] = iw
 
         # self.main_page_click()
@@ -564,7 +565,7 @@ class Application(QBaseApplication):
 
         iw.start()
 
-    def remove_from_download_list(self, name: str):
+    def remove_from_download_list(self, name: str, error: str = None) -> None:
         self.main_page.downloads_widget.list.scroll_layout.removeWidget(self.downloads[name])
         self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{self.save_data.apps_folder}/{name}')
         del self.downloads[name]
@@ -578,7 +579,10 @@ class Application(QBaseApplication):
         self.refresh_apps()
         self.save_data.save()
 
-        self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+        if error:
+            if self.save_data.app_install_error_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallError']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallError']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
+        else:
+            if self.save_data.app_install_done_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
 
     def remove_from_install_list(self, path: str):
         for i in ['official', 'pre', 'custom']:
@@ -590,13 +594,21 @@ class Application(QBaseApplication):
         self.remove_from_install_list(path)
         self.uninstalls[path] = UninstallWorker(path)
         self.uninstalls[path].signals.done.connect(self.remove_from_uninstall_list)
+        self.uninstalls[path].signals.failed.connect(self.remove_from_uninstall_list)
         self.uninstalls[path].start()
 
-    def remove_from_uninstall_list(self, path: str):
+    def remove_from_uninstall_list(self, path: str, error: str = None):
         self.uninstalls[path].exit()
         del self.uninstalls[path]
         self.refresh_apps()
         self.install_app_page_refresh_buttons()
+
+        name = path.split('/')[-1]
+
+        if error:
+            if self.save_data.app_uninstall_error_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallError']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallError']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
+        else:
+            if self.save_data.app_uninstall_done_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
 
 
 
@@ -813,7 +825,12 @@ class Application(QBaseApplication):
 
     def close_event(self, event: QCloseEvent) -> None:
         self.window.hide()
-        event.ignore() if self.save_data.minimize_to_tray else event.accept()
+
+        if self.save_data.minimize_to_tray:
+            event.ignore()
+            if self.save_data.goes_to_tray_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+        else:
+            event.accept()
 
     def exit(self) -> None:
         if self.downloads or self.uninstalls or self.is_updating: return print('cannot exit')

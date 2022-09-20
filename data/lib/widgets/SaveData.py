@@ -40,6 +40,14 @@ class SaveData(QSaveData):
 
         self.compact_paths = 0
 
+        self.goes_to_tray_message = True
+        self.update_done_message = True
+        self.update_error_message = True
+        self.app_install_done_message = True
+        self.app_install_error_message = True
+        self.app_uninstall_done_message = True
+        self.app_uninstall_error_message = True #todo: add this to the settings (on a new page)
+
         self.token = None
 
         super().__init__(save_path)

@@ -392,10 +392,6 @@
                     "title": "Minimisé dans la Barre des Tâches",
                     "message": "App Manager est maintenant minimisé dans la barre des tâches."
                 },
-                "updateAvailable": {
-                    "title": "Mise à Jour Disponible",
-                    "message": "Une mise à jour est disponible pour App Manager."
-                },
                 "updateDone": {
                     "title": "Mise à Jour Terminée",
                     "message": "App Manager a été mis à jour avec succès."
@@ -415,6 +411,10 @@
                 "appUninstallDone": {
                     "title": "Désinstallation de l'Application Terminée",
                     "message": "%s a été désinstallée avec succès."
+                },
+                "appUninstallError": {
+                    "title": "Erreur de Désinstallation de l'Application",
+                    "message": "Une erreur est survenue lors de la désinstallation de %s.\n%s"
                 }
             }
         }

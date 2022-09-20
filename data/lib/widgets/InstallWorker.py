@@ -20,7 +20,7 @@ class __WorkerSignals__(QObject):
         install_speed_changed = pyqtSignal(float)
         download_done = pyqtSignal()
         install_done = pyqtSignal()
-        failed = pyqtSignal(str)
+        install_failed = pyqtSignal(str)
 
 class InstallWorker(QThread):
     def __init__(self, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps'):
@@ -125,7 +125,7 @@ class InstallWorker(QThread):
 
         except Exception as e:
             print(traceback.format_exc())
-            self.signals.failed.emit(str(e))
+            self.signals.install_failed.emit(str(e))
 
     def get_file(self) -> str|None:
         for format in ['exe', 'bat']:
@@ -137,8 +137,9 @@ class InstallWorker(QThread):
 
 class Installer(QGridFrame):
     done = pyqtSignal(str)
+    failed = pyqtSignal(str, str)
 
-    def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps'):
+    def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps') -> None:
         super(Installer, self).__init__(parent)
 
         self.lang = lang
@@ -196,7 +197,7 @@ class Installer(QGridFrame):
         self.setProperty('side', 'all')
 
 
-    def start(self):
+    def start(self) -> None:
         self.iw = InstallWorker(self.data, self.download_folder, self.install_folder)
         self.iw.signals.download_progress_changed.connect(self.download_progress_changed)
         self.iw.signals.install_progress_changed.connect(self.install_progress_changed)
@@ -204,7 +205,7 @@ class Installer(QGridFrame):
         self.iw.signals.install_speed_changed.connect(self.install_speed_changed)
         self.iw.signals.download_done.connect(self.download_done)
         self.iw.signals.install_done.connect(self.install_done)
-        self.iw.signals.failed.connect(self.failed)
+        self.iw.signals.install_failed.connect(self.install_failed)
         self.iw.start()
 
     def convert(self, bytes: float) -> str:
@@ -217,32 +218,32 @@ class Installer(QGridFrame):
             bytes /= step_unit
         return f'{bytes:.2f} {units[-1]}'
 
-    def update_main(self):
+    def update_main(self) -> None:
         self.main_progress.setValue(int((self.download_progress.value() / 2) + (self.install_progress.value() / 2)))
 
-    def download_progress_changed(self, value: float):
+    def download_progress_changed(self, value: float) -> None:
         self.download_progress.setValue(int(value * 100))
         self.update_main()
 
-    def download_speed_changed(self, value: float):
+    def download_speed_changed(self, value: float) -> None:
         self.download_label.setText(f'{self.lang["QLabel"]["download"]} - {self.lang["QLabel"]["bytes"].replace("%s", self.convert(value)) if value >= 0 else self.lang["QLabel"]["done"]}')
 
-    def download_done(self):
+    def download_done(self) -> None:
         self.download_progress.setValue(100)
         self.update_main()
 
-    def install_progress_changed(self, value: float):
+    def install_progress_changed(self, value: float) -> None:
         self.install_progress.setValue(int(value * 100))
         self.update_main()
 
-    def install_speed_changed(self, value: float):
+    def install_speed_changed(self, value: float) -> None:
         self.install_label.setText(f'{self.lang["QLabel"]["install"]} - ' + self.lang['QLabel']['items'].replace('%s', f'{value:.1f}') if value >= 0 else self.lang['QLabel']['done'])
 
-    def install_done(self):
+    def install_done(self) -> None:
         self.install_progress.setValue(100)
         self.update_main()
         self.done.emit(f'{self.data.name}')
 
-    def failed(self, message):
-        self.done.emit(f'{self.data.name}')
+    def install_failed(self, message: str) -> None:
+        self.failed.emit(f'{self.data.name}', message)
 #----------------------------------------------------------------------

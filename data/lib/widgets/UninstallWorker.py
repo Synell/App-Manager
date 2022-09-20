@@ -8,7 +8,7 @@ import traceback, shutil, os
     # Class
 class __WorkerSignals__(QObject):
         done = pyqtSignal(str)
-        failed = pyqtSignal(str)
+        failed = pyqtSignal(str, str)
 
 class UninstallWorker(QThread):
     def __init__(self, path: str = None):
@@ -23,5 +23,5 @@ class UninstallWorker(QThread):
             self.signals.done.emit(self.path)
 
         except Exception as e:
-            self.signals.failed.emit(str(e))
+            self.signals.failed.emit(self.path, str(e))
 #----------------------------------------------------------------------

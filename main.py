@@ -580,9 +580,9 @@ class Application(QBaseApplication):
         self.save_data.save()
 
         if error:
-            if self.save_data.app_install_error_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallError']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallError']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
+            if self.save_data.app_install_failed_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
         else:
-            if self.save_data.app_install_done_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            if self.save_data.app_install_done_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
 
     def remove_from_install_list(self, path: str):
         for i in ['official', 'pre', 'custom']:
@@ -606,9 +606,9 @@ class Application(QBaseApplication):
         name = path.split('/')[-1]
 
         if error:
-            if self.save_data.app_uninstall_error_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallError']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallError']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
+            if self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
         else:
-            if self.save_data.app_uninstall_done_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            if self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
 
 
 
@@ -828,7 +828,7 @@ class Application(QBaseApplication):
 
         if self.save_data.minimize_to_tray:
             event.ignore()
-            if self.save_data.goes_to_tray_message: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            if self.save_data.goes_to_tray_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
         else:
             event.accept()
 

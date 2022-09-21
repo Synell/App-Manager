@@ -246,7 +246,7 @@ class InstalledButton(QGridFrame):
         self.install_worker.signals.download_progress_changed.connect(lambda val: self.progress_changed(val / 2))
         self.install_worker.signals.install_progress_changed.connect(lambda val: self.progress_changed(0.5 + (val / 2)))
         self.install_worker.signals.install_done.connect(lambda: self.progress_done(True))
-        self.install_worker.signals.failed.connect(lambda: self.progress_done(False))
+        self.install_worker.signals.install_failed.connect(lambda: self.progress_done(False))
         self.install_worker.start()
 
     def progress_changed(self, value: float) -> None:

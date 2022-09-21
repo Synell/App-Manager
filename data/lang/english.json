@@ -314,6 +314,48 @@
                         "minimizeToTray": "Minimize in Taskbar"
                     }
                 },
+                "notification": {
+                    "title": "Notification",
+                    "QLabel": {
+                        "goesToTray": {
+                            "title": "Goes to Tray Notification",
+                            "description": "Determines if a notification will be sent when the app goes to the tray."
+                        },
+                        "updateDone": {
+                            "title": "Update Done Notification",
+                            "description": "Determines if a notification will be sent when an update is done."
+                        },
+                        "updateFailed": {
+                            "title": "Update Failed Notification",
+                            "description": "Determines if a notification will be sent when an update fails."
+                        },
+                        "appInstallDone": {
+                            "title": "App Install Done Notification",
+                            "description": "Determines if a notification will be sent when an app install is done."
+                        },
+                        "appInstallFailed": {
+                            "title": "App Install Failed Notification",
+                            "description": "Determines if a notification will be sent when an app install fails."
+                        },
+                        "appUninstallDone": {
+                            "title": "App Uninstall Done Notification",
+                            "description": "Determines if a notification will be sent when an app uninstall is done."
+                        },
+                        "appUninstallFailed": {
+                            "title": "App Uninstall Failed Notification",
+                            "description": "Determines if a notification will be sent when an app uninstall fails."
+                        }
+                    },
+                    "QToggleButton": {
+                        "goesToTray": "Goes to Tray",
+                        "updateDone": "Update Done",
+                        "updateFailed": "Update Failed",
+                        "appInstallDone": "App Install Done",
+                        "appInstallFailed": "App Install Failed",
+                        "appUninstallDone": "App Uninstall Done",
+                        "appUninstallFailed": "App Uninstall Failed"
+                    }
+                },
                 "github": {
                     "title": "GitHub",
                     "QLabel": {
@@ -404,16 +446,16 @@
                     "title": "App Install Done",
                     "message": "%s has been successfully installed."
                 },
-                "appInstallError": {
-                    "title": "App Install Error",
+                "appInstallFailed": {
+                    "title": "App Install Failed",
                     "message": "An error occurred while installing %s.\n%s"
                 },
                 "appUninstallDone": {
                     "title": "App Uninstall Done",
                     "message": "%s has been successfully uninstalled."
                 },
-                "appUninstallError": {
-                    "title": "App Uninstall Error",
+                "appUninstallFailed": {
+                    "title": "App Uninstall Failed",
                     "message": "An error occurred while uninstalling %s.\n%s"
                 }
             }

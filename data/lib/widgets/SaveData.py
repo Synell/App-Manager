@@ -30,7 +30,7 @@ class SaveData(QSaveData):
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
         self.new_apps_check_for_updates = 4
-        self.new_apps_auto_update = True
+        self.new_apps_auto_update = True # TODO: Implement this functionallity
 
         self.last_check_for_updates = datetime.now()
         self.last_check_for_apps_updates = datetime.now()
@@ -40,15 +40,15 @@ class SaveData(QSaveData):
 
         self.compact_paths = 0
 
-        self.goes_to_tray_message = True
-        self.update_done_message = True
-        self.update_error_message = True
-        self.app_install_done_message = True
-        self.app_install_error_message = True
-        self.app_uninstall_done_message = True
-        self.app_uninstall_error_message = True #todo: add this to the settings (on a new page)
-
         self.token = None
+
+        self.goes_to_tray_notif = True
+        self.update_done_notif = True # TODO: Implement this functionallity
+        self.update_failed_notif = True # TODO: Implement this functionallity
+        self.app_install_done_notif = True
+        self.app_install_failed_notif = True
+        self.app_uninstall_done_notif = True
+        self.app_uninstall_failed_notif = True
 
         super().__init__(save_path)
 
@@ -58,6 +58,7 @@ class SaveData(QSaveData):
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.getIconsDir()}/sidepanel/updates.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.getIconsDir()}/sidepanel/interface.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/github.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.getIconsDir()}/sidepanel/followedApps.png')
         }, self.get_extra
@@ -273,6 +274,129 @@ class SaveData(QSaveData):
 
 
 
+    def settings_menu_notification(self):
+        lang = self.language_data['QSettingsDialog']['QSidePanel']['notification']
+        widget = QScrollableGridWidget()
+        widget.scroll_layout.setSpacing(0)
+        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        root_frame = QGridFrame()
+        root_frame.grid_layout.setSpacing(16)
+        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
+        widget.scroll_layout.addWidget(root_frame, 0, 0)
+        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['goesToTray']['title'], lang['QLabel']['goesToTray']['description'])
+        root_frame.grid_layout.addWidget(label, 0, 0)
+
+        widget.goes_to_tray_notif_checkbox = QNamedToggleButton()
+        widget.goes_to_tray_notif_checkbox.setText(lang['QToggleButton']['goesToTray'])
+        widget.goes_to_tray_notif_checkbox.setChecked(self.goes_to_tray_notif)
+        root_frame.grid_layout.addWidget(widget.goes_to_tray_notif_checkbox, 1, 0)
+        root_frame.grid_layout.setAlignment(widget.goes_to_tray_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 2, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['updateDone']['title'], lang['QLabel']['updateDone']['description'])
+        root_frame.grid_layout.addWidget(label, 3, 0)
+
+        widget.update_done_notif_checkbox = QNamedToggleButton()
+        widget.update_done_notif_checkbox.setText(lang['QToggleButton']['updateDone'])
+        widget.update_done_notif_checkbox.setChecked(self.update_done_notif)
+        root_frame.grid_layout.addWidget(widget.update_done_notif_checkbox, 4, 0)
+        root_frame.grid_layout.setAlignment(widget.update_done_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 5, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['updateFailed']['title'], lang['QLabel']['updateFailed']['description'])
+        root_frame.grid_layout.addWidget(label, 6, 0)
+
+        widget.update_failed_notif_checkbox = QNamedToggleButton()
+        widget.update_failed_notif_checkbox.setText(lang['QToggleButton']['updateFailed'])
+        widget.update_failed_notif_checkbox.setChecked(self.update_failed_notif)
+        root_frame.grid_layout.addWidget(widget.update_failed_notif_checkbox, 7, 0)
+        root_frame.grid_layout.setAlignment(widget.update_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 8, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['appInstallDone']['title'], lang['QLabel']['appInstallDone']['description'])
+        root_frame.grid_layout.addWidget(label, 9, 0)
+
+        widget.app_install_done_notif_checkbox = QNamedToggleButton()
+        widget.app_install_done_notif_checkbox.setText(lang['QToggleButton']['appInstallDone'])
+        widget.app_install_done_notif_checkbox.setChecked(self.app_install_done_notif)
+        root_frame.grid_layout.addWidget(widget.app_install_done_notif_checkbox, 10, 0)
+        root_frame.grid_layout.setAlignment(widget.app_install_done_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 11, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['appInstallFailed']['title'], lang['QLabel']['appInstallFailed']['description'])
+        root_frame.grid_layout.addWidget(label, 12, 0)
+
+        widget.app_install_failed_notif_checkbox = QNamedToggleButton()
+        widget.app_install_failed_notif_checkbox.setText(lang['QToggleButton']['appInstallFailed'])
+        widget.app_install_failed_notif_checkbox.setChecked(self.app_install_failed_notif)
+        root_frame.grid_layout.addWidget(widget.app_install_failed_notif_checkbox, 13, 0)
+        root_frame.grid_layout.setAlignment(widget.app_install_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 14, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['appUninstallDone']['title'], lang['QLabel']['appUninstallDone']['description'])
+        root_frame.grid_layout.addWidget(label, 15, 0)
+
+        widget.app_uninstall_done_notif_checkbox = QNamedToggleButton()
+        widget.app_uninstall_done_notif_checkbox.setText(lang['QToggleButton']['appUninstallDone'])
+        widget.app_uninstall_done_notif_checkbox.setChecked(self.app_uninstall_done_notif)
+        root_frame.grid_layout.addWidget(widget.app_uninstall_done_notif_checkbox, 16, 0)
+        root_frame.grid_layout.setAlignment(widget.app_uninstall_done_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 17, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['appUninstallFailed']['title'], lang['QLabel']['appUninstallFailed']['description'])
+        root_frame.grid_layout.addWidget(label, 18, 0)
+
+        widget.app_uninstall_failed_notif_checkbox = QNamedToggleButton()
+        widget.app_uninstall_failed_notif_checkbox.setText(lang['QToggleButton']['appUninstallFailed'])
+        widget.app_uninstall_failed_notif_checkbox.setChecked(self.app_uninstall_failed_notif)
+        root_frame.grid_layout.addWidget(widget.app_uninstall_failed_notif_checkbox, 19, 0)
+        root_frame.grid_layout.setAlignment(widget.app_uninstall_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        return widget
+
+
+
     def settings_menu_github(self):
         lang = self.language_data['QSettingsDialog']['QSidePanel']['github']
         widget = QScrollableGridWidget()
@@ -359,6 +483,14 @@ class SaveData(QSaveData):
 
         self.followed_apps = [item.url for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']].followed_apps_list.items if self.valid_url(item.url)]
 
+        self.goes_to_tray_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].goes_to_tray_notif_checkbox.isChecked()
+        self.update_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_done_notif_checkbox.isChecked()
+        self.update_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_failed_notif_checkbox.isChecked()
+        self.app_install_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_done_notif_checkbox.isChecked()
+        self.app_install_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_failed_notif_checkbox.isChecked()
+        self.app_uninstall_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_done_notif_checkbox.isChecked()
+        self.app_uninstall_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_failed_notif_checkbox.isChecked()
+
 
 
     def valid_url(self, url: str) -> bool:
@@ -391,7 +523,15 @@ class SaveData(QSaveData):
 
             'compactPaths': self.compact_paths,
 
-            'token': self.token
+            'token': self.token,
+
+            'goesToTrayNotif': self.goes_to_tray_notif,
+            'updateDoneNotif': self.update_done_notif,
+            'updateFailedNotif': self.update_failed_notif,
+            'appInstallDoneNotif': self.app_install_done_notif,
+            'appInstallFailedNotif': self.app_install_failed_notif,
+            'appUninstallDoneNotif': self.app_uninstall_done_notif,
+            'appUninstallFailedNotif': self.app_uninstall_failed_notif
         }
 
     def load_extra_data(self, extra_data: dict = ...) -> None:
@@ -417,6 +557,14 @@ class SaveData(QSaveData):
             self.compact_paths = extra_data['compactPaths']
 
             self.token = extra_data['token']
+
+            self.goes_to_tray_notif = extra_data['goesToTrayNotif']
+            self.update_done_notif = extra_data['updateDoneNotif']
+            self.update_failed_notif = extra_data['updateFailedNotif']
+            self.app_install_done_notif = extra_data['appInstallDoneNotif']
+            self.app_install_failed_notif = extra_data['appInstallFailedNotif']
+            self.app_uninstall_done_notif = extra_data['appUninstallDoneNotif']
+            self.app_uninstall_failed_notif = extra_data['appUninstallFailedNotif']
 
         except: self.save()
 #----------------------------------------------------------------------

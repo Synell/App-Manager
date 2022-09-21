@@ -314,6 +314,48 @@
                         "minimizeToTray": "Minimiser dans la Barre des Tâches"
                     }
                 },
+                "notification": {
+                    "title": "Notification",
+                    "QLabel": {
+                        "goesToTray": {
+                            "title": "Notification de Minimisation dans la Barre des Tâches",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'il est minimisé dans la barre des tâches."
+                        },
+                        "updateDone": {
+                            "title": "Notification de Mise à Jour Terminée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une mise à jour est terminée."
+                        },
+                        "updateFailed": {
+                            "title": "Notification de Mise à Jour Échouée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une mise à jour échoue."
+                        },
+                        "appInstallDone": {
+                            "title": "Notification d'Installation d'Application Terminée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une installation d'application est terminée."
+                        },
+                        "appInstallFailed": {
+                            "title": "Notification d'Installation d'Application Échouée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une installation d'application échoue."
+                        },
+                        "appUninstallDone": {
+                            "title": "Notification de Désinstallation d'Application Terminée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une désinstallation d'application est terminée."
+                        },
+                        "appUninstallFailed": {
+                            "title": "Notification de Désinstallation d'Application Échouée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une désinstallation d'application échoue."
+                        }
+                    },
+                    "QToggleButton": {
+                        "goesToTray": "Minimiser dans la Barre des Tâches",
+                        "updateDone": "Mise à Jour Terminée",
+                        "updateFailed": "Mise à Jour Échouée",
+                        "appInstallDone": "Installation d'Application Terminée",
+                        "appInstallFailed": "Installation d'Application Échouée",
+                        "appUninstallDone": "Désinstallation d'Application Terminée",
+                        "appUninstallFailed": "Désinstallation d'Application Échouée"
+                    }
+                },
                 "github": {
                     "title": "GitHub",
                     "QLabel": {

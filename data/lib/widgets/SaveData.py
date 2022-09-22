@@ -58,7 +58,7 @@ class SaveData(QSaveData):
             self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.getIconsDir()}/sidepanel/updates.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.getIconsDir()}/sidepanel/interface.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.getIconsDir()}/sidepanel/notification.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/github.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.getIconsDir()}/sidepanel/followedApps.png')
         }, self.get_extra

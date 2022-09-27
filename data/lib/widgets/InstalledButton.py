@@ -67,9 +67,6 @@ class InstalledButton(QGridFrame):
         self.grid_layout.setAlignment(self.progress_bar, Qt.AlignmentFlag.AlignRight)
 
 
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.setProperty('side', 'all-hover')
-
         self.update_button = QPushButton()
         self.update_button.setText(lang['QPushButton']['update'])
         self.update_button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -117,6 +114,8 @@ class InstalledButton(QGridFrame):
         self.download_data = download_data
         self.progress_bar.setValue(0)
         self.update_button.setVisible(self.has_update and self.release in ['official', 'prerelease'])
+
+        if self.auto_update and self.has_update: self.update_app.emit(self.path)
 
 
     def set_disabled(self, disabled: bool) -> None:

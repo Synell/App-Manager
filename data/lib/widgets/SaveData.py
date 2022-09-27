@@ -30,7 +30,7 @@ class SaveData(QSaveData):
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
         self.new_apps_check_for_updates = 4
-        self.new_apps_auto_update = True # TODO: Implement this functionallity
+        self.new_apps_auto_update = True
 
         self.last_check_for_updates = datetime.now()
         self.last_check_for_apps_updates = datetime.now()

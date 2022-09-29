@@ -397,11 +397,23 @@ class Application(QBaseApplication):
         self.install_app_page.top.grid_layout.addWidget(label, 0, 0)
         self.install_app_page.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignTop)
 
+        frame = QGridFrame()
+        frame.grid_layout.setSpacing(20)
+        frame.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.top.grid_layout.addWidget(frame, 1, 1)
+        self.install_app_page.top.grid_layout.setAlignment(frame, Qt.AlignmentFlag.AlignRight)
+
+        button = QPushButton()
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setIcon(self.save_data.getIcon('pushbutton/refresh.png'))
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: self.install_app_page_refresh_template(True))
+        frame.grid_layout.addWidget(button, 0, 0)
+
         self.install_app_page.top.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
         self.install_app_page.top.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['installAppPage']['QLineEdit']['search'])
         self.install_app_page.top.searchbar.textChanged.connect(self.refresh_install_apps_list)
-        self.install_app_page.top.grid_layout.addWidget(self.install_app_page.top.searchbar, 1, 1)
-        self.install_app_page.top.grid_layout.setAlignment(self.install_app_page.top.searchbar, Qt.AlignmentFlag.AlignRight)
+        frame.grid_layout.addWidget(self.install_app_page.top.searchbar, 0, 1)
 
 
         self.install_app_page.middle = QGridFrame()
@@ -452,14 +464,22 @@ class Application(QBaseApplication):
 
         right_buttons = QGridWidget()
         self.install_app_page.bottom.grid_layout.addWidget(right_buttons, 0, 0)
-        self.install_app_page.bottom.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
 
-        button = QPushButton(self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['cancel'])
+        button = QPushButton(self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['goToDownloadPage'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.clicked.connect(self.panel_select_downloads)
+        button.setProperty('color', 'main')
+        button.setProperty('transparent', True)
+        right_buttons.grid_layout.addWidget(button, 0, 0)
+        right_buttons.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
+
+        button = QPushButton(self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['back'])
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.main_page_click)
         button.setProperty('color', 'white')
         button.setProperty('transparent', True)
-        right_buttons.grid_layout.addWidget(button, 0, 0)
+        right_buttons.grid_layout.addWidget(button, 0, 1)
+        right_buttons.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
 
 
     def install_app_page_refresh_template(self, force: bool = False) -> None:
@@ -560,9 +580,6 @@ class Application(QBaseApplication):
         iw.failed.connect(self.remove_from_download_list)
         self.downloads[f'{data.name}'] = iw
 
-        # self.main_page_click()
-        # self.panel_select_downloads()
-
         iw.start()
 
     def remove_from_download_list(self, name: str, error: str = None) -> None:
@@ -618,6 +635,7 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.setVisible(True)
 
     def panel_select_downloads(self):
+        if not self.main_page.isVisible(): self.main_page_click()
         self.main_page.side_panel.set_current_index(1)
         self.main_page.apps_widget.setVisible(False)
         self.main_page.downloads_widget.setVisible(True)
@@ -824,16 +842,18 @@ class Application(QBaseApplication):
 
 
     def close_event(self, event: QCloseEvent) -> None:
+        event.ignore()
         self.window.hide()
 
         if self.save_data.minimize_to_tray:
-            event.ignore()
             if self.save_data.goes_to_tray_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
         else:
-            event.accept()
+            self.exit()
 
     def exit(self) -> None:
-        if self.downloads or self.uninstalls or self.is_updating: return print('cannot exit')
+        if self.downloads or self.uninstalls or self.is_updating:
+            if self.save_data.exit_after_work_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitAfterWork']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitAfterWork']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            return print('cannot exit')
         super().exit()
 
 

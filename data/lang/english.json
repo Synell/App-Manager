@@ -175,8 +175,9 @@
                     }
                 },
                 "QPushButton": {
-                    "cancel": "Cancel",
-                    "install": "Install"
+                    "back": "Back",
+                    "install": "Install",
+                    "goToDownloadPage": "Go to Download Page"
                 },
                 "QLineEdit": {
                     "search": "Search"
@@ -321,6 +322,10 @@
                             "title": "Goes to Tray Notification",
                             "description": "Determines if a notification will be sent when the app goes to the tray."
                         },
+                        "exitDuringWork": {
+                            "title": "Exit During Work Notification",
+                            "description": "Determines if a notification will be sent when the app is exited during work."
+                        },
                         "updateDone": {
                             "title": "Update Done Notification",
                             "description": "Determines if a notification will be sent when an update is done."
@@ -348,6 +353,7 @@
                     },
                     "QToggleButton": {
                         "goesToTray": "Goes to Tray",
+                        "exitDuringWork": "Exit During Work",
                         "updateDone": "Update Done",
                         "updateFailed": "Update Failed",
                         "appInstallDone": "App Install Done",
@@ -433,6 +439,10 @@
                 "goesToTray": {
                     "title": "Goes to Tray",
                     "message": "App Manager is still running in the background."
+                },
+                "exitDuringWork": {
+                    "title": "Exit During Work",
+                    "message": "App Manager is still running in the background because it is working. It will be closed when the work is done."
                 },
                 "updateDone": {
                     "title": "Update Done",

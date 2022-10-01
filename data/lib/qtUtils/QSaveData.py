@@ -37,7 +37,7 @@ class QSaveData:
     def save(self) -> None:
         extra_data = self.save_extra_data()
         with open(self.path, 'w', encoding = 'utf-8') as outfile:
-            json.dump({'language': self.language, 'theme': self.theme, 'themeVariant': self.theme_variant, 'extraData': extra_data}, outfile, indent = 4, sort_keys = True, ensure_ascii = False)
+            json.dump(obj = {'language': self.language, 'theme': self.theme, 'themeVariant': self.theme_variant} | extra_data, fp = outfile, ensure_ascii = False)
 
     def save_extra_data(self) -> dict: return {}
 
@@ -50,7 +50,7 @@ class QSaveData:
         self.theme_variant = data['themeVariant']
         self.load_language_data()
         self.load_theme_data()
-        self.load_extra_data(data['extraData'])
+        self.load_extra_data(data)
 
     def load_language_data(self) -> None:
         with open(f'{self.lang_folder}{self.language}.json', 'r', encoding = 'utf-8') as infile:
@@ -70,8 +70,6 @@ class QSaveData:
                 self.theme_data += infile.read()
 
         self.theme_data = self.theme_data.replace('{path}', f'data/lib/qtUtils/themes/{self.theme}/{self.theme_variant}/{path}/icons/'.replace('//', '/'))
-        # with open('test.qss', 'w', encoding = 'utf-8') as outfile:
-        #     outfile.write(self.theme_data)
 
     def load_extra_data(self, extra_data: dict = {}) -> None: pass
 

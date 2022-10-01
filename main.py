@@ -4,7 +4,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from sys import exit
 from math import *
-import os, requests, json, shutil, yaml
+import os, json
 from datetime import datetime, timedelta
 from data.lib import *
 
@@ -12,7 +12,7 @@ from data.lib import *
 
 
 class Application(QBaseApplication):
-    BUILD = '07e6bf94'
+    BUILD = '07e6d408'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -20,10 +20,15 @@ class Application(QBaseApplication):
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
     MESSAGE_DURATION = 5000
 
+    ALERT_RAISE_DURATION = 350
+    ALERT_PAUSE_DURATION = 2300
+    ALERT_FADE_DURATION = 350
+
     def __init__(self):
         super().__init__()
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
+        self.must_exit_after_download = False
 
         InstallButton.platform = PlatformType.Windows
         InstallButton.token = self.save_data.token
@@ -587,19 +592,48 @@ class Application(QBaseApplication):
         self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{self.save_data.apps_folder}/{name}')
         del self.downloads[name]
 
-        if len(list(self.downloads.keys())) == 0:
-            self.main_page.downloads_widget.list.setVisible(False)
-            self.main_page.downloads_widget.no_download.setVisible(True)
-            try: os.rmdir(self.save_data.downloads_folder)
-            except: pass
-
         self.refresh_apps()
         self.save_data.save()
 
         if error:
-            if self.save_data.app_install_failed_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
+            if self.save_data.app_install_failed_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['title'],
+                StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['message'], '%s', name).replace('%s', error),
+                QSystemTrayIcon.MessageIcon.Critical,
+                self.MESSAGE_DURATION
+            )
+            self.show_alert(
+                message = StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['message'], '%s', name).replace('%s', error),
+                raise_duration = self.ALERT_RAISE_DURATION,
+                pause_duration = self.ALERT_PAUSE_DURATION,
+                fade_duration = self.ALERT_FADE_DURATION,
+                color = 'main'
+            )
         else:
-            if self.save_data.app_install_done_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            if self.save_data.app_install_done_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'],
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name),
+                QSystemTrayIcon.MessageIcon.Information,
+                self.MESSAGE_DURATION
+            )
+            self.show_alert(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name),
+                raise_duration = self.ALERT_RAISE_DURATION,
+                pause_duration = self.ALERT_PAUSE_DURATION,
+                fade_duration = self.ALERT_FADE_DURATION,
+                color = 'main'
+            )
+
+        if len(list(self.downloads.keys())) == 0:
+            self.main_page.downloads_widget.list.setVisible(False)
+            self.main_page.downloads_widget.no_download.setVisible(True)
+
+            try: os.rmdir(self.save_data.downloads_folder)
+            except: pass
+
+            if self.must_exit_after_download:
+                if self.window.isVisible(): self.must_exit_after_download = False
+                else: self.exit()
 
     def remove_from_install_list(self, path: str):
         for i in ['official', 'pre', 'custom']:
@@ -623,9 +657,33 @@ class Application(QBaseApplication):
         name = path.split('/')[-1]
 
         if error:
-            if self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['title'], StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'], '%s', name).replace('%s', error), QSystemTrayIcon.MessageIcon.Critical, self.MESSAGE_DURATION)
+            if self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['title'],
+                StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'], '%s', name).replace('%s', error),
+                QSystemTrayIcon.MessageIcon.Critical,
+                self.MESSAGE_DURATION
+            )
+            self.show_alert(
+                StringUtils.replaceFirst(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'], '%s', name).replace('%s', error),
+                raise_duration = self.ALERT_RAISE_DURATION,
+                pause_duration = self.ALERT_PAUSE_DURATION,
+                fade_duration = self.ALERT_FADE_DURATION,
+                color = 'main'
+            )
         else:
-            if self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name), QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            if self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'],
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name),
+                QSystemTrayIcon.MessageIcon.Information,
+                self.MESSAGE_DURATION
+            )
+            self.show_alert(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name),
+                raise_duration = self.ALERT_RAISE_DURATION,
+                pause_duration = self.ALERT_PAUSE_DURATION,
+                fade_duration = self.ALERT_FADE_DURATION,
+                color = 'main'
+            )
 
 
 
@@ -662,13 +720,13 @@ class Application(QBaseApplication):
         if os.path.exists(f'{path}/manifest.json'): return self.locate_app(f'{path}/manifest.json')
 
         with open(f'{path}/manifest.json', 'w', encoding = 'utf-8') as f:
-            json.dump({
+            json.dump(obj = {
                 'release': 'custom',
                 'tag_name': None,
                 'command': f'{path}/{filename}',
                 'url': None,
                 'created_at': None
-            }, f, indent = 4, sort_keys = True, ensure_ascii = False)
+            }, fp = f, ensure_ascii = False)
 
         self.save_data.apps['custom'].append(path)
         self.refresh_apps()
@@ -846,14 +904,32 @@ class Application(QBaseApplication):
         self.window.hide()
 
         if self.save_data.minimize_to_tray:
-            if self.save_data.goes_to_tray_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
+            if self.save_data.goes_to_tray_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'],
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'],
+                QSystemTrayIcon.MessageIcon.Information,
+                self.MESSAGE_DURATION
+            )
+            self.show_alert(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'],
+                raise_duration = self.ALERT_RAISE_DURATION,
+                pause_duration = self.ALERT_PAUSE_DURATION,
+                fade_duration = self.ALERT_FADE_DURATION,
+                color = 'main'
+            )
         else:
             self.exit()
 
     def exit(self) -> None:
         if self.downloads or self.uninstalls or self.is_updating:
-            if self.save_data.exit_after_work_notif: self.sys_tray.showMessage(self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitAfterWork']['title'], self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitAfterWork']['message'], QSystemTrayIcon.MessageIcon.Information, self.MESSAGE_DURATION)
-            return print('cannot exit')
+            if self.save_data.exit_during_work_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringWork']['title'],
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringWork']['message'],
+                QSystemTrayIcon.MessageIcon.Information,
+                self.MESSAGE_DURATION
+            )
+            self.must_exit_after_download = True
+            return
         super().exit()
 
 

@@ -13,20 +13,19 @@ import json
 from .QSidePanelWidget import QSidePanelWidget
 from .QSidePanel import QSidePanelItem
 from .QNamedComboBox import QNamedComboBox
-
-from data.lib.customOS import *
+from .QFileExplorer import QFileExplorer
 #----------------------------------------------------------------------
 
     # Class
 class __QData__:
     class __QLang__:
-        def __init__(self, lang_folder = '', langPath = ''):
-            with open(f'{lang_folder}/{langPath}', encoding = 'utf-8') as infile:
+        def __init__(self, lang_folder = '', lang_path = ''):
+            with open(f'{lang_folder}/{lang_path}', encoding = 'utf-8') as infile:
                 data = json.load(infile)
                 self.display_name = data['info']['name']
                 self.version = data['info']['version']
                 self.desc = data['info']['description']
-                self.filename = '.'.join(langPath.split('.')[:-1])
+                self.filename = '.'.join(lang_path.split('.')[:-1])
 
 
     class __QTheme__:
@@ -42,11 +41,11 @@ class __QData__:
 
     def __init__(self, lang_folder = '', themes_folder = ''):
         self.lang = []
-        for file in get.files.extensions(lang_folder, ['.json'], False, True):
+        for file in QFileExplorer.get_files(lang_folder, ['json'], False, True):
             self.lang.append(self.__QLang__(lang_folder, file))
 
         self.themes = []
-        for file in get.files.extensions(themes_folder, ['.json'], False, True):
+        for file in QFileExplorer.get_files(themes_folder, ['json'], False, True):
             self.themes.append(self.__QTheme__(themes_folder, file))
 
 

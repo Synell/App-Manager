@@ -3,6 +3,7 @@
     # Libraries
 from .QBaseApplication import *
 from .QSaveData import QSaveData
+from .QBetterListWidget import QBetterListWidget
 from .QScrollableGridWidget import QScrollableGridWidget
 from .QScrollableGridFrame import QScrollableGridFrame
 from .QGridWidget import QGridWidget
@@ -36,4 +37,5 @@ from .QToggleButton import QToggleButton
 from .QNamedToggleButton import QNamedToggleButton
 from .QDragList import QDragList, QDragListItem
 from .QFileExplorer import QFileExplorer
+from .QSlidingStackedWidget import QSlidingStackedWidget
 #----------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
     # Libraries
 from PyQt6.QtWidgets import QLabel
-from PyQt6.QtGui import QPixmap, QIcon, QFileSystemModel
+from PyQt6.QtGui import QPixmap, QIcon, QFileSystemModel, QImage
 from PyQt6.QtSvgWidgets import QSvgWidget
 from PyQt6.QtCore import Qt, QSize, QFileInfo
 import os
@@ -11,7 +11,7 @@ from .QGridFrame import QGridFrame
 
     # Class
 class QIconWidget(QGridFrame):
-    def __init__(self, parent = None, icon: str|QPixmap|QSvgWidget|QIcon|QLabel|None = None, icon_size: QSize = QSize(96, 96), check_file: bool = True) -> None:
+    def __init__(self, parent = None, icon: str|bytes|QPixmap|QSvgWidget|QIcon|QLabel|None = None, icon_size: QSize = QSize(96, 96), check_file: bool = True) -> None:
         super().__init__(parent)
         self.__icon_size__ = QSize(96, 96)
         self.__check_file__ = check_file
@@ -22,17 +22,17 @@ class QIconWidget(QGridFrame):
         self.setProperty('QIconWidget', True)
         self.update()
 
-    def set(self, icon: str|QPixmap|QSvgWidget|QIcon|QLabel, size: QSize = 0) -> None:
+    def set(self, icon: str|bytes|QPixmap|QSvgWidget|QIcon|QLabel, size: QSize = 0) -> None:
         self.icon = icon
         self.icon_size = size
         self.update()
 
     @property
-    def icon(self) -> str|QPixmap|QSvgWidget|QIcon|QLabel:
+    def icon(self) -> str|bytes|QPixmap|QSvgWidget|QIcon|QLabel:
         return self.__icon__
 
     @icon.setter
-    def icon(self, icon: str|QPixmap|QSvgWidget|QIcon|QLabel) -> None:
+    def icon(self, icon: str|bytes|QPixmap|QSvgWidget|QIcon|QLabel) -> None:
         self.__icon__ = icon
         self.update()
 
@@ -71,12 +71,12 @@ class QIconWidget(QGridFrame):
         self.grid_layout.addWidget(pixmap, 0, 0)
 
     @staticmethod
-    def is_file_icon(icon: str|QPixmap|QSvgWidget|QIcon|QLabel) -> bool:
+    def is_file_icon(icon: str|bytes|QPixmap|QSvgWidget|QIcon|QLabel) -> bool:
         if isinstance(icon, str):
             if os.path.isfile(icon):
                 if QIconWidget.__check_extension__(icon, ['.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.svg']): return False
             else: return False
-        elif isinstance(icon, [QPixmap, QSvgWidget, QIcon, QLabel]): return False
+        elif isinstance(icon, [bytes, QPixmap, QSvgWidget, QIcon, QLabel]): return False
         return True
 
     @staticmethod
@@ -117,6 +117,12 @@ class QIconWidget(QGridFrame):
 
                 else:
                     pixmap = QSvgWidget()
+
+            elif type(icon) is bytes:
+                pixmap = QLabel()
+                img = QImage()
+                img.loadFromData(icon)
+                pixmap.setPixmap(QPixmap.fromImage(img).scaled(icon_size, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
         else:
             pixmap = QSvgWidget()

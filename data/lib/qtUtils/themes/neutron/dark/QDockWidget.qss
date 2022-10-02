@@ -11,5 +11,5 @@ QDockWidget {
 }
 
 QWidget[QDockWidget=true] {
-	background-color: #262626;
+	background-color: #202020;
 }

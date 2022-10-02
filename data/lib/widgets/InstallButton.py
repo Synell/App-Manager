@@ -120,13 +120,10 @@ class InstallButton(QGridFrame):
 
     def install_click(self) -> None:
         rel = InstallButton.get_release(self.platform, self.data, self.token)
-        # files = [asset['browser_download_url'] for asset in self.data['assets'] if InstallButton.is_content_type(self.platform, asset['content_type']) if InstallButton.in_platform(asset['name'].lower())]
 
-        # if files:
         if rel:
             self.push_button.setDisabled(True)
             self.setCursor(Qt.CursorShape.ForbiddenCursor)
-            # self.download.emit(self.download_data(self.data['name'], self.data['tag_name'], InstallButton.better_file(self.platform, files), self.data['prerelease'], self.data['created_at'], self.token))
             self.download.emit(rel)
         else: print('Unable to download')
 

@@ -20,21 +20,21 @@ class QMessageBoxWithWidget(QDialog):
 
     def __init__(self, app: QBaseApplication = None, title: str = '', text: str = '', informative_text: str = '', icon: Icon|QIcon = Icon.NoIcon, widget: QWidget = None):
         super().__init__(parent = app.window)
-        self.__layout__ = QGridLayout(self)
+        self._layout = QGridLayout(self)
 
-        self.__left__ = QWidget()
-        self.__left_layout__ = QGridLayout(self.__left__)
+        self._left = QWidget()
+        self._left_layout = QGridLayout(self._left)
 
-        self.__right__ = QWidget()
-        self.__right_layout__ = QGridLayout(self.__right__)
-        self.__right_layout__.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self._right = QWidget()
+        self._right_layout = QGridLayout(self._right)
+        self._right_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.msg_box_widget = widget
 
-        self.__layout__.addWidget(self.__left__, 0, 0)
-        self.__layout__.addWidget(self.__right__, 0, 1)
+        self._layout.addWidget(self._left, 0, 0)
+        self._layout.addWidget(self._right, 0, 1)
         if self.msg_box_widget:
-            self.__layout__.addWidget(self.msg_box_widget, 1, 0, 1, 2)
+            self._layout.addWidget(self.msg_box_widget, 1, 0, 1, 2)
 
         if app:
             match icon:
@@ -43,28 +43,28 @@ class QMessageBoxWithWidget(QDialog):
 
         pixmap = QLabel()
         pixmap.setPixmap(self.__generatePixmap__(icon))
-        self.__left_layout__.addWidget(pixmap)
-        self.__left_layout__.setAlignment(pixmap, Qt.AlignmentFlag.AlignTop)
-        self.__left_layout__.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self._left_layout.addWidget(pixmap)
+        self._left_layout.setAlignment(pixmap, Qt.AlignmentFlag.AlignTop)
+        self._left_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.setWindowTitle(title)
 
         text = QLabel(text)
         informative_text = QLabel(informative_text)
 
-        self.__right_layout__.addWidget(text, 0, 0)
-        self.__right_layout__.setAlignment(text, Qt.AlignmentFlag.AlignLeft)
-        self.__right_layout__.addWidget(informative_text, 1, 0)
-        self.__right_layout__.setAlignment(informative_text, Qt.AlignmentFlag.AlignLeft)
+        self._right_layout.addWidget(text, 0, 0)
+        self._right_layout.setAlignment(text, Qt.AlignmentFlag.AlignLeft)
+        self._right_layout.addWidget(informative_text, 1, 0)
+        self._right_layout.setAlignment(informative_text, Qt.AlignmentFlag.AlignLeft)
 
 
         QBtn = QDialogButtonBox.StandardButton.Ok
 
-        self.__buttonBox__ = QDialogButtonBox(QBtn)
-        self.__buttonBox__.accepted.connect(self.accept)
-        self.__buttonBox__.rejected.connect(self.reject)
+        self._button_box = QDialogButtonBox(QBtn)
+        self._button_box.accepted.connect(self.accept)
+        self._button_box.rejected.connect(self.reject)
 
-        self.__layout__.addWidget(self.__buttonBox__, 2, 1)
+        self._layout.addWidget(self._button_box, 2, 1)
 
 
     def __generatePixmap__(self, icon: Icon|QIcon = Icon.NoIcon):

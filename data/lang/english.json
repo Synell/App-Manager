@@ -469,6 +469,9 @@
                     "message": "An error occurred while uninstalling %s.\n%s"
                 }
             }
+        },
+        "QUpdater": {
+            "title": "App Manager Updater"
         }
     }
 }

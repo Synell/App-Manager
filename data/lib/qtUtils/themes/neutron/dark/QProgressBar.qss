@@ -18,9 +18,16 @@ QProgressBar::chunk
 QProgressBar[small=true]
 {
 	height: 6px;
-	border-radius: 3px;
+	/* border-radius: 3px; */
+	border-radius: 0px;
 }
 QProgressBar::chunk[small=true]
 {
-	border-radius: 3px;
+	/* border-radius: 3px; */
+	border-radius: 0px;
+}
+
+QProgressBar[light=true]
+{
+	background-color: #808080;
 }

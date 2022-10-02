@@ -469,6 +469,9 @@
                     "message": "Une erreur est survenue lors de la désinstallation de %s.\n%s"
                 }
             }
+        },
+        "QUpdater": {
+            "title": "App Manager Updater"
         }
     }
 }

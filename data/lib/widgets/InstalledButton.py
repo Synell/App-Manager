@@ -128,7 +128,7 @@ class InstalledButton(QGridFrame):
 
     def set_compact_mode(self, compact_mode: bool) -> None:
         self.compact_mode = compact_mode
-        self.icon_couple.text_widget.widgets[1].desc.setText(self.small_path(self.path) if compact_mode else self.path)
+        self.icon_couple.text_widget.desc.setText(self.small_path(self.path) if compact_mode else self.path)
 
 
     def small_path(self, path: str) -> str:
@@ -181,7 +181,6 @@ class InstalledButton(QGridFrame):
         widget = QGridWidget()
         widget.grid_layout.setSpacing(spacing)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
-        widget.widgets = list(widgets)
 
         i = 0
         for i, widget_ in enumerate(widgets):

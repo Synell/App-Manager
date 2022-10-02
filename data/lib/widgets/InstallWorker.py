@@ -164,7 +164,7 @@ class Installer(QGridFrame):
         widget.grid_layout.addWidget(self.download_label, 0, 0)
 
         self.download_progress = QProgressBar()
-        self.download_progress.setProperty('class', 'small')
+        self.download_progress.setProperty('small', True)
         self.download_progress.setFixedHeight(6)
         self.download_progress.setTextVisible(False)
         self.download_progress.setRange(0, 100)
@@ -181,7 +181,7 @@ class Installer(QGridFrame):
         widget.grid_layout.addWidget(self.install_label, 0, 0)
 
         self.install_progress = QProgressBar()
-        self.install_progress.setProperty('class', 'small')
+        self.install_progress.setProperty('small', True)
         self.install_progress.setFixedHeight(6)
         self.install_progress.setTextVisible(False)
         self.install_progress.setRange(0, 100)

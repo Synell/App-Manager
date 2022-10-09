@@ -9,6 +9,7 @@ from math import *
 import os, json, base64, math
 from data.lib.qtUtils import *
 from data.lib.widgets import SaveData
+from data.lib.widgets.updater import *
 from data.lib.widgets.updater import data as updater_data
 #----------------------------------------------------------------------
 
@@ -36,6 +37,8 @@ class QUpdater(QBaseApplication):
         self.create_widgets()
         self.load_colors()
         self.update_title()
+
+        self.run()
 
 
 
@@ -166,6 +169,9 @@ class QUpdater(QBaseApplication):
 
         ratio = 1192 / self.window.width() # 1192x674
         self.screenshots = QSlidingStackedWidget()
+        self.screenshots.set_speed(650)
+        self.screenshots.set_animation(QEasingCurve.Type.OutCubic)
+        self.screenshots.set_has_opacity_effect(False)
         self.screenshots.setFixedHeight(math.ceil(674 / ratio))
         self.screenshots.layout().setContentsMargins(0, 0, 0, 0)
         self.screenshots.layout().setSpacing(0)
@@ -181,39 +187,10 @@ class QUpdater(QBaseApplication):
         bottom_frame.grid_layout.setSpacing(5)
         bottom_frame.grid_layout.setContentsMargins(10, 10, 10, 10)
 
-        # ratio = 1192 / self.window.width() # 1192x674
-        # self.screenshots = QSlidingStackedWidget()
-        # self.screenshots.setFixedHeight(math.ceil(674 / ratio))
-        # self.screenshots.layout().setContentsMargins(0, 0, 0, 0)
-        # self.screenshots.layout().setSpacing(0)
-        # self.root.grid_layout.addWidget(self.screenshots, 0, 0)
-
-        # for image in updater_data.images:
-        #     self.screenshots.addWidget(QIconWidget(None, base64.b64decode(image), QSize(self.window.width() + 1, math.ceil(674 / ratio)), False))
-
-        # frame = QGridFrame()
-        # frame.setProperty('border-top', True)
-        # self.root.grid_layout.addWidget(frame, 1, 0)
-        # frame.grid_layout.setSpacing(20)
-        # frame.grid_layout.setContentsMargins(0, 10, 0, 30)
-
-        # frame2 = QGridFrame()
-        # frame.grid_layout.addWidget(frame2, 0, 0)
-        # frame2.grid_layout.setSpacing(20)
-        # frame2.grid_layout.setContentsMargins(10, 10, 10, 10)
-
-        # self.progress_info = QLabel('Installing...')
-        # self.progress_info.setProperty('h', 2)
-        # frame2.grid_layout.addWidget(self.progress_info, 0, 0)
-
-        # self.progress = QProgressBar()
-        # self.progress.setProperty('color', 'main')
-        # self.progress.setProperty('small', True)
-        # self.progress.setFixedHeight(8)
-        # self.progress.setTextVisible(False)
-        # self.progress.setValue(100)
-        # frame.grid_layout.addWidget(self.progress, 1, 0)
-        # frame.grid_layout.setAlignment(self.progress, Qt.AlignmentFlag.AlignBottom)
+    def run(self):
+        self.slide_worker = SlideWorker(self.screenshots)
+        self.slide_worker.signals.slide_changed.connect(self.screenshots.slide_loop_next)
+        self.slide_worker.start()
 #----------------------------------------------------------------------
 
     # Main

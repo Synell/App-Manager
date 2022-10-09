@@ -2,6 +2,7 @@
 
     # Libraries
 from .QBaseApplication import *
+from .QssParser import QssParser, QssSelector
 from .QSaveData import QSaveData
 from .QBetterListWidget import QBetterListWidget
 from .QScrollableGridWidget import QScrollableGridWidget

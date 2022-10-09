@@ -430,7 +430,7 @@ class SaveData(QSaveData):
         label = QSettingsDialog.textGroup(lang['QLabel']['token']['title'], lang['QLabel']['token']['description'])
         root_frame.grid_layout.addWidget(label, 0, 0)
 
-        label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex};\">{lang["QLabel"]["createToken"]}</a>')
+        label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{lang["QLabel"]["createToken"]}</a>')
         label.setOpenExternalLinks(True)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('brightnormal', True)

@@ -35,7 +35,7 @@ class SaveData(QSaveData):
         self.last_check_for_updates = datetime.now()
         self.last_check_for_apps_updates = datetime.now()
 
-        self.start_at_launch = True
+        self.start_at_launch = True # TODO: Implement this functionallity
         self.minimize_to_tray = True
 
         self.compact_paths = 0
@@ -50,6 +50,7 @@ class SaveData(QSaveData):
         self.app_install_failed_notif = True
         self.app_uninstall_done_notif = True
         self.app_uninstall_failed_notif = True
+        self.request_worker_failed_notif = True
 
         super().__init__(save_path)
 
@@ -225,20 +226,20 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['startAtLaunch']['title'], lang['QLabel']['startAtLaunch']['description'])
-        root_frame.grid_layout.addWidget(label, 0, 0)
+        # label = QSettingsDialog.textGroup(lang['QLabel']['startAtLaunch']['title'], lang['QLabel']['startAtLaunch']['description'])
+        # root_frame.grid_layout.addWidget(label, 0, 0)
 
         widget.start_at_launch_checkbox = QNamedToggleButton()
         widget.start_at_launch_checkbox.setText(lang['QToggleButton']['startAtLaunch'])
         widget.start_at_launch_checkbox.setChecked(self.start_at_launch)
-        root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, 1, 0)
-        root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
+        # root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, 1, 0)
+        # root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 2, 0)
+        # frame = QFrame()
+        # frame.setProperty('border-top', True)
+        # frame.setFixedHeight(1)
+        # root_frame.grid_layout.addWidget(frame, 2, 0)
 
 
         label = QSettingsDialog.textGroup(lang['QLabel']['minimizeToTray']['title'], lang['QLabel']['minimizeToTray']['description'])
@@ -410,6 +411,22 @@ class SaveData(QSaveData):
         root_frame.grid_layout.setAlignment(widget.app_uninstall_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, 23, 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['requestWorkerFailed']['title'], lang['QLabel']['requestWorkerFailed']['description'])
+        root_frame.grid_layout.addWidget(label, 24, 0)
+
+        widget.request_worker_failed_notif_checkbox = QNamedToggleButton()
+        widget.request_worker_failed_notif_checkbox.setText(lang['QToggleButton']['requestWorkerFailed'])
+        widget.request_worker_failed_notif_checkbox.setChecked(self.request_worker_failed_notif)
+        root_frame.grid_layout.addWidget(widget.request_worker_failed_notif_checkbox, 25, 0)
+        root_frame.grid_layout.setAlignment(widget.request_worker_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
         return widget
 
 
@@ -508,6 +525,7 @@ class SaveData(QSaveData):
         self.app_install_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_failed_notif_checkbox.isChecked()
         self.app_uninstall_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_done_notif_checkbox.isChecked()
         self.app_uninstall_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_failed_notif_checkbox.isChecked()
+        self.request_worker_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].request_worker_failed_notif_checkbox.isChecked()
 
 
 
@@ -550,7 +568,8 @@ class SaveData(QSaveData):
             'appInstallDoneNotif': self.app_install_done_notif,
             'appInstallFailedNotif': self.app_install_failed_notif,
             'appUninstallDoneNotif': self.app_uninstall_done_notif,
-            'appUninstallFailedNotif': self.app_uninstall_failed_notif
+            'appUninstallFailedNotif': self.app_uninstall_failed_notif,
+            'requestWorkerFailedNotif': self.request_worker_failed_notif
         }
 
     def load_extra_data(self, extra_data: dict = ...) -> None:
@@ -585,6 +604,7 @@ class SaveData(QSaveData):
             self.app_install_failed_notif = extra_data['appInstallFailedNotif']
             self.app_uninstall_done_notif = extra_data['appUninstallDoneNotif']
             self.app_uninstall_failed_notif = extra_data['appUninstallFailedNotif']
+            self.request_worker_failed_notif = extra_data['requestWorkerFailedNotif']
 
         except: self.save()
 #----------------------------------------------------------------------

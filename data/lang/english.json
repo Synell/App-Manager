@@ -349,6 +349,10 @@
                         "appUninstallFailed": {
                             "title": "App Uninstall Failed Notification",
                             "description": "Determines if a notification will be sent when an app uninstall fails."
+                        },
+                        "requestWorkerFailed": {
+                            "title": "Request Failed Notification",
+                            "description": "Determines if a notification will be sent when a request for getting updates or apps fails."
                         }
                     },
                     "QToggleButton": {
@@ -359,7 +363,8 @@
                         "appInstallDone": "App Install Done",
                         "appInstallFailed": "App Install Failed",
                         "appUninstallDone": "App Uninstall Done",
-                        "appUninstallFailed": "App Uninstall Failed"
+                        "appUninstallFailed": "App Uninstall Failed",
+                        "requestWorkerFailed": "Request Failed"
                     }
                 },
                 "github": {
@@ -467,6 +472,10 @@
                 "appUninstallFailed": {
                     "title": "App Uninstall Failed",
                     "message": "An error occurred while uninstalling %s.\n%s"
+                },
+                "requestWorkerFailed": {
+                    "title": "Request Failed",
+                    "message": "An error occurred while requesting.\n%s"
                 }
             }
         },

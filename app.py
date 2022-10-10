@@ -288,7 +288,6 @@ class Application(QBaseApplication):
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setIcon(self.save_data.getIcon('/pushbutton/note.png'))
         button.clicked.connect(self.about_menu_clicked)
-        #button.setProperty('transparent', True)
         left_top.grid_layout.addWidget(button, 0, 0)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
 
@@ -296,8 +295,6 @@ class Application(QBaseApplication):
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setIcon(self.save_data.getIcon('/pushbutton/settings.png'))
         button.clicked.connect(self.settings_menu)
-        # button.setProperty('color', 'main')
-        # button.setProperty('transparent', True)
         left_top.grid_layout.addWidget(button, 0, 1)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
 
@@ -355,8 +352,6 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook, 2, 0)
 
         self.main_page.apps_widget.notebook_tabs = QScrollableGridWidget()
-        # self.main_page.apps_widget.notebook_tabs.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        # self.main_page.apps_widget.notebook_tabs.horizontalScrollBar().setEnabled(False)
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook_tabs, 3, 0)
         self.main_page.apps_widget.notebook_tabs.scroll_layout.setAlignment(self.main_page.apps_widget.notebook_tabs, Qt.AlignmentFlag.AlignTop)
         self.main_page.apps_widget.notebook_tabs.scroll_layout.setSpacing(1)
@@ -619,8 +614,20 @@ class Application(QBaseApplication):
         self.updates[rel['name']] = InstallButton.get_release(InstallButton.platform, rel, self.save_data.token)
         self.refresh_apps()
 
-    def release_failed(self) -> None:
-        print('fail')
+    def release_failed(self, error: str) -> None:
+        if self.save_data.request_worker_failed_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['message'].replace('%s', error),
+            QSystemTrayIcon.MessageIcon.Critical,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['message'].replace('%s', error),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
 
 
     def add_to_download_list(self, data: InstallButton.download_data):
@@ -830,7 +837,6 @@ class Application(QBaseApplication):
     def add_to_update_list(self, path: str) -> None:
         self.app_buttons[path].init_update(self.save_data.downloads_folder)
         self.is_updating.append(path)
-        # print(self.updates[path.split('/')[-1]], os.path.dirname(path))
 
     def remove_from_update_list(self, path: str, success: bool) -> None:
         if success:

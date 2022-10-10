@@ -9,7 +9,7 @@ import traceback, shutil, os, requests
     # Class
 class __WorkerSignals__(QObject):
     received = pyqtSignal(dict, str)
-    failed = pyqtSignal()
+    failed = pyqtSignal(str)
 
 class RequestWorker(QThread):
     token: str = None
@@ -22,14 +22,12 @@ class RequestWorker(QThread):
         self.time = datetime.now()
 
     def run(self):
-        # installed_releases = [f'{folder}' for folder in os.listdir(self.apps_folder) if os.path.isdir(os.path.join(self.apps_folder, folder))]
-
         for app in self.followed_apps:
             try:
                 response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases', headers = {'Authorization': self.token} if self.token else None)
                 if response.status_code != 200: continue
                 response = response.json()
-                if type(response) is not list: return self.signals.failed.emit()
+                if type(response) is not list: return self.signals.failed.emit('Invalid response')
 
                 name = f'{app.replace("https://github.com/", "").split("/")[-1].replace("-", " ")}'
 
@@ -53,6 +51,7 @@ class RequestWorker(QThread):
                     self.signals.received.emit(official_release, app)
                 elif pre_release:
                     self.signals.received.emit(pre_release, app)
+
             except Exception as e:
-                print(f'Request error: {e}')
+                self.signals.failed.emit(f'{e}')
 #----------------------------------------------------------------------

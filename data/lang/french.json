@@ -349,6 +349,10 @@
                         "appUninstallFailed": {
                             "title": "Notification de Désinstallation d'Application Échouée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une désinstallation d'application échoue."
+                        },
+                        "requestWorkerFailed": {
+                            "title": "Notification de Requête Échouée",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'une requête pour chercher des mises à jour ou des applications échoue."
                         }
                     },
                     "QToggleButton": {
@@ -359,7 +363,8 @@
                         "appInstallDone": "Installation d'Application Terminée",
                         "appInstallFailed": "Installation d'Application Échouée",
                         "appUninstallDone": "Désinstallation d'Application Terminée",
-                        "appUninstallFailed": "Désinstallation d'Application Échouée"
+                        "appUninstallFailed": "Désinstallation d'Application Échouée",
+                        "requestWorkerFailed": "Requête Échouée"
                     }
                 },
                 "github": {
@@ -467,6 +472,10 @@
                 "appUninstallError": {
                     "title": "Erreur de Désinstallation de l'Application",
                     "message": "Une erreur est survenue lors de la désinstallation de %s.\n%s"
+                },
+                "requestWorkerFailed": {
+                    "title": "Erreur de Requête",
+                    "message": "Une erreur est survenue lors de la requête.\n%s"
                 }
             }
         },

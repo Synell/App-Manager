@@ -45,72 +45,115 @@ class QUpdater(QBaseApplication):
     def update_title(self):
         self.window.setWindowTitle(self.save_data.language_data['QUpdater']['title'] + f' | Version: {self.VERSION} | Build: {self.BUILD}')
 
-    def load_color(self, data: str, element: str, var: str):
-        def find(keyword: str = ''):
-            keyword += '{'
-
-            start = data.find(keyword)
-            if start == -1: return ''
-
-            end = data[start:].find('}')
-            if end == -1: return ''
-            return data[start + len(keyword) : start + end]
-
-
-        def get_variable(qss: str = '', var_name: str = ''):
-            var_name += ':'
-
-            start = qss.find(f'{var_name}')
-            if start == -1: return ''
-
-            end = qss[start:].find(';')
-            if end == -1: return ''
-
-            if qss[start - 1] == '-': return get_variable(qss[start + end + 1 :], var_name)
-
-            return qss[start + len(var_name) : start + end]
-
-        return get_variable(find(element), var)
-
     def load_colors(self):
-        data = (
+        qss = QssParser(
             self.save_data.getStyleSheet(app = self, mode = QSaveData.StyleSheetMode.Local) + '\n' +
             self.save_data.getStyleSheet(app = self, mode = QSaveData.StyleSheetMode.Global)
-        ).replace(' ', '').replace('\t', '').replace('\n', '')
+        )
 
-        linkColor = self.load_color(data, f'QLabel[color=\'{self.window.property("color")}\']::link', 'color')
+        self.COLOR_LINK = QUtilsColor(
+            qss.search(
+                QssSelector(widget = 'QLabel', attributes = {'color': self.window.property('color')}, items = ['link'])
+            )['color']
+        )
+        SaveData.COLOR_LINK = self.COLOR_LINK
 
-        if linkColor:
-            self.COLOR_LINK = QUtilsColor(linkColor)
-            SaveData.COLOR_LINK = self.COLOR_LINK
+        QNamedLineEdit.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedLineEdit': True}),
+            QssSelector(widget = 'QLabel')
+        )['color']
+        QNamedLineEdit.hover_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedLineEdit': True}),
+            QssSelector(widget = 'QLabel', attributes = {'hover': True})
+        )['color']
+        QNamedLineEdit.focus_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'color': self.window.property('color')}),
+            QssSelector(widget = 'QWidget', attributes = {'QNamedLineEdit': True, 'color': 'main'}),
+            QssSelector(widget = 'QLabel', attributes = {'focus': True})
+        )['color']
 
-        QNamedLineEdit.normal_color = self.load_color(data, 'QWidget[QNamedLineEdit=true]QLabel', 'color')
-        QNamedLineEdit.hover_color = self.load_color(data, 'QWidget[QNamedLineEdit=true]QLabel[hover=true]', 'color')
-        QNamedLineEdit.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedLineEdit=true][color=\'main\']QLabel[focus=true]', 'color')
+        QNamedTextEdit.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedTextEdit': True}),
+            QssSelector(widget = 'QLabel')
+        )['color']
+        QNamedTextEdit.hover_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedTextEdit': True}),
+            QssSelector(widget = 'QLabel', attributes = {'hover': True})
+        )['color']
+        QNamedTextEdit.focus_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'color': self.window.property('color')}),
+            QssSelector(widget = 'QWidget', attributes = {'QNamedTextEdit': True, 'color': 'main'}),
+            QssSelector(widget = 'QLabel', attributes = {'focus': True})
+        )['color']
 
-        QNamedTextEdit.normal_color = self.load_color(data, 'QWidget[QNamedTextEdit=true]QLabel', 'color')
-        QNamedTextEdit.hover_color = self.load_color(data, 'QWidget[QNamedTextEdit=true]QLabel[hover=true]', 'color')
-        QNamedTextEdit.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedTextEdit=true][color=\'main\']QLabel[focus=true]', 'color')
+        QNamedComboBox.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedComboBox': True}),
+            QssSelector(widget = 'QLabel')
+        )['color']
+        QNamedComboBox.hover_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedComboBox': True}),
+            QssSelector(widget = 'QLabel', attributes = {'hover': True})
+        )['color']
+        QNamedComboBox.focus_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'color': self.window.property('color')}),
+            QssSelector(widget = 'QWidget', attributes = {'QNamedComboBox': True, 'color': 'main'}),
+            QssSelector(widget = 'QLabel', attributes = {'focus': True})
+        )['color']
 
-        QNamedComboBox.normal_color = self.load_color(data, 'QWidget[QNamedComboBox=true]QLabel', 'color')
-        QNamedComboBox.hover_color = self.load_color(data, 'QWidget[QNamedComboBox=true]QLabel[hover=true]', 'color')
-        QNamedComboBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedComboBox=true][color=\'main\']QLabel[focus=true]', 'color')
+        QNamedSpinBox.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedSpinBox': True}),
+            QssSelector(widget = 'QLabel')
+        )['color']
+        QNamedSpinBox.hover_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedSpinBox': True}),
+            QssSelector(widget = 'QLabel', attributes = {'hover': True})
+        )['color']
+        QNamedSpinBox.focus_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'color': self.window.property('color')}),
+            QssSelector(widget = 'QWidget', attributes = {'QNamedSpinBox': True, 'color': 'main'}),
+            QssSelector(widget = 'QLabel', attributes = {'focus': True})
+        )['color']
 
-        QNamedSpinBox.normal_color = self.load_color(data, 'QWidget[QNamedSpinBox=true]QLabel', 'color')
-        QNamedSpinBox.hover_color = self.load_color(data, 'QWidget[QNamedSpinBox=true]QLabel[hover=true]', 'color')
-        QNamedSpinBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedSpinBox=true][color=\'main\']QLabel[focus=true]', 'color')
+        QNamedDoubleSpinBox.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedDoubleSpinBox': True}),
+            QssSelector(widget = 'QLabel')
+        )['color']
+        QNamedDoubleSpinBox.hover_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QNamedDoubleSpinBox': True}),
+            QssSelector(widget = 'QLabel', attributes = {'hover': True})
+        )['color']
+        QNamedDoubleSpinBox.focus_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'color': self.window.property('color')}),
+            QssSelector(widget = 'QWidget', attributes = {'QNamedDoubleSpinBox': True, 'color': 'main'}),
+            QssSelector(widget = 'QLabel', attributes = {'focus': True})
+        )['color']
 
-        QNamedDoubleSpinBox.normal_color = self.load_color(data, 'QWidget[QNamedDoubleSpinBox=true]QLabel', 'color')
-        QNamedDoubleSpinBox.hover_color = self.load_color(data, 'QWidget[QNamedDoubleSpinBox=true]QLabel[hover=true]', 'color')
-        QNamedDoubleSpinBox.focus_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QNamedDoubleSpinBox=true][color=\'main\']QLabel[focus=true]', 'color')
+        QFileButton.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QFileButton': True}),
+            QssSelector(widget = 'QLabel')
+        )['color']
+        QFileButton.hover_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QFileButton': True}),
+            QssSelector(widget = 'QLabel', attributes = {'hover': True})
+        )['color']
 
-        QFileButton.normal_color = self.load_color(data, 'QWidget[QFileButton=true]QLabel', 'color')
-        QFileButton.hover_color = self.load_color(data, 'QWidget[QFileButton=true]QLabel[hover=true]', 'color')
-
-        QToggleButton.normal_color = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox', 'color')
-        QToggleButton.normal_color_handle = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox::handle', 'color')
-        QToggleButton.checked_color = self.load_color(data, f'QWidget[color=\'{self.window.property("color")}\']QWidget[QToggleButton=true]QCheckBox:checked', 'color')
-        QToggleButton.checked_color_handle = self.load_color(data, f'QWidget[QToggleButton=true]QCheckBox:checked::handle', 'color')
+        QToggleButton.normal_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QToggleButton': True}),
+            QssSelector(widget = 'QCheckBox')
+        )['color']
+        QToggleButton.normal_color_handle = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QToggleButton': True}),
+            QssSelector(widget = 'QCheckBox', items = ['handle'])
+        )['color']
+        QToggleButton.checked_color = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'color': self.window.property('color')}),
+            QssSelector(widget = 'QWidget', attributes = {'QToggleButton': True}),
+            QssSelector(widget = 'QCheckBox', states = ['checked'])
+        )['color']
+        QToggleButton.checked_color_handle = qss.search(
+            QssSelector(widget = 'QWidget', attributes = {'QToggleButton': True}),
+            QssSelector(widget = 'QCheckBox', states = ['checked'], items = ['handle'])
+        )['color']
 
     def settings_menu(self):
         self.save_data.settings_menu(self)

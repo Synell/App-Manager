@@ -10,7 +10,7 @@ from PyQt6.QtGui import QIcon, QPixmap
     # Class
 class QBaseApplication(QApplication):
     def __init__(self) -> None:
-        super().__init__(argv)
+        super().__init__([argv[0]])
         self.window = QMainWindow()
         self.window.setWindowTitle('Base Qt Window')
 

@@ -42,8 +42,6 @@ class Application(QBaseApplication):
         InstalledButton.show_in_explorer_icon = self.save_data.getIcon('popup/showInExplorer.png')
         InstalledButton.uninstall_icon = self.save_data.getIcon('popup/uninstall.png')
 
-        ChangeAppDialog.install_app_icon = self.save_data.getIcon('pushbutton/InstallApp.png')
-
         EditAppDialog.general_tab_icon = self.save_data.getIcon('sidepanel/general.png', False)
         EditAppDialog.advanced_tab_icon = self.save_data.getIcon('sidepanel/advanced.png', False)
         EditAppDialog.updates_tab_icon = self.save_data.getIcon('sidepanel/updates.png', False)

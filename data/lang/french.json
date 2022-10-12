@@ -480,7 +480,16 @@
             }
         },
         "QUpdater": {
-            "title": "App Manager Updater"
+            "title": "App Manager Updater",
+            "QLabel": {
+                "downloading": "Téléchargement... (%s %)",
+                "installing": "Installation... (%s %)",
+                "calculatingRemainingTime": "Calcul du Temps Restant...",
+                "remainingTime": "Temps Restant: %s",
+                "done": "Terminé",
+                "bytes": "%s/s",
+                "packages": "%s paquets/s"
+            }
         }
     }
 }

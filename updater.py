@@ -6,7 +6,7 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from sys import exit
 from math import *
-import os, json, base64, math
+import os, json, base64, math, sys
 from data.lib.qtUtils import *
 from data.lib.widgets import SaveData
 from data.lib.widgets.updater import *
@@ -190,11 +190,11 @@ class QUpdater(QBaseApplication):
         top_frame.grid_layout.setSpacing(5)
         top_frame.grid_layout.setContentsMargins(15, 10, 15, 10)
 
-        self.progress_percent = QLabel('Installing... (40%)')
+        self.progress_percent = QLabel(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', '0'))
         self.progress_percent.setProperty('h', 2)
         top_frame.grid_layout.addWidget(self.progress_percent, 0, 0)
 
-        self.progress_eta = QLabel('Calculating remaining time...')
+        self.progress_eta = QLabel(self.save_data.language_data['QUpdater']['QLabel']['calculatingRemainingTime'])
         self.progress_eta.setProperty('subtitle', True)
         self.progress_eta.setProperty('bold', True)
         top_frame.grid_layout.addWidget(self.progress_eta, 1, 0)
@@ -206,7 +206,7 @@ class QUpdater(QBaseApplication):
         self.progress.setProperty('light', True)
         self.progress.setFixedHeight(8)
         self.progress.setTextVisible(False)
-        self.progress.setValue(40)
+        self.progress.setValue(0)
         self.root.grid_layout.addWidget(self.progress, 1, 0)
 
 
@@ -234,10 +234,56 @@ class QUpdater(QBaseApplication):
         self.slide_worker = SlideWorker(self.screenshots)
         self.slide_worker.signals.slide_changed.connect(self.screenshots.slide_loop_next)
         self.slide_worker.start()
+
+        self.update_worker = UpdateWorker(self.UPDATE_LINK, self.save_data.token, self.save_data.downloads_folder)
+        self.update_worker.signals.download_progress_changed.connect(self.download_progress_changed)
+        self.update_worker.signals.download_speed_changed.connect(self.download_speed_changed)
+        self.update_worker.signals.download_done.connect(self.download_done)
+        self.update_worker.signals.install_progress_changed.connect(self.install_progress_changed)
+        self.update_worker.signals.install_speed_changed.connect(self.install_speed_changed)
+        self.update_worker.signals.install_done.connect(self.install_done)
+        self.update_worker.signals.install_failed.connect(self.install_failed)
+        self.update_worker.start()
+
+    def download_speed_changed(self, speed: float):
+        pass # todo: set text
+
+    def download_progress_changed(self, progress: float):
+        self.progress.setValue(int(progress * 50))
+
+    def download_done(self):
+        self.progress.setValue(50)
+        pass # todo: set text
+
+    def install_speed_changed(self, speed: float):
+        pass # todo: set text
+
+    def install_progress_changed(self, progress: float):
+        self.progress.setValue(int(50 + progress * 50))
+
+    def install_done(self):
+        self.progress.setValue(100)
+        print('done') # todo: set text
+
+    def install_failed(self, error: str):
+        pass # todo
+
+    def convert(self, bytes: float) -> str:
+        step_unit = 1024
+        units = ['B', 'KB', 'MB', 'GB', 'TB']
+
+        for x in units[:-1]:
+            if bytes < step_unit:
+                return f'{bytes:.2f} {x}'
+            bytes /= step_unit
+        return f'{bytes:.2f} {units[-1]}'
 #----------------------------------------------------------------------
 
     # Main
 if __name__ == '__main__':
+    if len(sys.argv) > 1: QUpdater.UPDATE_LINK = sys.argv[1]
+    else: QUpdater.UPDATE_LINK = 'https://github.com/Synell/PERT-Maker/releases/download/07e69431/Windows.PERT_Maker.Rel-07e69431.zip'#exit()
+
     app = QUpdater()
     app.window.showNormal()
     exit(app.exec())

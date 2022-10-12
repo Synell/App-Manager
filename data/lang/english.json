@@ -482,10 +482,11 @@
         "QUpdater": {
             "title": "App Manager Updater",
             "QLabel": {
-                "downloading": "Downloading... (%s %)",
-                "installing": "Installing... (%s %)",
+                "downloading": "Downloading... (%s)",
+                "installing": "Installing... (%s)",
                 "calculatingRemainingTime": "Calculating remaining time...",
                 "remainingTime": "Remaining time: %s",
+                "waiting": "Waiting...",
                 "done": "Done",
                 "bytes": "%s/s",
                 "items": "%s packages/s"

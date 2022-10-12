@@ -485,6 +485,7 @@
                 "downloading": "Téléchargement... (%s %)",
                 "installing": "Installation... (%s %)",
                 "calculatingRemainingTime": "Calcul du Temps Restant...",
+                "waiting": "En Attente...",
                 "remainingTime": "Temps Restant: %s",
                 "done": "Terminé",
                 "bytes": "%s/s",

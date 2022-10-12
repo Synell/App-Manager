@@ -190,7 +190,7 @@ class QUpdater(QBaseApplication):
         top_frame.grid_layout.setSpacing(5)
         top_frame.grid_layout.setContentsMargins(15, 10, 15, 10)
 
-        self.progress_percent = QLabel(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', '0'))
+        self.progress_percent = QLabel(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', self.save_data.language_data['QUpdater']['QLabel']['waiting']))
         self.progress_percent.setProperty('h', 2)
         top_frame.grid_layout.addWidget(self.progress_percent, 0, 0)
 
@@ -246,24 +246,28 @@ class QUpdater(QBaseApplication):
         self.update_worker.start()
 
     def download_speed_changed(self, speed: float):
-        pass # todo: set text
+        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['bytes'].replace('%s', self.convert(speed)))
 
     def download_progress_changed(self, progress: float):
         self.progress.setValue(int(progress * 50))
+        self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', f'{int(progress * 100)} %'))
 
     def download_done(self):
         self.progress.setValue(50)
-        pass # todo: set text
+        self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', self.save_data.language_data['QUpdater']['QLabel']['done']))
+        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['done'])
 
     def install_speed_changed(self, speed: float):
-        pass # todo: set text
+        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['items'].replace('%s', f'{speed}'))
 
     def install_progress_changed(self, progress: float):
         self.progress.setValue(int(50 + progress * 50))
+        self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['installing'].replace('%s', f'{int(progress * 100)} %'))
 
     def install_done(self):
         self.progress.setValue(100)
-        print('done') # todo: set text
+        self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['done'])
+        self.progress_eta.setText('')
 
     def install_failed(self, error: str):
         pass # todo

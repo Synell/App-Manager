@@ -101,10 +101,12 @@ class UpdateWorker(QThread):
 
 
     def time_triggered(self, deltatime: timedelta):
+        if self.done: return
+
         if not self.install:
             self.signals.download_speed_changed.emit(self.timed_chunk / deltatime.total_seconds())
 
-        elif not self.done:
+        else:
             self.signals.install_speed_changed.emit(self.timed_items / deltatime.total_seconds())
 
         self.timed_chunk = 0

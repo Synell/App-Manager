@@ -187,6 +187,7 @@ class QUpdater(QBaseApplication):
         top_frame = QGridFrame()
         top_frame.setProperty('border-top', True)
         self.root.grid_layout.addWidget(top_frame, 0, 0)
+        self.root.grid_layout.setAlignment(top_frame, Qt.AlignmentFlag.AlignTop)
         top_frame.grid_layout.setSpacing(5)
         top_frame.grid_layout.setContentsMargins(15, 10, 15, 10)
 
@@ -208,6 +209,7 @@ class QUpdater(QBaseApplication):
         self.progress.setTextVisible(False)
         self.progress.setValue(0)
         self.root.grid_layout.addWidget(self.progress, 1, 0)
+        self.root.grid_layout.setAlignment(self.progress, Qt.AlignmentFlag.AlignTop)
 
 
         ratio = 1192 / self.window.width() # 1192x674
@@ -219,20 +221,56 @@ class QUpdater(QBaseApplication):
         self.screenshots.layout().setContentsMargins(0, 0, 0, 0)
         self.screenshots.layout().setSpacing(0)
         self.root.grid_layout.addWidget(self.screenshots, 2, 0)
+        self.root.grid_layout.setAlignment(self.screenshots, Qt.AlignmentFlag.AlignTop)
 
         for image in updater_data.images:
             self.screenshots.addWidget(QIconWidget(None, base64.b64decode(image), QSize(self.window.width() + 1, math.ceil(674 / ratio)), False))
 
         bottom_frame = QGridFrame()
         bottom_frame.setFixedHeight(int(self.window.height() / 2.125))
-        bottom_frame.setProperty('border-top', True)
+        # bottom_frame.setProperty('border-top', True)
         self.root.grid_layout.addWidget(bottom_frame, 3, 0)
         bottom_frame.grid_layout.setSpacing(5)
-        bottom_frame.grid_layout.setContentsMargins(10, 10, 10, 10)
+        bottom_frame.grid_layout.setContentsMargins(0, 0, 0, 0)
+
+        bottom_frame.top = QGridFrame()
+        bottom_frame.top.grid_layout.setSpacing(0)
+        bottom_frame.top.grid_layout.setContentsMargins(10, 10, 10, 10)
+        bottom_frame.grid_layout.addWidget(bottom_frame.top, 0, 0)
+
+
+        bottom_frame.bottom = QGridFrame()
+        bottom_frame.bottom.grid_layout.setSpacing(5)
+        bottom_frame.bottom.grid_layout.setContentsMargins(10, 10, 10, 10)
+        bottom_frame.bottom.setProperty('border-top', True)
+        bottom_frame.grid_layout.addWidget(bottom_frame.bottom, 0, 0)
+        bottom_frame.grid_layout.setAlignment(bottom_frame.bottom, Qt.AlignmentFlag.AlignBottom)
+
+        # right_buttons = QGridFrame()
+        # right_buttons.grid_layout.setSpacing(10)
+        # right_buttons.grid_layout.setContentsMargins(0, 0, 0, 0)
+        # bottom_frame.bottom.grid_layout.addWidget(right_buttons, 0, 0)
+        # bottom_frame.bottom.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
+
+        self.close_button = QPushButton('Close')
+        self.close_button.setCursor(Qt.CursorShape.ForbiddenCursor)
+        self.close_button.setDisabled(True)
+        self.close_button.setProperty('color', 'white')
+        self.close_button.setProperty('transparent', True)
+        bottom_frame.bottom.grid_layout.addWidget(self.close_button, 0, 0)
+        bottom_frame.bottom.grid_layout.setAlignment(self.close_button, Qt.AlignmentFlag.AlignLeft)
+
+        self.open_button = QPushButton('Open App')
+        self.open_button.setCursor(Qt.CursorShape.ForbiddenCursor)
+        self.open_button.setDisabled(True)
+        self.open_button.setProperty('color', 'main')
+        bottom_frame.bottom.grid_layout.addWidget(self.open_button, 0, 1)
+        bottom_frame.bottom.grid_layout.setAlignment(self.open_button, Qt.AlignmentFlag.AlignRight)
+
 
     def run(self):
-        self.slide_worker = SlideWorker(self.screenshots)
-        self.slide_worker.signals.slide_changed.connect(self.screenshots.slide_loop_next)
+        self.slide_worker = SlideWorker()
+        self.slide_worker.signals.slide_changed.connect(self.slide)
         self.slide_worker.start()
 
         self.update_worker = UpdateWorker(self.UPDATE_LINK, self.save_data.token, self.save_data.downloads_folder)
@@ -243,7 +281,10 @@ class QUpdater(QBaseApplication):
         self.update_worker.signals.install_speed_changed.connect(self.install_speed_changed)
         self.update_worker.signals.install_done.connect(self.install_done)
         self.update_worker.signals.install_failed.connect(self.install_failed)
-        self.update_worker.start()
+        # self.update_worker.start()
+
+    def slide(self):
+        self.screenshots.slide_loop_next()
 
     def download_speed_changed(self, speed: float):
         self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['bytes'].replace('%s', self.convert(speed)))
@@ -268,6 +309,14 @@ class QUpdater(QBaseApplication):
         self.progress.setValue(100)
         self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['done'])
         self.progress_eta.setText('')
+
+        self.close_button.setDisabled(False)
+        self.close_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        # self.close_button.clicked.connect(self.close)
+
+        self.open_button.setDisabled(False)
+        self.open_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        # self.open_button.clicked.connect(self.open_app)
 
     def install_failed(self, error: str):
         pass # todo

@@ -10,10 +10,9 @@ class __WorkerSignals__(QObject):
         slide_changed = pyqtSignal()
 
 class SlideWorker(QThread):
-    def __init__(self, sliding_widget: QSlidingStackedWidget):
+    def __init__(self):
         super(SlideWorker, self).__init__()
         self.signals = __WorkerSignals__()
-        self.sliding_widget = sliding_widget
 
     def run(self):
         while True:

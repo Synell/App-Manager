@@ -6,7 +6,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QThread
 import os, zipfile, shutil, json, traceback
 from urllib.request import urlopen, Request
 from datetime import timedelta
-from time import process_time
+from time import process_time, sleep
 
 from .InstallButton import InstallButton
 from data.lib.qtUtils import QGridFrame, QGridWidget
@@ -22,6 +22,8 @@ class __WorkerSignals__(QObject):
         install_done = pyqtSignal()
         install_failed = pyqtSignal(str)
 
+
+
 class InstallWorker(QThread):
     def __init__(self, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps'):
         super(InstallWorker, self).__init__()
@@ -29,8 +31,18 @@ class InstallWorker(QThread):
         self.data = data
         self.dest_path = f'{download_folder}/{data.name}'
         self.out_path = f'{install_folder}/{data.name}'
+        self.timer = TimeWorker(timedelta(milliseconds = 500))
+        self.timer.time_triggered.connect(self.time_triggered)
+        self.speed = 0
+        self.timed_chunk = 0
+        self.timed_items = 0
+        self.install = False
+        self.done = False
+
 
     def run(self):
+        self.timer.start()
+
         try:
             if not os.path.exists(self.dest_path):
                 os.makedirs(self.dest_path)
@@ -59,13 +71,7 @@ class InstallWorker(QThread):
 
                         f.write(chunk)
                         read_bytes += chunk_size
-                        timed_chunk += chunk_size
-
-                        deltatime = timedelta(seconds = process_time() - time)
-                        if deltatime >= timedelta(milliseconds = 500):
-                            self.signals.download_speed_changed.emit(timed_chunk / deltatime.total_seconds())
-                            timed_chunk = 0
-                            time = process_time()
+                        self.timed_chunk += chunk_size
 
                         self.signals.download_progress_changed.emit(read_bytes / total)
 
@@ -83,19 +89,14 @@ class InstallWorker(QThread):
             timed_items = 0
 
             self.signals.install_speed_changed.emit(0)
+            self.install = True
 
             for n, item in enumerate(items, 1):
                 if not any(item.filename.startswith(p) for p in exclude_path):
                     self.zipfile.extract(item, self.out_path)
 
                 self.signals.install_progress_changed.emit(n / total_n)
-                timed_items += 1
-
-                deltatime = timedelta(seconds = process_time() - time)
-                if deltatime >= timedelta(milliseconds = 500):
-                    self.signals.install_speed_changed.emit(timed_items / deltatime.total_seconds())
-                    timed_items = 0
-                    time = process_time()
+                self.timed_items += 1
 
             self.zipfile.close()
 
@@ -127,12 +128,43 @@ class InstallWorker(QThread):
             print(traceback.format_exc())
             self.signals.install_failed.emit(str(e))
 
+        self.timer.exit(0)
+        self.done = True
+
+
+    def time_triggered(self, deltatime: timedelta):
+        if self.done: return
+
+        if not self.install:
+            self.signals.download_speed_changed.emit(self.timed_chunk / deltatime.total_seconds())
+
+        else:
+            self.signals.install_speed_changed.emit(self.timed_items / deltatime.total_seconds())
+
+        self.timed_chunk = 0
+
+
     def get_file(self) -> str|None:
         for format in ['exe', 'bat']:
                 for file in os.listdir(self.out_path):
                     if file.endswith(f'.{format}'):
                         return f'{self.out_path}/{file}'
         return None
+
+
+
+class TimeWorker(QThread):
+    time_triggered = pyqtSignal(timedelta)
+
+    def __init__(self, interval: timedelta):
+        super(TimeWorker, self).__init__()
+        self.interval = interval
+
+    def run(self):
+        while True:
+            self.time_triggered.emit(self.interval)
+            sleep(self.interval.total_seconds())
+
 
 
 class Installer(QGridFrame):

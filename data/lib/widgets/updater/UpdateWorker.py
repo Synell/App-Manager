@@ -14,6 +14,8 @@ class __WorkerSignals__(QObject):
         install_progress_changed = pyqtSignal(float)
         download_speed_changed = pyqtSignal(float)
         install_speed_changed = pyqtSignal(float)
+        download_eta_changed = pyqtSignal(timedelta)
+        install_eta_changed = pyqtSignal(timedelta)
         download_done = pyqtSignal()
         install_done = pyqtSignal()
         install_failed = pyqtSignal(str)
@@ -33,6 +35,8 @@ class UpdateWorker(QThread):
         self.timed_items = 0
         self.install = False
         self.done = False
+        self.download_left = 0
+        self.install_left = 0
 
     def run(self):
         self.timer.start()
@@ -65,6 +69,7 @@ class UpdateWorker(QThread):
                         read_bytes += chunk_size
                         self.timed_chunk += chunk_size
 
+                        self.download_left = total - read_bytes
                         self.signals.download_progress_changed.emit(read_bytes / total)
 
             self.signals.download_done.emit()
@@ -82,6 +87,7 @@ class UpdateWorker(QThread):
                 if not any(item.filename.startswith(p) for p in exclude_path):
                     self.zipfile.extract(item, self.out_path)
 
+                self.install_left = total_n - n
                 self.signals.install_progress_changed.emit(n / total_n)
                 self.timed_items += 1
 
@@ -104,10 +110,14 @@ class UpdateWorker(QThread):
         if self.done: return
 
         if not self.install:
-            self.signals.download_speed_changed.emit(self.timed_chunk / deltatime.total_seconds())
+            t = self.timed_chunk / deltatime.total_seconds()
+            self.signals.download_speed_changed.emit(t)
+            self.signals.download_eta_changed.emit(timedelta(seconds = (self.download_left / t) if t else -1))
 
         else:
-            self.signals.install_speed_changed.emit(self.timed_items / deltatime.total_seconds())
+            t = self.timed_items / deltatime.total_seconds()
+            self.signals.install_speed_changed.emit(t)
+            self.signals.install_eta_changed.emit(timedelta(seconds = (self.install_left / t) if t else -1))
 
         self.timed_chunk = 0
 

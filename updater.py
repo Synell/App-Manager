@@ -5,7 +5,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from sys import exit
-from math import *
+from datetime import timedelta
 import os, json, base64, math, sys
 from data.lib.qtUtils import *
 from data.lib.widgets import SaveData
@@ -193,12 +193,19 @@ class QUpdater(QBaseApplication):
 
         self.progress_percent = QLabel(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', self.save_data.language_data['QUpdater']['QLabel']['waiting']))
         self.progress_percent.setProperty('h', 2)
-        top_frame.grid_layout.addWidget(self.progress_percent, 0, 0)
+        top_frame.grid_layout.addWidget(self.progress_percent, 0, 0, 1, 2)
 
         self.progress_eta = QLabel(self.save_data.language_data['QUpdater']['QLabel']['calculatingRemainingTime'])
         self.progress_eta.setProperty('subtitle', True)
         self.progress_eta.setProperty('bold', True)
         top_frame.grid_layout.addWidget(self.progress_eta, 1, 0)
+        top_frame.grid_layout.setAlignment(self.progress_eta, Qt.AlignmentFlag.AlignLeft)
+
+        self.progress_speed = QLabel(self.convert(0))
+        self.progress_speed.setProperty('subtitle', True)
+        self.progress_speed.setProperty('bold', True)
+        top_frame.grid_layout.addWidget(self.progress_speed, 1, 1)
+        top_frame.grid_layout.setAlignment(self.progress_speed, Qt.AlignmentFlag.AlignRight)
 
 
         self.progress = QProgressBar()
@@ -246,12 +253,6 @@ class QUpdater(QBaseApplication):
         bottom_frame.grid_layout.addWidget(bottom_frame.bottom, 0, 0)
         bottom_frame.grid_layout.setAlignment(bottom_frame.bottom, Qt.AlignmentFlag.AlignBottom)
 
-        # right_buttons = QGridFrame()
-        # right_buttons.grid_layout.setSpacing(10)
-        # right_buttons.grid_layout.setContentsMargins(0, 0, 0, 0)
-        # bottom_frame.bottom.grid_layout.addWidget(right_buttons, 0, 0)
-        # bottom_frame.bottom.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
-
         self.close_button = QPushButton('Close')
         self.close_button.setCursor(Qt.CursorShape.ForbiddenCursor)
         self.close_button.setDisabled(True)
@@ -276,18 +277,23 @@ class QUpdater(QBaseApplication):
         self.update_worker = UpdateWorker(self.UPDATE_LINK, self.save_data.token, self.save_data.downloads_folder)
         self.update_worker.signals.download_progress_changed.connect(self.download_progress_changed)
         self.update_worker.signals.download_speed_changed.connect(self.download_speed_changed)
+        self.update_worker.signals.download_eta_changed.connect(self.download_eta_changed)
         self.update_worker.signals.download_done.connect(self.download_done)
         self.update_worker.signals.install_progress_changed.connect(self.install_progress_changed)
         self.update_worker.signals.install_speed_changed.connect(self.install_speed_changed)
+        self.update_worker.signals.install_eta_changed.connect(self.install_eta_changed)
         self.update_worker.signals.install_done.connect(self.install_done)
         self.update_worker.signals.install_failed.connect(self.install_failed)
-        # self.update_worker.start()
+        self.update_worker.start()
 
     def slide(self):
         self.screenshots.slide_loop_next()
 
     def download_speed_changed(self, speed: float):
-        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['bytes'].replace('%s', self.convert(speed)))
+        self.progress_speed.setText(self.save_data.language_data['QUpdater']['QLabel']['bytes'].replace('%s', self.convert(speed)))
+
+    def download_eta_changed(self, eta: float):
+        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['eta'].replace('%s', self.convert_time(eta)))
 
     def download_progress_changed(self, progress: float):
         self.progress.setValue(int(progress * 50))
@@ -299,7 +305,10 @@ class QUpdater(QBaseApplication):
         self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['done'])
 
     def install_speed_changed(self, speed: float):
-        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['items'].replace('%s', f'{speed}'))
+        self.progress_speed.setText(self.save_data.language_data['QUpdater']['QLabel']['items'].replace('%s', f'{speed}'))
+
+    def install_eta_changed(self, eta: float):
+        self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['eta'].replace('%s', self.convert_time(eta)))
 
     def install_progress_changed(self, progress: float):
         self.progress.setValue(int(50 + progress * 50))
@@ -309,6 +318,7 @@ class QUpdater(QBaseApplication):
         self.progress.setValue(100)
         self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['done'])
         self.progress_eta.setText('')
+        self.progress_speed.setText('')
 
         self.close_button.setDisabled(False)
         self.close_button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -330,6 +340,24 @@ class QUpdater(QBaseApplication):
                 return f'{bytes:.2f} {x}'
             bytes /= step_unit
         return f'{bytes:.2f} {units[-1]}'
+
+    def convert_time(self, time: timedelta) -> str:
+        secs = round(time.total_seconds())
+        days = secs // 86400
+        hours = (secs % 86400) // 3600
+        minutes = (secs % 3600) // 60
+        seconds = secs % 60
+
+        if days == -1:
+            return self.save_data.language_data['QUpdater']['QLabel']['undefined']
+        elif days > 0:
+            return (self.save_data.language_data["QUpdater"]["QLabel"]["days"] if days > 1 else self.save_data.language_data["QUpdater"]["QLabel"]["day"]).replace('%s', str(days))
+        elif hours > 0:
+            return (self.save_data.language_data["QUpdater"]["QLabel"]["hours"] if hours > 1 else self.save_data.language_data["QUpdater"]["QLabel"]["hour"]).replace('%s', str(hours))
+        elif minutes > 0:
+            return (self.save_data.language_data["QUpdater"]["QLabel"]["minutes"] if minutes > 1 else self.save_data.language_data["QUpdater"]["QLabel"]["minute"]).replace('%s', str(minutes))
+        else:
+            return (self.save_data.language_data["QUpdater"]["QLabel"]["seconds"] if seconds > 1 else self.save_data.language_data["QUpdater"]["QLabel"]["second"]).replace('%s', str(seconds))
 #----------------------------------------------------------------------
 
     # Main

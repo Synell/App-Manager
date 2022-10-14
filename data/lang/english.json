@@ -489,7 +489,17 @@
                 "waiting": "Waiting...",
                 "done": "Done",
                 "bytes": "%s/s",
-                "items": "%s packages/s"
+                "items": "%s packages/s",
+                "eta": "ETA: %s",
+                "days": "%s days",
+                "hours": "%s hours",
+                "minutes": "%s minutes",
+                "seconds": "%s seconds",
+                "day": "%s day",
+                "hour": "%s hour",
+                "minute": "%s minute",
+                "second": "%s second",
+                "undefined": "Undefined"
             }
         }
     }

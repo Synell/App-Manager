@@ -489,7 +489,17 @@
                 "remainingTime": "Temps Restant: %s",
                 "done": "Terminé",
                 "bytes": "%s/s",
-                "packages": "%s paquets/s"
+                "packages": "%s paquets/s",
+                "eta": "Temps Restant: %s",
+                "days": "%s jours",
+                "hours": "%s heures",
+                "minutes": "%s minutes",
+                "seconds": "%s secondes",
+                "day": "%s jour",
+                "hour": "%s heure",
+                "minute": "%s minute",
+                "second": "%s seconde",
+                "undefined": "Indéfini"
             }
         }
     }

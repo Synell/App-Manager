@@ -38,10 +38,11 @@
 
 ### Windows, Linux, MacOS
 
-- Download the latest release from the [releases page](https://github.com/Synell/AppManager/releases) and extract it to a folder of your choice.
 <a href="https://github.com/Synell/AppManager/releases/latest">
   <img alt="Release: Latest" src="https://img.shields.io/badge/Release-Latest-00B4BE?style=for-the-badge" target="_blank" />
 </a>
+
+- Download the latest release from the [releases page](https://github.com/Synell/AppManager/releases) and extract it to a folder of your choice.
 
 
 ## Customization

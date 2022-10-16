@@ -7,8 +7,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtSvg import *
 from PyQt6.QtSvgWidgets import *
 from math import *
-import os, json, zipfile, shutil, traceback, sys
-from urllib.request import urlopen, Request
+import os, json, sys
 from datetime import datetime, timedelta
 from data.lib import *
 #----------------------------------------------------------------------

@@ -4,12 +4,12 @@
     <img alt="Python 3.10" src="https://img.shields.io/badge/Python-3.10-blue" />
   </a>
   <a href="https://www.qt.io/">
-    <img alt="Qt 6" src="https://img.shields.io/badge/Qt-6.2.3-orange" />
+    <img alt="Qt 6" src="https://img.shields.io/badge/Qt-6.2.3-brightgreen" />
   </a>
   <a href="https://github.com/Synell/AppManager/blob/master/LICENSE">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" target="_blank" />
   </a>
-  <img alt="Platforms: Windows, Linux, MacOS" src="https://img.shields.io/badge/Platforms-Windows%20|%20Linux%20|%20MacOS-brightgreen" />
+  <img alt="Platforms: Windows, Linux, MacOS" src="https://img.shields.io/badge/Platforms-Windows%20|%20Linux%20|%20MacOS-yellow" />
 </p>
 
 ----------------------------------------------------------------------

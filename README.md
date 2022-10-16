@@ -56,7 +56,7 @@
 
 - You can customize the theme of the app by adding new files into the `/data/themes/` folder. The theme must be contain valid [JSON](https://en.wikipedia.org/wiki/JavaScript_Object_Notation) codes and valid [QSS](https://doc.qt.io/qt-6/stylesheet-reference.html) codes. If the theme is not supported, the app will default to the default theme. Then, you can change the theme in the settings menu.
 
-  *See [this folder](https://github.com/Synell/AppManager/tree/main/data/themes/neutron/dark) for an example.*
+  *See [this file](https://github.com/Synell/AppManager/blob/main/data/themes/neutron.json) and [this folder](https://github.com/Synell/AppManager/tree/main/data/themes/neutron) for an example.*
 
 
 ## Usage

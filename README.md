@@ -3,6 +3,9 @@
   <a href="https://www.python.org/downloads/">
     <img alt="Python 3.10" src="https://img.shields.io/badge/Python-3.10-blue" />
   </a>
+  <a href="https://www.qt.io/">
+    <img alt="Qt 6" src="https://img.shields.io/badge/Qt-6.2.3-orange" />
+  </a>
   <a href="https://github.com/Synell/AppManager/blob/master/LICENSE">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" target="_blank" />
   </a>

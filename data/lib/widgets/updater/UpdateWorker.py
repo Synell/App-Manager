@@ -2,7 +2,7 @@
 
     # Libraries
 from PyQt6.QtCore import QObject, pyqtSignal, QThread
-import os, zipfile, shutil, traceback
+import os, zipfile, shutil, traceback, sys
 from urllib.request import urlopen, Request
 from datetime import timedelta
 from time import sleep
@@ -18,7 +18,7 @@ class __WorkerSignals__(QObject):
         install_eta_changed = pyqtSignal(timedelta)
         download_done = pyqtSignal()
         install_done = pyqtSignal()
-        install_failed = pyqtSignal(str)
+        install_failed = pyqtSignal(str, int)
 
 class UpdateWorker(QThread):
     def __init__(self, link: str, token: str, download_folder: str):
@@ -27,7 +27,7 @@ class UpdateWorker(QThread):
         self.link = link
         self.token = token
         self.dest_path = f'{download_folder}/AppManager'
-        self.out_path = f'./temp/'
+        self.out_path = './temp/' if sys.argv[0].endswith('.py') else './'
         self.timer = TimeWorker(timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0
@@ -37,6 +37,7 @@ class UpdateWorker(QThread):
         self.done = False
         self.download_left = 0
         self.install_left = 0
+        self.state = 0
 
     def run(self):
         self.timer.start()
@@ -51,6 +52,8 @@ class UpdateWorker(QThread):
 
             read_bytes = 0
             chunk_size = 1024
+
+            self.state = 1
 
             with urlopen(Request(self.link, headers = {'Authorization': f'token {self.token}'}) if self.token else self.link) as r:
                 total = int(r.info()['Content-Length'])
@@ -74,6 +77,7 @@ class UpdateWorker(QThread):
 
             self.signals.download_done.emit()
             self.signals.download_speed_changed.emit(-1)
+            self.state = 2
 
             self.zipfile = zipfile.ZipFile(file_path)
 
@@ -82,16 +86,20 @@ class UpdateWorker(QThread):
 
             self.signals.install_speed_changed.emit(0)
             self.install = True
+            file = sys.executable.replace(os.path.dirname(sys.executable), '').replace('\\', '').replace('/', '')
 
             for n, item in enumerate(items, 1):
                 if not any(item.filename.startswith(p) for p in exclude_path):
-                    self.zipfile.extract(item, self.out_path)
+                    if item.orig_filename == file: self.zipfile.extract(item, f'{self.out_path}/#tmp#/')
+                    else: self.zipfile.extract(item, self.out_path)
 
                 self.install_left = total_n - n
                 self.signals.install_progress_changed.emit(n / total_n)
                 self.timed_items += 1
 
             self.zipfile.close()
+
+            self.state = 3
 
             shutil.rmtree(self.dest_path)
 
@@ -100,7 +108,7 @@ class UpdateWorker(QThread):
 
         except Exception as e:
             print(traceback.format_exc())
-            self.signals.install_failed.emit(str(e))
+            self.signals.install_failed.emit(str(e), self.state)
 
         self.timer.exit(0)
         self.done = True

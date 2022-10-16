@@ -16,6 +16,6 @@ class SlideWorker(QThread):
 
     def run(self):
         while True:
-            self.sleep(5)
+            self.sleep(10)
             self.signals.slide_changed.emit()
 #----------------------------------------------------------------------

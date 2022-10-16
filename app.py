@@ -4,16 +4,18 @@
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
-from sys import exit
+from PyQt6.QtSvg import *
+from PyQt6.QtSvgWidgets import *
 from math import *
-import os, json
+import os, json, zipfile, shutil, traceback, sys
+from urllib.request import urlopen, Request
 from datetime import datetime, timedelta
 from data.lib import *
 #----------------------------------------------------------------------
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e6d408'
+    BUILD = '07e6d483'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -30,7 +32,7 @@ class Application(QBaseApplication):
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
-        self.must_update = False
+        self.must_update = None
 
         InstallButton.platform = PlatformType.Windows
         InstallButton.token = self.save_data.token
@@ -991,5 +993,5 @@ class Application(QBaseApplication):
 if __name__ == '__main__':
     app = Application()
     app.window.showNormal()
-    exit(app.exec())
+    sys.exit(app.exec())
 #----------------------------------------------------------------------

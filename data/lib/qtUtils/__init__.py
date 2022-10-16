@@ -39,4 +39,6 @@ from .QNamedToggleButton import QNamedToggleButton
 from .QDragList import QDragList, QDragListItem
 from .QFileExplorer import QFileExplorer
 from .QSlidingStackedWidget import QSlidingStackedWidget
+from .QAnimatedProgressBar import QAnimatedProgressBar
+from .QAnimatedSlider import QAnimatedSlider
 #----------------------------------------------------------------------

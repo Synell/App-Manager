@@ -4,9 +4,12 @@
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
-from sys import exit
+from PyQt6.QtSvg import *
+from PyQt6.QtSvgWidgets import *
 from datetime import timedelta
-import os, json, base64, math, sys
+import os, base64, math, sys, subprocess
+from urllib.request import urlopen, Request
+from time import sleep
 from data.lib.qtUtils import *
 from data.lib.widgets import SaveData
 from data.lib.widgets.updater import *
@@ -15,7 +18,7 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e6d408'
+    BUILD = '07e6d483'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -28,7 +31,7 @@ class QUpdater(QBaseApplication):
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
 
         self.save_data.setStyleSheet(self)
-        self.window.setProperty('color', 'cyan')
+        self.window.setProperty('color', updater_data.color)
 
         self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
 
@@ -208,13 +211,14 @@ class QUpdater(QBaseApplication):
         top_frame.grid_layout.setAlignment(self.progress_speed, Qt.AlignmentFlag.AlignRight)
 
 
-        self.progress = QProgressBar()
+        self.progress = QAnimatedProgressBar()
         self.progress.setProperty('color', 'main')
         self.progress.setProperty('small', True)
         self.progress.setProperty('light', True)
         self.progress.setFixedHeight(8)
         self.progress.setTextVisible(False)
         self.progress.setValue(0)
+        self.progress.setRange(0, 100)
         self.root.grid_layout.addWidget(self.progress, 1, 0)
         self.root.grid_layout.setAlignment(self.progress, Qt.AlignmentFlag.AlignTop)
 
@@ -240,10 +244,30 @@ class QUpdater(QBaseApplication):
         bottom_frame.grid_layout.setSpacing(5)
         bottom_frame.grid_layout.setContentsMargins(0, 0, 0, 0)
 
+
         bottom_frame.top = QGridFrame()
         bottom_frame.top.grid_layout.setSpacing(0)
-        bottom_frame.top.grid_layout.setContentsMargins(10, 10, 10, 10)
+        bottom_frame.top.grid_layout.setContentsMargins(0, 10, 0, 10)
         bottom_frame.grid_layout.addWidget(bottom_frame.top, 0, 0)
+
+        self.texts = QSlidingStackedWidget()
+        self.texts.set_speed(650)
+        self.texts.set_animation(QEasingCurve.Type.OutCubic)
+        self.texts.layout().setContentsMargins(0, 0, 0, 0)
+        self.texts.layout().setSpacing(0)
+        bottom_frame.top.grid_layout.addWidget(self.texts, 0, 0)
+
+        for text in self.save_data.language_data['QUpdater']['QSlidingStackedWidget']['texts']:
+            w = QGridFrame()
+            w.grid_layout.setSpacing(0)
+            w.grid_layout.setContentsMargins(50, 0, 50, 0)
+
+            l = QLabel(text)
+            l.setWordWrap(True)
+            l.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            w.grid_layout.addWidget(l, 0, 0)
+
+            self.texts.addWidget(w)
 
 
         bottom_frame.bottom = QGridFrame()
@@ -287,7 +311,8 @@ class QUpdater(QBaseApplication):
         self.update_worker.start()
 
     def slide(self):
-        self.screenshots.slide_loop_next()
+        self.screenshots.slide_loop_next(QSlidingStackedWidget.Direction.Right2Left)
+        self.texts.slide_loop_next(QSlidingStackedWidget.Direction.Right2Left)
 
     def download_speed_changed(self, speed: float):
         self.progress_speed.setText(self.save_data.language_data['QUpdater']['QLabel']['bytes'].replace('%s', self.convert(speed)))
@@ -296,7 +321,7 @@ class QUpdater(QBaseApplication):
         self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['eta'].replace('%s', self.convert_time(eta)))
 
     def download_progress_changed(self, progress: float):
-        self.progress.setValue(int(progress * 50))
+        if self.progress._anim.state() != QPropertyAnimation.State.Running: self.progress.setValue(int(progress * 50))
         self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['downloading'].replace('%s', f'{int(progress * 100)} %'))
 
     def download_done(self):
@@ -311,7 +336,7 @@ class QUpdater(QBaseApplication):
         self.progress_eta.setText(self.save_data.language_data['QUpdater']['QLabel']['eta'].replace('%s', self.convert_time(eta)))
 
     def install_progress_changed(self, progress: float):
-        self.progress.setValue(int(50 + progress * 50))
+        if self.progress._anim.state() != QPropertyAnimation.State.Running: self.progress.setValue(int(50 + progress * 50))
         self.progress_percent.setText(self.save_data.language_data['QUpdater']['QLabel']['installing'].replace('%s', f'{int(progress * 100)} %'))
 
     def install_done(self):
@@ -322,14 +347,24 @@ class QUpdater(QBaseApplication):
 
         self.close_button.setDisabled(False)
         self.close_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        # self.close_button.clicked.connect(self.close)
+        self.close_button.clicked.connect(self.exit)
 
         self.open_button.setDisabled(False)
         self.open_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        # self.open_button.clicked.connect(self.open_app)
+        self.open_button.clicked.connect(self.open_app)
 
-    def install_failed(self, error: str):
-        pass # todo
+    def install_failed(self, error: str, exit_code: int):
+        w = QPlainTextEdit()
+        w.setReadOnly(True)
+        w.setPlainText(error)
+        QMessageBoxWithWidget(
+            app = self,
+            title = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['downloadFailed' if exit_code < 2 else 'installFailed']['title'],
+            text = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['downloadFailed' if exit_code < 2 else 'installFailed']['text'],
+            informative_text = str(sys.argv[2]),
+            icon = QMessageBoxWithWidget.Icon.Critical,
+            widget = w
+        ).exec()
 
     def convert(self, bytes: float) -> str:
         step_unit = 1024
@@ -358,6 +393,32 @@ class QUpdater(QBaseApplication):
             return (self.save_data.language_data["QUpdater"]["QLabel"]["minutes"] if minutes > 1 else self.save_data.language_data["QUpdater"]["QLabel"]["minute"]).replace('%s', str(minutes))
         else:
             return (self.save_data.language_data["QUpdater"]["QLabel"]["seconds"] if seconds > 1 else self.save_data.language_data["QUpdater"]["QLabel"]["second"]).replace('%s', str(seconds))
+
+    def open_app(self):
+        if len(sys.argv) > 2:
+            try: subprocess.Popen(rf'"./{sys.argv[2]}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.path.dirname(os.path.abspath(sys.argv[0])))
+            except Exception as e:
+                w = QPlainTextEdit()
+                w.setReadOnly(True)
+                w.setPlainText(str(e))
+                QMessageBoxWithWidget(
+                    app = self,
+                    title = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['openAppFailed']['title'],
+                    text = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['openAppFailed']['text'],
+                    informative_text = str(sys.argv[2]),
+                    icon = QMessageBoxWithWidget.Icon.Critical,
+                    widget = w
+                ).exec()
+
+            self.exit()
+
+        else:
+            QMessageBoxWithWidget(
+                app = self,
+                title = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['appNotFound']['title'],
+                text = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['appNotFound']['text'],
+                icon = QMessageBoxWithWidget.Icon.Critical
+            ).exec()
 #----------------------------------------------------------------------
 
     # Main
@@ -367,5 +428,5 @@ if __name__ == '__main__':
 
     app = QUpdater()
     app.window.showNormal()
-    exit(app.exec())
+    sys.exit(app.exec())
 #----------------------------------------------------------------------

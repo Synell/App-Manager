@@ -39,6 +39,8 @@ class UpdateWorker(QThread):
         self.download_left = 0
         self.install_left = 0
         self.state = 0
+        self.speeds = []
+        self.len_speeds = 4
 
     def run(self):
         self.timer.start()
@@ -87,6 +89,7 @@ class UpdateWorker(QThread):
 
             self.signals.install_speed_changed.emit(0)
             self.install = True
+            self.speeds = []
             file = sys.executable.replace(os.path.dirname(sys.executable), '').replace('\\', '').replace('/', '')
 
             for n, item in enumerate(items, 1):
@@ -121,12 +124,18 @@ class UpdateWorker(QThread):
         if not self.install:
             t = self.timed_chunk / deltatime.total_seconds()
             self.signals.download_speed_changed.emit(t)
-            self.signals.download_eta_changed.emit(timedelta(seconds = (self.download_left / t) if t else -1))
+
+            if len(self.speeds) >= self.len_speeds: self.speeds.pop(0)
+            if t: self.speeds.append(self.download_left / t)
+            self.signals.download_eta_changed.emit(timedelta(seconds = (sum(self.speeds) / len(self.speeds) if self.speeds else -1)))
 
         else:
             t = self.timed_items / deltatime.total_seconds()
             self.signals.install_speed_changed.emit(t)
-            self.signals.install_eta_changed.emit(timedelta(seconds = (self.install_left / t) if t else -1))
+
+            if len(self.speeds) >= self.len_speeds: self.speeds.pop(0)
+            if t: self.speeds.append(self.install_left / t)
+            self.signals.install_eta_changed.emit(timedelta(seconds = (sum(self.speeds) / len(self.speeds) if self.speeds else -1)))
 
         self.timed_chunk = 0
 

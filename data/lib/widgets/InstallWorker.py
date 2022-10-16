@@ -6,7 +6,7 @@ from PyQt6.QtCore import QObject, pyqtSignal, QThread
 import os, zipfile, shutil, json, traceback
 from urllib.request import urlopen, Request
 from datetime import timedelta
-from time import process_time, sleep
+from time import sleep
 
 from .InstallButton import InstallButton
 from data.lib.qtUtils import QGridFrame, QGridWidget
@@ -18,9 +18,11 @@ class __WorkerSignals__(QObject):
         install_progress_changed = pyqtSignal(float)
         download_speed_changed = pyqtSignal(float)
         install_speed_changed = pyqtSignal(float)
+        download_eta_changed = pyqtSignal(timedelta)
+        install_eta_changed = pyqtSignal(timedelta)
         download_done = pyqtSignal()
         install_done = pyqtSignal()
-        install_failed = pyqtSignal(str)
+        install_failed = pyqtSignal(str, int)
 
 
 
@@ -38,6 +40,11 @@ class InstallWorker(QThread):
         self.timed_items = 0
         self.install = False
         self.done = False
+        # self.download_left = 0
+        # self.install_left = 0
+        self.state = 0
+        # self.speeds = []
+        # self.len_speeds = 4
 
 
     def run(self):
@@ -53,8 +60,6 @@ class InstallWorker(QThread):
 
             read_bytes = 0
             chunk_size = 1024
-            time = process_time()
-            timed_chunk = 0
 
             with urlopen(Request(self.data.link, headers = {'Authorization': f'token {self.data.token}'}) if self.data.token else self.data.link) as r:
                 total = int(r.info()['Content-Length'])
@@ -73,6 +78,7 @@ class InstallWorker(QThread):
                         read_bytes += chunk_size
                         self.timed_chunk += chunk_size
 
+                        # self.download_left = total - read_bytes
                         self.signals.download_progress_changed.emit(read_bytes / total)
 
             self.signals.download_done.emit()
@@ -85,20 +91,22 @@ class InstallWorker(QThread):
 
             items = self.zipfile.infolist()
             total_n = len(items)
-            time = process_time()
-            timed_items = 0
 
             self.signals.install_speed_changed.emit(0)
             self.install = True
+            self.speeds = []
 
             for n, item in enumerate(items, 1):
                 if not any(item.filename.startswith(p) for p in exclude_path):
                     self.zipfile.extract(item, self.out_path)
 
+                # self.install_left = total_n - n
                 self.signals.install_progress_changed.emit(n / total_n)
                 self.timed_items += 1
 
             self.zipfile.close()
+
+            self.state = 3
 
             manifest = f'{self.out_path}/manifest.json'
             if os.path.exists(manifest):
@@ -116,8 +124,12 @@ class InstallWorker(QThread):
             d['checkForUpdates'] = 4
             d['autoUpdate'] = True
 
+            self.state = 4
+
             with open(manifest, 'w', encoding = 'utf-8') as f:
                 json.dump(d, f, indent = 4, sort_keys = True, ensure_ascii = False)
+
+            self.state = 5
 
             shutil.rmtree(self.dest_path)
 
@@ -126,7 +138,7 @@ class InstallWorker(QThread):
 
         except Exception as e:
             print(traceback.format_exc())
-            self.signals.install_failed.emit(str(e))
+            self.signals.install_failed.emit(str(e), self.state)
 
         self.timer.exit(0)
         self.done = True
@@ -140,6 +152,22 @@ class InstallWorker(QThread):
 
         else:
             self.signals.install_speed_changed.emit(self.timed_items / deltatime.total_seconds())
+
+        # if not self.install:
+        #     t = self.timed_chunk / deltatime.total_seconds()
+        #     self.signals.download_speed_changed.emit(t)
+
+        #     if len(self.speeds) >= self.len_speeds: self.speeds.pop(0)
+        #     if t: self.speeds.append(self.download_left / t)
+        #     self.signals.download_eta_changed.emit(timedelta(seconds = (sum(self.speeds) / len(self.speeds) if self.speeds else -1)))
+
+        # else:
+        #     t = self.timed_items / deltatime.total_seconds()
+        #     self.signals.install_speed_changed.emit(t)
+
+        #     if len(self.speeds) >= self.len_speeds: self.speeds.pop(0)
+        #     if t: self.speeds.append(self.install_left / t)
+        #     self.signals.install_eta_changed.emit(timedelta(seconds = (sum(self.speeds) / len(self.speeds) if self.speeds else -1)))
 
         self.timed_chunk = 0
 
@@ -276,6 +304,6 @@ class Installer(QGridFrame):
         self.update_main()
         self.done.emit(f'{self.data.name}')
 
-    def install_failed(self, message: str) -> None:
+    def install_failed(self, message: str, exit_code: int) -> None:
         self.failed.emit(f'{self.data.name}', message)
 #----------------------------------------------------------------------

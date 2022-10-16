@@ -165,11 +165,11 @@ class QUpdater(QBaseApplication):
 
 
     def not_implemented(self, text = ''):
-        if text:
-            w = QDropDownWidget(text = lang['details'], widget = QLabel(text))
-        else: w = None
-
         lang = self.save_data.language_data['QMessageBox']['critical']['notImplemented']
+
+        if text:
+            w = QDropDownWidget(text = self.save_data.language_data['QMessageBox']['critical']['notImplemented']['details'], widget = QLabel(text))
+        else: w = None
 
         QMessageBoxWithWidget(
             app = self,
@@ -354,16 +354,13 @@ class QUpdater(QBaseApplication):
         self.open_button.clicked.connect(self.open_app)
 
     def install_failed(self, error: str, exit_code: int):
-        w = QPlainTextEdit()
-        w.setReadOnly(True)
-        w.setPlainText(error)
         QMessageBoxWithWidget(
             app = self,
             title = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['downloadFailed' if exit_code < 2 else 'installFailed']['title'],
             text = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['downloadFailed' if exit_code < 2 else 'installFailed']['text'],
             informative_text = str(sys.argv[2]),
             icon = QMessageBoxWithWidget.Icon.Critical,
-            widget = w
+            widget = QDropDownWidget(text = self.save_data.language_data['QMessageBox']['critical']['notImplemented']['details'], widget = QLabel(error))
         ).exec()
 
     def convert(self, bytes: float) -> str:
@@ -396,18 +393,15 @@ class QUpdater(QBaseApplication):
 
     def open_app(self):
         if len(sys.argv) > 2:
-            try: subprocess.Popen(rf'"./{sys.argv[2]}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.path.dirname(os.path.abspath(sys.argv[0])))
+            try: subprocess.Popen(rf'{sys.argv[2]}', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd())
             except Exception as e:
-                w = QPlainTextEdit()
-                w.setReadOnly(True)
-                w.setPlainText(str(e))
                 QMessageBoxWithWidget(
                     app = self,
                     title = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['openAppFailed']['title'],
                     text = self.save_data.language_data['QUpdater']['QMessageBox']['critical']['openAppFailed']['text'],
                     informative_text = str(sys.argv[2]),
                     icon = QMessageBoxWithWidget.Icon.Critical,
-                    widget = w
+                    widget = QDropDownWidget(text = self.save_data.language_data['QMessageBox']['critical']['notImplemented']['details'], widget = QLabel(str(e)))
                 ).exec()
 
             self.exit()
@@ -424,7 +418,7 @@ class QUpdater(QBaseApplication):
     # Main
 if __name__ == '__main__':
     if len(sys.argv) > 1: QUpdater.UPDATE_LINK = sys.argv[1]
-    else: QUpdater.UPDATE_LINK = 'https://github.com/Synell/PERT-Maker/releases/download/07e69431/Windows.PERT_Maker.Rel-07e69431.zip'#exit()
+    else: QUpdater.UPDATE_LINK = 'https://github.com/Synell/PERT-Maker/releases/download/07e69431/Windows.PERT_Maker.Rel-07e69431.zip'#sys.exit()
 
     app = QUpdater()
     app.window.showNormal()

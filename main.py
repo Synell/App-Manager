@@ -24,7 +24,7 @@ class ApplicationError(QApplication):
             app = self,
             title = 'App Manager - Error',
             text = 'Oups, something went wrong...',
-            informativeText = str(err),
+            informative_text = str(err),
             icon = QMessageBoxWithWidget.Icon.Critical
         ).exec()
         exit()
@@ -33,7 +33,7 @@ class ApplicationError(QApplication):
     # Main
 if __name__ == '__main__':
     try:
-        os.chdir(os.path.dirname(os.path.abspath(__file__)))
+        os.chdir(os.path.dirname(os.path.abspath(__file__ if sys.argv[0].endswith('.py') else sys.executable)))
 
         if os.path.exists('./#tmp#/'):
             try:
@@ -47,10 +47,12 @@ if __name__ == '__main__':
         app.window.showNormal()
         exit_code = app.exec()
         if (exit_code == 0 and app.must_update):
-            try: subprocess.Popen(rf'./Updater "{app.must_update}" "{__file__}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.path.dirname(os.path.abspath(__file__)))
-            except: exit_code = 1
+            ex = 'py main.py' if sys.argv[0].endswith('.py') else f'./{sys.executable}'
+            try: subprocess.Popen(rf'{"py updater.py" if sys.argv[0].endswith(".py") else "./Updater"} "{app.must_update}" "{ex}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd())
+            except Exception as e:
+                exit_code = 1
 
-        exit(exit_code)
+        sys.exit(exit_code)
 
     except Exception as err:
         print(err)

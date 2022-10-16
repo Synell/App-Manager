@@ -11,7 +11,7 @@
 
 ----------------------------------------------------------------------
 
-<p align="justify">App Manager is a simple app manager for Windows, Linux and MacOS. It allows you to install, uninstall, and update apps without using the command line or having to download and install the app from your browser. Everything is done in a simple and easy to use GUI.</p>
+App Manager is a simple app manager for Windows, Linux and MacOS. It allows you to install, uninstall, and update apps without using the command line or having to download and install the app from your browser. Everything is done in a simple and easy to use GUI.
 
 
 ## Requirements
@@ -64,61 +64,61 @@
 
 ### Installing Apps
 
-<p align="justify">You can start App Manager by double clicking the `AppManager` file in the folder you extracted the release to.</p>
+You can start App Manager by double clicking the `AppManager` file in the folder you extracted the release to.
 
 <img alt="Apps tab with no app installed" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmTz96GiViWHxBzCpqYHfEpsh8HtYUVBmzSmse6mOAfFx5K5Y8fSnPU7DabnOf7dO8MSnF6VzRs" />
 
-<p align="justify">Once you have started App Manager, you can click on the settings button to configure the app and add the apps you want to follow in the `Followed Apps` tab.</p>
+Once you have started App Manager, you can click on the settings button to configure the app and add the apps you want to follow in the `Followed Apps` tab.
 
-*<p align="justify">To add an app, you need to get its URL (e.g. `https://github.com/Synell/PERT-Maker`). You can then click on the `+` button and paste the URL into the text field.</p>*
+*To add an app, you need to get its URL (e.g. `https://github.com/Synell/PERT-Maker`). You can then click on the `+` button and paste the URL into the text field.*
 
 <br/>
 
 <img alt="Settings window" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmSTIUKvqwigHVZJru8jTn2hY6I7SgC1WW-KqW19keAnM5ARzXmlxTZsZAOheqTIfw-KXM5rIPw" />
 
-<p align="justify">Once you have added the apps you want to follow, you can leave the settings and click on the `Install App` button to install an app. This will open a new menu where you can select the app you want to install.</p>
+Once you have added the apps you want to follow, you can leave the settings and click on the `Install App` button to install an app. This will open a new menu where you can select the app you want to install.
 
-*<p align="justify">Note that you can only install apps that you have added to the `Followed Apps` tab.<br/>You also need to be connected to the internet to install apps.</p>*
+*Note that you can only install apps that you have added to the `Followed Apps` tab.<br/>You also need to be connected to the internet to install apps.*
 
 <br/>
 
-<p align="justify">Once you have found the app you want to install, you can click on the `Install` button to install it. This will open a new menu where you can select the version you want to install.</p>
+Once you have found the app you want to install, you can click on the `Install` button to install it. This will open a new menu where you can select the version you want to install.
 
-<p align="justify">If you go into the `Downloads` tab, you can see all the apps you are currently downloading with their progress.</p>
+If you go into the `Downloads` tab, you can see all the apps you are currently downloading with their progress.
 
 <img alt="Downloads tab" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmTISo22y5dMUTbVMVWoB28qGeHUcaX2jRPMJ9i9OTWH1Qtu2xX2NN6WrCWw2HMjNx9ESThIJEQ" />
 
 <br/>
 
-<p align="justify">If you go into the `Apps` tab, you can see all the apps you have installed with their version.</p>
+If you go into the `Apps` tab, you can see all the apps you have installed with their version.
 
 <img alt="Apps tab with an app installed" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmTvmvn-hbHXEF07JGruvlaldVcbPwbXgI0YxL6mJsriFtXXspU-XAnvtIcz1-4L1KnSaGeLS8E" />
 
-<p align="justify">Just click on the app to open it.</p>
+Just click on the app to open it.
 
 
 ### Updating Apps
 
-<p align="justify">To update an app, you can click on the `Update` button in the `Apps` tab.</p>
+To update an app, you can click on the `Update` button in the `Apps` tab.
 
-*<p align="justify">This button will only be visible if there is an update available for the app.</p>*
+*This button will only be visible if there is an update available for the app.*
 
 <img alt="Update button image" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmQJwaJ66AYKfmjmM3Gd1qQ_oBMyDM-Oslw-YJGEpqsFloBp3n3NqHqAPr0JwBzDxBmCHZwR8PU" />
 
 
 ### Uninstalling Apps
 
-<p align="justify">To uninstall an app, you can click on the setting button of the app in the `Apps` tab. Then, click on the `Uninstall` button.</p>
+To uninstall an app, you can click on the setting button of the app in the `Apps` tab. Then, click on the `Uninstall` button.
 
 <img alt="Uninstall popup image" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmSruwZQjWIXx-iiLMjc-RIONywmPyx7KUzQlCSyQBIjS4nlD20mRuVs9-xT65aGisX295CgXwQ" />
 
 
 ### Editing Apps Properties
 
-<p align="justify">In the `Apps` tab, you can click on the setting button of the app and then on the `Edit` button to edit the app's properties.</p>
+In the `Apps` tab, you can click on the setting button of the app and then on the `Edit` button to edit the app's properties.
 
 <img alt="Edit popup image" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmTFTxgxsOrFlhiF0K9XUDineDC64Ak7xAOt_p7GKttDk95Ou6P0QHH3sPMDXg6xCHISoV0OPMw" />
 
-*<p align="justify">You can edit the app's icon, update interval, and the advanced settings like the current working directory and the command line to execute in order to start the app.</p>*
+*You can edit the app's icon, update interval, and the advanced settings like the current working directory and the command line to execute in order to start the app.*
 
 <img alt="App Settings Image" src="https://lh3.googleusercontent.com/drive-viewer/AJc5JmSI34NeTVsxA21P4a_BEeeH7myqndmKyUwICvSOOsjY12vZBVniPkvYKUJX9b7JYbb2NXHATbU" />

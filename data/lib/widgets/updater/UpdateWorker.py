@@ -28,6 +28,7 @@ class UpdateWorker(QThread):
         self.token = token
         self.dest_path = f'{download_folder}/AppManager'
         self.out_path = './temp/' if sys.argv[0].endswith('.py') else './'
+        if not os.path.exists(self.out_path): os.makedirs(self.out_path)
         self.timer = TimeWorker(timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0

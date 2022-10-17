@@ -53,9 +53,9 @@ class QSettingsDialog(QDialog):
     def __init__(self, parent = None, settings_data = {}, lang_folder = '', themes_folder = '', current_lang = '', current_theme = '', current_theme_variant = '', extra_tabs: dict[str: QWidget] = {}, get_function = None):
         super().__init__(parent)
 
-        self.layout = QGridLayout()
-        self.layout.setSpacing(0)
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self._layout = QGridLayout()
+        self._layout.setSpacing(0)
+        self._layout.setContentsMargins(0, 0, 0, 0)
 
         extra_icons = {k: extra_tabs[k][1] for k in list(extra_tabs.keys())}
         extra_tabs = {k: extra_tabs[k][0] for k in list(extra_tabs.keys())}
@@ -123,10 +123,10 @@ class QSettingsDialog(QDialog):
 
         self.get_function = get_function
 
-        self.layout.addWidget(self.root, 0, 0)
-        self.layout.addWidget(self.frame, 1, 0)
+        self._layout.addWidget(self.root, 0, 0)
+        self._layout.addWidget(self.frame, 1, 0)
 
-        self.setLayout(self.layout)
+        self.setLayout(self._layout)
 
         self.setMinimumSize(int(parent.window().size().width() * (205 / 256)), int(parent.window().size().height() * (13 / 15)))
 

@@ -23,6 +23,7 @@ class QBaseApplication(QApplication):
             self._has_installed_event_filter = True
 
         alert = QLabel(message, self.window.centralWidget(), alignment = Qt.AlignmentFlag.AlignCenter)
+        alert.setWordWrap(True)
         if icon: alert.setPixmap(icon.pixmap(16, 16) if isinstance(icon, QIcon) else icon)
         alert.setProperty('QAlert', True)
         alert.setProperty('color', color)

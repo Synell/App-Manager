@@ -832,8 +832,11 @@ class Application(QBaseApplication):
 
     def check_updates_release(self, rel: dict, app: str):
         self.update_request.exit()
-        self.save_data.save()
-        print(rel)
+        if True:#rel['tag_name'] >= self.VERSION:
+            if UpdateDialog(self.window, self.save_data.language_data['UpdateDialog']).exec():
+                self.save_data.save()
+                self.must_update = self.UPDATE_LINK
+                self.exit()
 
     def check_updates_failed(self, error: str):
         self.update_request.exit()

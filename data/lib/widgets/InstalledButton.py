@@ -44,7 +44,7 @@ class InstalledButton(QGridFrame):
             self.release = data['release']
             self.tag_name = data['tag_name'] if data['tag_name'] else 'Custom'
             self.command = data['command']
-            self.created_at = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%SZ')
+            self.created_at = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%SZ') if data['created_at'] else None
             self.cwd = data['cwd']
             self.raw_icon = data['icon']
             self.icon = QIconWidget(None, icon, QSize(40, 40))
@@ -213,10 +213,11 @@ class InstalledButton(QGridFrame):
         action_remove.triggered.connect(lambda: self.remove_from_list.emit(self.path))
         menu.addAction(action_remove)
 
-        action_uninstall = QAction(self.lang['QAction']['uninstall'])
-        action_uninstall.setIcon(self.uninstall_icon)
-        action_uninstall.triggered.connect(lambda: self.uninstall.emit(self.path))
-        menu.addAction(action_uninstall)
+        if self.release in ['official', 'prerelease']:
+            action_uninstall = QAction(self.lang['QAction']['uninstall'])
+            action_uninstall.setIcon(self.uninstall_icon)
+            action_uninstall.triggered.connect(lambda: self.uninstall.emit(self.path))
+            menu.addAction(action_uninstall)
 
         menu.exec(self.settings_button.mapToGlobal(QPoint(0, 0)))
 

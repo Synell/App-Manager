@@ -635,7 +635,7 @@ class Application(QBaseApplication):
             self.main_page.downloads_widget.no_download.setVisible(False)
             self.main_page.downloads_widget.list.setVisible(True)
 
-        iw = Installer(None, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'], data, self.save_data.downloads_folder, self.save_data.apps_folder)
+        iw = Installer(None, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'], data, self.save_data.downloads_folder, self.save_data.apps_folder, self.save_data.new_apps_check_for_updates, self.save_data.new_apps_auto_update)
         self.main_page.downloads_widget.list.scroll_layout.addWidget(iw, len(list(self.downloads.keys())), 0)
         self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)
@@ -780,9 +780,12 @@ class Application(QBaseApplication):
             json.dump(obj = {
                 'release': 'custom',
                 'tag_name': None,
-                'command': f'{path}/{filename}',
-                'url': None,
-                'created_at': None
+                'command': f'"{path}/{filename}"',
+                'created_at': None,
+                'icon': f'{path}/{filename}',
+                'cwd': f'{path}/',
+                'checkForUpdates': 0,
+                'autoUpdate': False
             }, fp = f, ensure_ascii = False)
 
         self.save_data.apps['custom'].append(path)

@@ -185,7 +185,7 @@ class EditAppDialog(QDialog):
         label = self.textGroup(lang['QLabel']['releaseDate']['title'], lang['QLabel']['releaseDate']['description'])
         root_frame.grid_layout.addWidget(label, 9, 0)
 
-        app_release_date = QLabel(self.created_at.strftime('%d/%m/%Y %H:%M:%S'))
+        app_release_date = QLabel(self.created_at.strftime('%d/%m/%Y %H:%M:%S')) if self.created_at else QLabel('???')
         app_release_date.setProperty('title', True)
         app_release_date.setWordWrap(True)
         app_release_date.setFixedHeight(app_release_date.sizeHint().height())

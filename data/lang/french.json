@@ -532,13 +532,6 @@
                 "warning": {},
                 "information": {}
             }
-        },
-        "UpdateDialog": {
-            "title": "App Manager > Mise à Jour Disponible",
-            "QPushButton": {
-                "update": "Mettre à Jour",
-                "skip": "Ignorer"
-            }
         }
     }
 }

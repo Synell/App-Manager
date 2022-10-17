@@ -532,13 +532,6 @@
                 "warning": {},
                 "information": {}
             }
-        },
-        "UpdateDialog": {
-            "title": "App Manager > Update",
-            "QPushButton": {
-                "update": "Update",
-                "skip": "Skip"
-            }
         }
     }
 }

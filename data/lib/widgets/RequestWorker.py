@@ -14,11 +14,10 @@ class __WorkerSignals__(QObject):
 class RequestWorker(QThread):
     token: str = None
 
-    def __init__(self, followed_apps: list[str] = [], app_folder: str = ''):
+    def __init__(self, followed_apps: list[str] = []):
         super(RequestWorker, self).__init__()
         self.signals = __WorkerSignals__()
         self.followed_apps = followed_apps
-        self.apps_folder = app_folder
         self.time = datetime.now()
 
     def run(self):

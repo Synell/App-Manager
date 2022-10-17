@@ -26,6 +26,8 @@ class Application(QBaseApplication):
     ALERT_PAUSE_DURATION = 2300
     ALERT_FADE_DURATION = 350
 
+    UPDATE_LINK = 'https://github.com/Synell/PERT-Maker' # todo: replace with the true url
+
     def __init__(self):
         super().__init__()
 
@@ -71,7 +73,6 @@ class Application(QBaseApplication):
         self.load_colors()
         self.update_title()
 
-        self.check_updates()
         self.refresh_apps()
 
         self.create_about_menu()
@@ -573,7 +574,7 @@ class Application(QBaseApplication):
                     break
             if not app_is_installed: followed_apps_not_installed.append(fapp)
 
-        self.install_page_worker = RequestWorker(followed_apps_not_installed + followed_apps_to_update, self.save_data.apps_folder)
+        self.install_page_worker = RequestWorker(followed_apps_not_installed + followed_apps_to_update)
         self.install_page_worker.signals.received.connect(self.release_received)
         self.install_page_worker.signals.failed.connect(self.release_failed)
         self.install_page_worker.start()
@@ -821,15 +822,20 @@ class Application(QBaseApplication):
 
 
     def check_updates(self):
-        pass
-    #     self.update_worker = UpdateWorker()
-    #     self.update_worker.signals.done.connect(self.update_done)
-    #     self.update_worker.start()
+        self.update_request = RequestWorker([self.UPDATE_LINK])
+        self.update_request.signals.received.connect(self.check_updates_release)
+        self.update_request.signals.failed.connect(self.check_updates_failed)
+        self.update_request.start()
 
-    # def update_done(self):
-    #     self.update_worker.exit()
-    #     self.refresh_apps()
-    #     self.save_data.save()
+    def check_updates_release(self, rel: dict, app: str):
+        self.update_request.exit()
+        self.save_data.save()
+        print(rel)
+
+    def check_updates_failed(self, error: str):
+        self.update_request.exit()
+        self.save_data.save()
+        print('Failed to check for updates:', error)
 
 
 

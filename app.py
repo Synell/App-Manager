@@ -28,12 +28,13 @@ class Application(QBaseApplication):
 
     UPDATE_LINK = 'https://github.com/Synell/PERT-Maker' # todo: replace with the true url
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
         self.must_update = None
+        self.must_update_link = None
 
         InstallButton.platform = PlatformType.Windows
         InstallButton.token = self.save_data.token
@@ -106,10 +107,10 @@ class Application(QBaseApplication):
 
 
 
-    def update_title(self):
+    def update_title(self) -> None:
         self.window.setWindowTitle(self.save_data.language_data['QMainWindow']['title'] + f' | Version: {self.VERSION} | Build: {self.BUILD}')
 
-    def load_colors(self):
+    def load_colors(self) -> None:
         qss = QssParser(
             self.save_data.getStyleSheet(app = self, mode = QSaveData.StyleSheetMode.Local) + '\n' +
             self.save_data.getStyleSheet(app = self, mode = QSaveData.StyleSheetMode.Global)
@@ -221,14 +222,14 @@ class Application(QBaseApplication):
 
 
 
-    def settings_menu(self):
+    def settings_menu(self) -> None:
         self.save_data.settings_menu(self)
         self.load_colors()
         self.refresh_apps()
 
 
 
-    def not_implemented(self, text = ''):
+    def not_implemented(self, text = '') -> None:
         if text:
             w = QDropDownWidget(text = lang['details'], widget = QLabel(text))
         else: w = None
@@ -243,7 +244,7 @@ class Application(QBaseApplication):
             widget = w
         ).exec()
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
         self.root = QGridWidget()
         self.root.grid_layout.setSpacing(0)
         self.root.grid_layout.setContentsMargins(0, 0, 0, 0)
@@ -255,7 +256,7 @@ class Application(QBaseApplication):
 
 
 
-    def create_main_page(self):
+    def create_main_page(self) -> None:
         self.main_page = QGridWidget()
         self.root.grid_layout.addWidget(self.main_page, 0, 0)
 
@@ -308,7 +309,7 @@ class Application(QBaseApplication):
         self.panel_select_apps()
 
 
-    def create_apps_widget(self):
+    def create_apps_widget(self) -> None:
         self.main_page.apps_widget = QGridWidget()
 
         self.main_page.apps_widget.top = QGridWidget()
@@ -323,6 +324,14 @@ class Application(QBaseApplication):
         right_buttons = QGridWidget()
         self.main_page.apps_widget.top.grid_layout.addWidget(right_buttons, 0, 1, 2, 1)
         self.main_page.apps_widget.top.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
+
+        self.update_button = QPushButton(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QPushButton']['update'])
+        self.update_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.update_button.clicked.connect(self.update_click)
+        self.update_button.setProperty('color', 'main')
+        self.update_button.setProperty('transparent', True)
+        right_buttons.grid_layout.addWidget(self.update_button, 0, 0)
+        self.update_button.setVisible(False)
 
         button = QPushButton(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QPushButton']['locate'])
         button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -378,7 +387,7 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.setVisible(False)
 
 
-    def create_downloads_widget(self):
+    def create_downloads_widget(self) -> None:
         self.main_page.downloads_widget = QGridWidget()
 
         self.main_page.downloads_widget.top = QGridWidget()
@@ -426,7 +435,7 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.setVisible(False)
 
 
-    def create_install_app_page(self):
+    def create_install_app_page(self) -> None:
         self.install_app_page = QGridWidget()
         self.root.grid_layout.addWidget(self.install_app_page, 0, 0)
         self.install_app_page.grid_layout.setSpacing(0)
@@ -630,7 +639,7 @@ class Application(QBaseApplication):
         )
 
 
-    def add_to_download_list(self, data: InstallButton.download_data):
+    def add_to_download_list(self, data: InstallButton.download_data) -> None:
         if len(list(self.downloads.keys())) == 0:
             self.main_page.downloads_widget.no_download.setVisible(False)
             self.main_page.downloads_widget.list.setVisible(True)
@@ -692,20 +701,20 @@ class Application(QBaseApplication):
                 if self.window.isVisible(): self.must_exit_after_download = False
                 else: self.exit()
 
-    def remove_from_install_list(self, path: str):
+    def remove_from_install_list(self, path: str) -> None:
         for i in ['official', 'pre', 'custom']:
             if path in self.save_data.apps[i]: self.save_data.apps[i].remove(path)
         self.refresh_apps()
         self.save_data.save()
 
-    def add_to_uninstall_list(self, path: str):
+    def add_to_uninstall_list(self, path: str) -> None:
         self.remove_from_install_list(path)
         self.uninstalls[path] = UninstallWorker(path)
         self.uninstalls[path].signals.done.connect(self.remove_from_uninstall_list)
         self.uninstalls[path].signals.failed.connect(self.remove_from_uninstall_list)
         self.uninstalls[path].start()
 
-    def remove_from_uninstall_list(self, path: str, error: str = None):
+    def remove_from_uninstall_list(self, path: str, error: str = None) -> None:
         self.uninstalls[path].exit()
         del self.uninstalls[path]
         self.refresh_apps()
@@ -744,23 +753,23 @@ class Application(QBaseApplication):
 
 
 
-    def panel_select_apps(self):
+    def panel_select_apps(self) -> None:
         self.main_page.side_panel.set_current_index(0)
         self.main_page.downloads_widget.setVisible(False)
         self.main_page.apps_widget.setVisible(True)
 
-    def panel_select_downloads(self):
+    def panel_select_downloads(self) -> None:
         if not self.main_page.isVisible(): self.main_page_click()
         self.main_page.side_panel.set_current_index(1)
         self.main_page.apps_widget.setVisible(False)
         self.main_page.downloads_widget.setVisible(True)
 
 
-    def main_page_click(self):
+    def main_page_click(self) -> None:
         self.install_app_page.setVisible(False)
         self.main_page.setVisible(True)
 
-    def locate_app_click(self):
+    def locate_app_click(self) -> None:
         path = QFileDialog.getOpenFileName(
             parent = self.window,
             directory = self.save_data.apps_folder,
@@ -803,14 +812,14 @@ class Application(QBaseApplication):
                 self.refresh_apps()
                 self.save_data.save()
 
-    def install_app_click(self):
+    def install_app_click(self) -> None:
         self.main_page.setVisible(False)
         self.install_app_page.setVisible(True)
         self.install_app_page_refresh_template()
 
 
 
-    def clear_layout(self, layout):
+    def clear_layout(self, layout: QLayout) -> None:
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():
@@ -818,35 +827,35 @@ class Application(QBaseApplication):
 
 
 
-    def refresh_install_apps_list(self):
+    def refresh_install_apps_list(self) -> None:
         for i in self.install_page_buttons[0] + self.install_page_buttons[1]:
             i.setVisible(self.install_app_page.top.searchbar.text().lower() in i.name.lower())
 
 
 
-    def check_updates(self):
+    def check_updates(self) -> None:
         self.update_request = RequestWorker([self.UPDATE_LINK])
         self.update_request.signals.received.connect(self.check_updates_release)
         self.update_request.signals.failed.connect(self.check_updates_failed)
         self.update_request.start()
 
-    def check_updates_release(self, rel: dict, app: str):
+    def check_updates_release(self, rel: dict, app: str) -> None:
         self.update_request.exit()
-        print(f'{rel["tag_name"]=} {self.BUILD=}')
-        if rel['tag_name'] >= self.BUILD:
+        self.must_update_link = InstallButton.get_release(rel, None).link
+        if True:#rel['tag_name'] > self.BUILD:
             self.set_update(True)
 
-    def check_updates_failed(self, error: str):
+    def check_updates_failed(self, error: str) -> None:
         self.update_request.exit()
         self.save_data.save()
         print('Failed to check for updates:', error)
 
-    def set_update(self, update: bool):
-        print(f'{update=}')# self.bla.setVisible(update)
+    def set_update(self, update: bool) -> None:
+        self.update_button.setVisible(update)
 
-    def update_click(self):
+    def update_click(self) -> None:
         self.save_data.save()
-        self.must_update = self.UPDATE_LINK
+        self.must_update = self.must_update_link
         self.exit()
 
 
@@ -862,7 +871,7 @@ class Application(QBaseApplication):
 
 
 
-    def refresh_apps(self):
+    def refresh_apps(self) -> None:
         for k in self.save_data.apps:
             for app in self.save_data.apps[k].copy():
                 if not os.path.exists(f'{app}/manifest.json'):
@@ -874,7 +883,7 @@ class Application(QBaseApplication):
 
         self.refresh_apps_list()
 
-    def refresh_apps_list(self, event: str|int = None):
+    def refresh_apps_list(self, event: str|int = None) -> None:
         match self.main_page.apps_widget.notebook.currentIndex():
             case 0: k = 'all'
             case 1: k = 'official'

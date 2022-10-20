@@ -78,15 +78,15 @@ class InstallButton(QGridFrame):
 
 
     @staticmethod
-    def get_release(platform: PlatformType, data: dict, token: str = None) -> download_data:
+    def get_release(data: dict, token: str = None) -> download_data:
         def in_platform(s: str) -> bool:
-            for i in platform.value:
+            for i in InstallButton.platform.value:
                 if i in s: return True
             return False
 
         def is_content_type(s: str) -> bool:
             types = []
-            match platform:
+            match InstallButton.platform:
                 case PlatformType.Windows:
                     types = [
                         'application/x-zip-compressed', # .zip
@@ -110,7 +110,7 @@ class InstallButton(QGridFrame):
             return False
 
         def better_file(files: list) -> str:
-            for i in platform.value:
+            for i in InstallButton.platform.value:
                 for j in files:
                     if i.lower() in j.lower(): return j
 
@@ -119,7 +119,7 @@ class InstallButton(QGridFrame):
 
 
     def install_click(self) -> None:
-        rel = InstallButton.get_release(self.platform, self.data, self.token)
+        rel = InstallButton.get_release(self.data, self.token)
 
         if rel:
             self.push_button.setDisabled(True)

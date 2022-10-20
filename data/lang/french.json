@@ -13,7 +13,8 @@
                         "title": "Applications",
                         "QPushButton": {
                             "locate": "Localiser",
-                            "installApp": "Installer une Application"
+                            "installApp": "Installer une Application",
+                            "update": "Mettre à jour"
                         },
                         "QLineEdit": {
                             "search": "Rechercher"

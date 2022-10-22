@@ -1,0 +1,29 @@
+<svg width="207.1px" height="207.1px" viewBox="-5 0 207.1 207.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="Path_14" data-name="Path 14" d="M782.218,228.625V169.95h-197.1v207.1h58.675Z" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="Group_17" data-name="Group 17" transform="translate(-585.118 -169.95)">
+    <g id="Group_15" data-name="Group 15">
+      <g id="Group_14" data-name="Group 14" clip-path="url(#clip-path)">
+        <circle id="Ellipse_32" data-name="Ellipse 32" cx="80" cy="80" r="80" transform="translate(603.739 198.5)" fill="#df71f5" opacity="0.4"/>
+        <circle id="Ellipse_33" data-name="Ellipse 33" cx="80" cy="80" r="80" transform="translate(603.739 188.5)" fill="#df71f5"/>
+      </g>
+    </g>
+    <circle id="Ellipse_34" data-name="Ellipse 34" cx="55.885" cy="55.885" r="55.885" transform="translate(627.855 218.615)" fill="#51e4c2" opacity="0.5"/>
+    <circle id="Ellipse_35" data-name="Ellipse 35" cx="55.885" cy="55.885" r="55.885" transform="translate(627.855 212.615)" fill="#51e4c2"/>
+    <g id="Group_16" data-name="Group 16">
+      <rect id="Rectangle_8" data-name="Rectangle 8" width="119.451" height="84.462" transform="translate(624.014 237.269)" fill="#1f211e" opacity="0.6"/>
+      <rect id="Rectangle_9" data-name="Rectangle 9" width="119.451" height="84.462" rx="2" transform="translate(629.423 220.639) rotate(5.604)" fill="#e4efec"/>
+      <rect id="Rectangle_10" data-name="Rectangle 10" width="119.451" height="84.462" rx="2" transform="translate(624.014 226.269)" fill="#fff"/>
+      <path id="Path_15" data-name="Path 15" d="M683.739,278.5l19.167-19.167,35.542,35.542v10.857H683.739Z" fill="#3ecca6"/>
+      <circle id="Ellipse_36" data-name="Ellipse 36" cx="14.305" cy="14.305" r="14.305" transform="translate(705.263 259.333)" fill="#f8e71c" opacity="0.2"/>
+      <circle id="Ellipse_37" data-name="Ellipse 37" cx="8.973" cy="8.973" r="8.973" transform="translate(710.595 264.665)" fill="#f8e71c"/>
+      <path id="Path_16" data-name="Path 16" d="M629.014,283.559c2.866-2.283,35.729-35.73,35.729-35.73l58.046,58.047H629.014Z" fill="#51e4c2"/>
+      <ellipse id="Ellipse_38" data-name="Ellipse 38" cx="6.471" cy="3.819" rx="6.471" ry="3.819" transform="translate(641.856 273.931)" fill="#1f211e" opacity="0.1"/>
+      <rect id="Rectangle_11" data-name="Rectangle 11" width="1.427" height="9.534" transform="translate(647.613 268.216)" fill="#534741"/>
+      <circle id="Ellipse_39" data-name="Ellipse 39" cx="6.471" cy="6.471" r="6.471" transform="translate(641.856 257.991)" fill="#3ecca6"/>
+    </g>
+  </g>
+</svg>

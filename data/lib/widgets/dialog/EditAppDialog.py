@@ -3,8 +3,6 @@
     # Libraries
 from PyQt6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
-from PyQt6.QtGui import QPixmap
-from PyQt6.QtSvgWidgets import QSvgWidget
 from datetime import datetime
 from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
 import json, os
@@ -109,6 +107,7 @@ class EditAppDialog(QDialog):
         w = self.tabs[self.lang['QSidePanel']['icon']['title']][0]
 
         for index, icon in enumerate(['../none.svg'] + os.listdir(self.icon_path)):
+            if not icon.endswith('.svg'): continue
             b = self.generate_button(f'{self.icon_path}/{icon}')
             w.bottom.scroll_layout.addWidget(b)
 

@@ -41,4 +41,5 @@ from .QFileExplorer import QFileExplorer
 from .QSlidingStackedWidget import QSlidingStackedWidget
 from .QAnimatedProgressBar import QAnimatedProgressBar
 from .QAnimatedSlider import QAnimatedSlider
+from .QSmoothScrollArea import QSmoothScrollArea
 #----------------------------------------------------------------------

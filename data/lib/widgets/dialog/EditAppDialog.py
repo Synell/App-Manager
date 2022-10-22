@@ -83,12 +83,11 @@ class EditAppDialog(QDialog):
             clear_root_widget(widget)
             self.root.sidepanel.set_current_index(index)
 
-        self.tabs = {
-            self.lang['QSidePanel']['general']['title']: self.general_tab_widget(),
-            self.lang['QSidePanel']['advanced']['title']: self.advanced_tab_widget(),
-            self.lang['QSidePanel']['updates']['title']: self.updates_tab_widget(),
-            self.lang['QSidePanel']['icon']['title']: self.icon_tab_widget()
-        }
+        self.tabs = {}
+        self.tabs[self.lang['QSidePanel']['general']['title']] = self.general_tab_widget()
+        self.tabs[self.lang['QSidePanel']['advanced']['title']] = self.advanced_tab_widget()
+        if self.release in ['official', 'prerelease']: self.tabs[self.lang['QSidePanel']['updates']['title']] = self.updates_tab_widget()
+        self.tabs[self.lang['QSidePanel']['icon']['title']] = self.icon_tab_widget()
 
 
         kLst = list(self.tabs.keys())
@@ -446,8 +445,9 @@ class EditAppDialog(QDialog):
             if self.cwd_button.path(): data['cwd'] = self.cwd_button.path()
             if self.command_lineedit.text(): data['command'] = self.command_lineedit.text()
             if self.icon_button.path(): data['icon'] = self.icon_button.path()
-            data['checkForUpdates'] = self.check_for_updates_combobox.combo_box.currentIndex()
-            data['autoUpdate'] = self.auto_update_checkbox.isChecked()
+            if self.release in ['official', 'prerelease']:
+                data['checkForUpdates'] = self.check_for_updates_combobox.combo_box.currentIndex()
+                data['autoUpdate'] = self.auto_update_checkbox.isChecked()
 
             with open(f'{self.path}/manifest.json', 'w', encoding = 'utf-8') as outfile:
                 json.dump(data, outfile, indent = 4)

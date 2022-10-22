@@ -48,7 +48,7 @@ if __name__ == '__main__':
         exit_code = app.exec()
         if (exit_code == 0 and app.must_update):
             ex = 'py main.py' if sys.argv[0].endswith('.py') else f'./{sys.executable}'
-            try: subprocess.Popen(rf'{"py updater.py" if sys.argv[0].endswith(".py") else "./Updater"} "{app.must_update}" "{ex}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd())
+            try: subprocess.Popen(rf'{"py updater.py" if sys.argv[0].endswith(".py") else "./Updater"} "{app.must_update}" "{ex}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd(), shell = False)
             except Exception as e:
                 exit_code = 1
 

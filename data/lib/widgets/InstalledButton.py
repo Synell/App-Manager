@@ -47,9 +47,13 @@ class InstalledButton(QGridFrame):
             self.created_at = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%SZ') if data['created_at'] else None
             self.cwd = data['cwd']
             self.raw_icon = data['icon']
-            self.icon = QIconWidget(None, icon, QSize(40, 40))
-            self.check_for_updates = data['checkForUpdates']
-            self.auto_update = data['autoUpdate']
+            self.icon = QIconWidget(None, icon, QSize(36, 36))
+            if self.release in ['official', 'prerelease']:
+                self.check_for_updates = data['checkForUpdates']
+                self.auto_update = data['autoUpdate']
+            else:
+                self.check_for_updates = 0
+                self.auto_update = False
 
         self.setFixedHeight(60)
         self.setProperty('color', 'main')
@@ -223,7 +227,7 @@ class InstalledButton(QGridFrame):
 
     def show_in_explorer(self) -> None:
         path = self.path.replace('/', '\\')
-        subprocess.Popen(rf'explorer /select, "{path}"')
+        subprocess.Popen(rf'explorer /select, "{path}"', shell = False)
 
     def edit(self) -> None:
         edit_dialog = EditAppDialog(self, self.lang['EditAppDialog'], self.name, self.tag_name, self.release, self.created_at, self.raw_icon, self.cwd, self.command, self.path, self.check_for_updates, self.auto_update)
@@ -232,7 +236,7 @@ class InstalledButton(QGridFrame):
 
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         try:
-            subprocess.Popen(rf'{self.command}', cwd = rf'{self.cwd}')
+            subprocess.Popen(rf'{self.command}', cwd = rf'{self.cwd}', shell = False)
         except Exception as e:
             print('oof: ' + str(e)) #todo
 
@@ -266,8 +270,9 @@ class InstalledButton(QGridFrame):
             self.cwd = data['cwd']
             self.raw_icon = data['icon']
             self.set_icon(self.raw_icon)
-            self.check_for_updates = data['checkForUpdates']
-            self.auto_update = data['autoUpdate']
+            if self.release in ['official', 'prerelease']:
+                self.check_for_updates = data['checkForUpdates']
+                self.auto_update = data['autoUpdate']
 #----------------------------------------------------------------------
 
     # Worker

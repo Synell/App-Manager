@@ -18,7 +18,7 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e6d483'
+    BUILD = '07e6d4b4'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -418,7 +418,7 @@ class QUpdater(QBaseApplication):
     # Main
 if __name__ == '__main__':
     if len(sys.argv) > 1: QUpdater.UPDATE_LINK = sys.argv[1]
-    else: QUpdater.UPDATE_LINK = 'https://github.com/Synell/PERT-Maker/releases/download/07e69431/Windows.PERT_Maker.Rel-07e69431.zip'#sys.exit()
+    else: sys.exit()
 
     app = QUpdater()
     app.window.showNormal()

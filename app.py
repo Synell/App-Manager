@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e6d483'
+    BUILD = '07e6d4b4'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -620,7 +620,7 @@ class Application(QBaseApplication):
 
             case _: return
 
-        self.updates[rel['name']] = InstallButton.get_release(InstallButton.platform, rel, self.save_data.token)
+        self.updates[rel['name']] = InstallButton.get_release(rel, self.save_data.token)
         self.refresh_apps()
 
     def release_failed(self, error: str) -> None:
@@ -792,9 +792,7 @@ class Application(QBaseApplication):
                 'command': f'"{path}/{filename}"',
                 'created_at': None,
                 'icon': f'{path}/{filename}',
-                'cwd': f'{path}/',
-                'checkForUpdates': 0,
-                'autoUpdate': False
+                'cwd': f'{path}/'
             }, fp = f, ensure_ascii = False)
 
         self.save_data.apps['custom'].append(path)
@@ -842,12 +840,11 @@ class Application(QBaseApplication):
     def check_updates_release(self, rel: dict, app: str) -> None:
         self.update_request.exit()
         self.must_update_link = InstallButton.get_release(rel, None).link
-        if True:#rel['tag_name'] > self.BUILD:
+        if rel['tag_name'] > self.BUILD:
             self.set_update(True)
 
     def check_updates_failed(self, error: str) -> None:
         self.update_request.exit()
-        self.save_data.save()
         print('Failed to check for updates:', error)
 
     def set_update(self, update: bool) -> None:

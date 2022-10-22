@@ -27,7 +27,7 @@ class ApplicationError(QApplication):
             informative_text = str(err),
             icon = QMessageBoxWithWidget.Icon.Critical
         ).exec()
-        exit()
+        sys.exit()
 #----------------------------------------------------------------------
 
     # Main

@@ -18,7 +18,7 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e6d4b4'
+    BUILD = '07e6d4bd'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()

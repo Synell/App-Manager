@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e6d4b4'
+    BUILD = '07e6d4bd'
     VERSION = 'Experimental'
 
     COLOR_LINK = QUtilsColor()
@@ -26,17 +26,17 @@ class Application(QBaseApplication):
     ALERT_PAUSE_DURATION = 2300
     ALERT_FADE_DURATION = 350
 
-    UPDATE_LINK = 'https://github.com/Synell/PERT-Maker' # todo: replace with the true url
+    UPDATE_LINK = 'https://github.com/Synell/AppManager'
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, platform: QPlatform) -> None:
+        super().__init__(platform = platform)
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
         self.must_update = None
         self.must_update_link = None
 
-        InstallButton.platform = PlatformType.Windows
+        InstallButton.platform = PlatformType.Windows if self.platform == QPlatform.Windows else PlatformType.Linux if self.platform == QPlatform.Linux else PlatformType.MacOS
         InstallButton.token = self.save_data.token
         RequestWorker.token = self.save_data.token
 

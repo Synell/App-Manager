@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtSvg import *
 from PyQt6.QtSvgWidgets import *
 from math import *
-import os, json, zipfile, shutil, traceback, sys, subprocess
+import os, json, zipfile, shutil, traceback, sys, subprocess, platform
 from urllib.request import urlopen, Request
 from datetime import datetime, timedelta
 from app import Application
@@ -30,8 +30,8 @@ class ApplicationError(QApplication):
         sys.exit()
 #----------------------------------------------------------------------
 
-    # Main
-if __name__ == '__main__':
+    # Main Function
+def main() -> None:
     try:
         os.chdir(os.path.dirname(os.path.abspath(__file__ if sys.argv[0].endswith('.py') else sys.executable)))
 
@@ -43,7 +43,17 @@ if __name__ == '__main__':
 
             except: pass
 
-        app = Application()
+        platf = None
+        match platform.system():
+            case 'Windows': platf = QPlatform.Windows
+            case 'Linux': platf = QPlatform.Linux
+            case 'Darwin': platf = QPlatform.MacOS
+            case 'Java': platf = QPlatform.Java
+            case _: platf = QPlatform.Unknown
+
+        if platf == QPlatform.Unknown: raise Exception('Unknown platform')
+
+        app = Application(platf)
         app.window.showNormal()
         exit_code = app.exec()
         if (exit_code == 0 and app.must_update):
@@ -57,4 +67,9 @@ if __name__ == '__main__':
     except Exception as err:
         print(err)
         app = ApplicationError(err)
+#----------------------------------------------------------------------
+
+    # Main
+if __name__ == '__main__':
+    main()
 #----------------------------------------------------------------------

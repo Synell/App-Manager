@@ -23,10 +23,7 @@ class SaveData(QSaveData):
         self.apps_folder = os.path.abspath('./data/apps/').replace('\\', '/')
         self.downloads_folder = os.path.abspath('./data/downloads/').replace('\\', '/')
         self.apps = {'official': [], 'pre': [], 'custom': []}
-        self.followed_apps = [
-            "https://github.com/CLF78/Reggie-Next",
-            "https://github.com/RoadrunnerWMC/Level-Info-Editor"
-        ]
+        self.followed_apps = []
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
         self.new_apps_check_for_updates = 4

@@ -5,14 +5,18 @@ from sys import argv
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt6.QtCore import QPauseAnimation, QRect, QEvent, QSequentialAnimationGroup, QPauseAnimation, QPropertyAnimation, Qt, QEasingCurve
 from PyQt6.QtGui import QIcon, QPixmap
+
+from .QPlatform import QPlatform
 #----------------------------------------------------------------------
 
     # Class
 class QBaseApplication(QApplication):
-    def __init__(self) -> None:
+    def __init__(self, platform: QPlatform) -> None:
         super().__init__([argv[0]])
         self.window = QMainWindow()
         self.window.setWindowTitle('Base Qt Window')
+
+        self.platform = platform
 
         self._alerts = []
         self._has_installed_event_filter = False

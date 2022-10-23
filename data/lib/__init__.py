@@ -2,6 +2,5 @@
 
     # Libraries
 from .qtUtils import *
-from .utils import *
 from .widgets import *
 #----------------------------------------------------------------------

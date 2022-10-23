@@ -43,4 +43,5 @@ from .QAnimatedProgressBar import QAnimatedProgressBar
 from .QAnimatedSlider import QAnimatedSlider
 from .QSmoothScrollArea import QSmoothScrollArea
 from .QPlatform import QPlatform
+from .QCrashReport import QCrashReport
 #----------------------------------------------------------------------

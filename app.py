@@ -24,7 +24,7 @@ class Application(QBaseApplication):
     ALERT_PAUSE_DURATION = 2300
     ALERT_FADE_DURATION = 350
 
-    UPDATE_LINK = 'https://github.com/Synell/AppManager'
+    UPDATE_LINK = 'https://github.com/Synell/App-Manager'
 
     def __init__(self, platform: QPlatform) -> None:
         super().__init__(platform = platform)

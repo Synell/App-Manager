@@ -24,11 +24,6 @@ App Manager is a simple app manager for Windows, Linux and MacOS. It allows you 
 - Windows 7 or later
 - VC++ 2015 Redistributable
 
-### Linux
-- !!todo!!
-
-### MacOS
-- !!todo!!
 
 ### Source Code
 - Python 3.10 or later
@@ -39,7 +34,7 @@ App Manager is a simple app manager for Windows, Linux and MacOS. It allows you 
 
 ## Installation
 
-### Windows, Linux, MacOS
+### Windows
 
 <a href="https://github.com/Synell/AppManager/releases/latest">
   <img alt="Release: Latest" src="https://img.shields.io/badge/Release-Latest-00B4BE?style=for-the-badge" target="_blank" />

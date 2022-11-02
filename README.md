@@ -32,7 +32,7 @@ App Manager is a simple app manager for Windows, Linux and MacOS. It allows you 
 
 ### Source Code
 - Python 3.10 or later
-  - PyQt6 (`pip install pyqt6`)
+  - PyQt6 (`pip install PyQt6`)
   - datetime (`pip install datetime`)
   - requests (`pip install requests`)
 

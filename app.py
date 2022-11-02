@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e6d4bd'
+    BUILD = '07e6e910'
     VERSION = 'Experimental'
 
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -733,8 +733,8 @@ class Application(QBaseApplication):
     def check_updates_release(self, rel: dict, app: str) -> None:
         self.update_request.exit()
         self.must_update_link = InstallButton.get_release(rel, None).link
-        if rel['tag_name'] > self.BUILD:
-            self.set_update(True)
+        if rel['tag_name'] > self.BUILD: self.set_update(True)
+        else: self.save_data.last_check_for_updates = datetime.now()
 
     def check_updates_failed(self, error: str) -> None:
         self.update_request.exit()

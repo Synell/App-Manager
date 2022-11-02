@@ -6,8 +6,8 @@ from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
 from PyQt6.QtSvg import *
 from PyQt6.QtSvgWidgets import *
-from datetime import timedelta
-import os, base64, math, sys, subprocess
+from datetime import datetime, timedelta
+import os, base64, math, sys, subprocess, platform
 from urllib.request import urlopen, Request
 from time import sleep
 from data.lib.qtUtils import *
@@ -18,13 +18,13 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e6d4bd'
+    BUILD = '07e6e910'
     VERSION = 'Experimental'
 
     UPDATE_LINK = ''
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self,  platform: QPlatform):
+        super().__init__(platform)
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
 
@@ -246,6 +246,9 @@ class QUpdater(QBaseApplication):
         self.open_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.open_button.clicked.connect(self.open_app)
 
+        self.save_data.last_check_for_updates = datetime.now()
+        self.save_data.save()
+
     def install_failed(self, error: str, exit_code: int):
         QMessageBoxWithWidget(
             app = self,
@@ -313,7 +316,17 @@ if __name__ == '__main__':
     if len(sys.argv) > 1: QUpdater.UPDATE_LINK = sys.argv[1]
     else: sys.exit()
 
-    app = QUpdater()
+    platf = None
+    match platform.system():
+        case 'Windows': platf = QPlatform.Windows
+        case 'Linux': platf = QPlatform.Linux
+        case 'Darwin': platf = QPlatform.MacOS
+        case 'Java': platf = QPlatform.Java
+        case _: platf = QPlatform.Unknown
+
+    if platf == QPlatform.Unknown: raise Exception('Unknown platform')
+
+    app = QUpdater(platf)
     app.window.showNormal()
     sys.exit(app.exec())
 #----------------------------------------------------------------------

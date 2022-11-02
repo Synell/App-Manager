@@ -109,7 +109,7 @@ class QSettingsDialog(QDialog):
 
         self.appearanceTab = self.__appearance_tab_widget__(settings_data['QSidePanel']['appearance'], current_lang, current_theme, current_theme_variant)
         self.root.widget.layout().addWidget(self.appearanceTab)
-        self.root.sidepanel.add_item(QSidePanelItem(settings_data['QSidePanel']['appearance']['title'], f'{themes_folder}{current_theme}/{current_theme_variant}/icons/sidepanel/appearance.png', show_appearance_tab))
+        self.root.sidepanel.add_item(QSidePanelItem(settings_data['QSidePanel']['appearance']['title'], f'./data/lib/qtUtils/themes/{current_theme}/{current_theme_variant}/icons/sidepanel/appearance.png', show_appearance_tab))
 
         self.extra_tabs = extra_tabs
 

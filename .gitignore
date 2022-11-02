@@ -162,3 +162,4 @@ png2data.pyw
 temp/
 output/
 data/lib/widgets/updater/data.json
+data/lib/widgets/updater/*.png

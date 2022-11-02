@@ -17,8 +17,6 @@ class Application(QBaseApplication):
     BUILD = '07e6d4bd'
     VERSION = 'Experimental'
 
-    COLOR_LINK = QUtilsColor()
-
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
     MESSAGE_DURATION = 5000
 

@@ -20,6 +20,8 @@ from .QFileButton import QFileButton
 
     # Class
 class QBaseApplication(QApplication):
+    COLOR_LINK = QUtilsColor.from_hex('#cccccc')
+
     def __init__(self, platform: QPlatform) -> None:
         super().__init__([argv[0]])
         self.window = QMainWindow()

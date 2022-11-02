@@ -6,7 +6,7 @@
   <a href="https://www.qt.io/">
     <img alt="Qt 6" src="https://img.shields.io/badge/Qt-6.2.3-brightgreen" />
   </a>
-  <a href="https://github.com/Synell/AppManager/blob/master/LICENSE">
+  <a href="https://github.com/Synell/App-Manager/blob/master/LICENSE">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green" target="_blank" />
   </a>
   <img alt="Platforms: Windows, Linux, MacOS" src="https://img.shields.io/badge/Platforms-Windows%20|%20Linux%20|%20MacOS-yellow" />
@@ -36,11 +36,11 @@ App Manager is a simple app manager for Windows, Linux and MacOS. It allows you 
 
 ### Windows
 
-<a href="https://github.com/Synell/AppManager/releases/latest">
+<a href="https://github.com/Synell/App-Manager/releases/latest">
   <img alt="Release: Latest" src="https://img.shields.io/badge/Release-Latest-00B4BE?style=for-the-badge" target="_blank" />
 </a>
 
-- Download the latest release from the [releases page](https://github.com/Synell/AppManager/releases) and extract it to a folder of your choice.
+- Download the latest release from the [releases page](https://github.com/Synell/App-Manager/releases) and extract it to a folder of your choice.
 
 
 ## Customization
@@ -49,13 +49,13 @@ App Manager is a simple app manager for Windows, Linux and MacOS. It allows you 
 
 - You can customize the language of the app by adding a new file into the `/data/lang/` folder. The language must be a valid [JSON](https://en.wikipedia.org/wiki/JavaScript_Object_Notation) code. If the language is not supported, the app will default to English. Then, you can change the language in the settings menu.
 
-  *See [this file](https://github.com/Synell/AppManager/blob/main/data/lang/english.json) for an example.*
+  *See [this file](https://github.com/Synell/App-Manager/blob/main/data/lang/english.json) for an example.*
 
 ### Theme
 
 - You can customize the theme of the app by adding new files into the `/data/themes/` folder. The theme must be contain valid [JSON](https://en.wikipedia.org/wiki/JavaScript_Object_Notation) codes and valid [QSS](https://doc.qt.io/qt-6/stylesheet-reference.html) codes. If the theme is not supported, the app will default to the default theme. Then, you can change the theme in the settings menu.
 
-  *See [this file](https://github.com/Synell/AppManager/blob/main/data/themes/neutron.json) and [this folder](https://github.com/Synell/AppManager/tree/main/data/themes/neutron) for an example.*
+  *See [this file](https://github.com/Synell/App-Manager/blob/main/data/themes/neutron.json) and [this folder](https://github.com/Synell/App-Manager/tree/main/data/themes/neutron) for an example.*
 
 
 ## Usage

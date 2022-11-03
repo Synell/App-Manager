@@ -2,9 +2,9 @@
 
     # Libraries
 from sys import argv
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt6.QtCore import QPauseAnimation, QRect, QEvent, QSequentialAnimationGroup, QPauseAnimation, QPropertyAnimation, Qt, QEasingCurve
-from PyQt6.QtGui import QIcon, QPixmap
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
+from PySide6.QtCore import QPauseAnimation, QRect, QEvent, QSequentialAnimationGroup, QPauseAnimation, QPropertyAnimation, Qt, QEasingCurve
+from PySide6.QtGui import QIcon, QPixmap
 
 from .QPlatform import QPlatform
 from .QssParser import QssParser, QssSelector

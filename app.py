@@ -1,11 +1,11 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtGui import *
-from PyQt6.QtCore import *
-from PyQt6.QtWidgets import *
-from PyQt6.QtSvg import *
-from PyQt6.QtSvgWidgets import *
+from PySide6.QtGui import *
+from PySide6.QtCore import *
+from PySide6.QtWidgets import *
+from PySide6.QtSvg import *
+from PySide6.QtSvgWidgets import *
 from math import *
 import os, json, sys
 from datetime import datetime, timedelta
@@ -665,7 +665,7 @@ class Application(QBaseApplication):
     def locate_app_click(self) -> None:
         path = QFileDialog.getOpenFileName(
             parent = self.window,
-            directory = self.save_data.apps_folder,
+            dir = self.save_data.apps_folder,
             caption = self.save_data.language_data['QFileDialog']['locateApp'],
             filter = 'All supported files (*.exe *.bat *.cmd manifest.json);;Manifest (manifest.json);;Application (*.exe);;Command Line (*.bat *.cmd)'
         )[0]
@@ -818,7 +818,7 @@ class Application(QBaseApplication):
         self.about_menu = QMenu(self.window)
         self.about_menu.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        act = self.about_menu.addAction(self.save_data.getIcon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.save_data.language_data['QMenu']['about']['Qt'])
+        act = self.about_menu.addAction(self.save_data.getIcon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.save_data.language_data['QMenu']['about']['PySide'])
         act.triggered.connect(self.aboutQt)
 
         act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.save_data.language_data['QMenu']['about']['AppManager'])

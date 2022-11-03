@@ -1,15 +1,15 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtCore import QObject, pyqtSignal, QThread
+from PySide6.QtCore import QObject, Signal, QThread
 from datetime import datetime
 import traceback, shutil, os, requests
 #----------------------------------------------------------------------
 
     # Class
 class __WorkerSignals__(QObject):
-    received = pyqtSignal(dict, str)
-    failed = pyqtSignal(str)
+    received = Signal(dict, str)
+    failed = Signal(str)
 
 class RequestWorker(QThread):
     token: str = None

@@ -2,8 +2,8 @@
 
     # Libraries
 from urllib.parse import urlparse
-from PyQt6.QtWidgets import QFrame, QLabel, QLineEdit, QPushButton
-from PyQt6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QLabel, QLineEdit, QPushButton
+from PySide6.QtCore import Qt
 
 from .PlatformType import PlatformType
 from .SettingsListNamedItem import SettingsListNamedItem

@@ -1,8 +1,8 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QProgressBar, QLabel
-from PyQt6.QtCore import QObject, pyqtSignal, QThread
+from PySide6.QtWidgets import QProgressBar, QLabel
+from PySide6.QtCore import QObject, Signal, QThread
 import os, zipfile, shutil, json, traceback
 from urllib.request import urlopen, Request
 from datetime import timedelta
@@ -14,15 +14,15 @@ from data.lib.qtUtils import QGridFrame, QGridWidget
 
     # Class
 class __WorkerSignals__(QObject):
-        download_progress_changed = pyqtSignal(float)
-        install_progress_changed = pyqtSignal(float)
-        download_speed_changed = pyqtSignal(float)
-        install_speed_changed = pyqtSignal(float)
-        download_eta_changed = pyqtSignal(timedelta)
-        install_eta_changed = pyqtSignal(timedelta)
-        download_done = pyqtSignal()
-        install_done = pyqtSignal()
-        install_failed = pyqtSignal(str, int)
+        download_progress_changed = Signal(float)
+        install_progress_changed = Signal(float)
+        download_speed_changed = Signal(float)
+        install_speed_changed = Signal(float)
+        download_eta_changed = Signal(timedelta)
+        install_eta_changed = Signal(timedelta)
+        download_done = Signal()
+        install_done = Signal()
+        install_failed = Signal(str, int)
 
 
 
@@ -183,7 +183,7 @@ class InstallWorker(QThread):
 
 
 class TimeWorker(QThread):
-    time_triggered = pyqtSignal(timedelta)
+    time_triggered = Signal(timedelta)
 
     def __init__(self, interval: timedelta):
         super(TimeWorker, self).__init__()
@@ -197,8 +197,8 @@ class TimeWorker(QThread):
 
 
 class Installer(QGridFrame):
-    done = pyqtSignal(str)
-    failed = pyqtSignal(str, str)
+    done = Signal(str)
+    failed = Signal(str, str)
 
     def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 0, auto_update: bool = False) -> None:
         super(Installer, self).__init__(parent)

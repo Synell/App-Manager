@@ -1,9 +1,9 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
-from PyQt6.QtGui import QAction, QMouseEvent, QIcon
-from PyQt6.QtCore import Qt, pyqtSignal, QPoint, QSize, QThread
+from PySide6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
+from PySide6.QtGui import QAction, QMouseEvent, QIcon
+from PySide6.QtCore import Qt, Signal, QPoint, QSize, QThread
 from datetime import datetime
 import subprocess, json, os
 
@@ -21,10 +21,10 @@ class InstalledButton(QGridFrame):
     show_in_explorer_icon = None
     uninstall_icon = None
 
-    remove_from_list = pyqtSignal(str)
-    update_app = pyqtSignal(str)
-    update_app_done = pyqtSignal(str, bool)
-    uninstall = pyqtSignal(str)
+    remove_from_list = Signal(str)
+    update_app = Signal(str)
+    update_app_done = Signal(str, bool)
+    uninstall = Signal(str)
 
     def __init__(self, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: InstallButton.download_data = False, compact_mode: bool = False) -> None:
         super().__init__()
@@ -277,7 +277,7 @@ class InstalledButton(QGridFrame):
 
     # Worker
 class __IconWorker__(QThread):
-    done = pyqtSignal(QIcon)
+    done = Signal(QIcon)
     def __init__(self, path: str) -> None:
         super(__IconWorker__, self).__init__()
 

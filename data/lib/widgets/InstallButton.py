@@ -2,9 +2,9 @@
 
     # Libraries
 from collections import namedtuple
-from PyQt6.QtWidgets import QPushButton, QLabel
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtSvgWidgets import QSvgWidget
+from PySide6.QtWidgets import QPushButton, QLabel
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtSvgWidgets import QSvgWidget
 from .PlatformType import PlatformType
 
 from data.lib.qtUtils import QGridWidget, QGridFrame
@@ -17,7 +17,7 @@ class InstallButton(QGridFrame):
     platform = PlatformType.Windows
     token: str = None
 
-    download = pyqtSignal(download_data)
+    download = Signal(download_data)
 
     def __init__(self, data: dict = {}, button_text: str = 'Install', name: str = '', tag_name: str = '', icon: str = None, disabled: bool = False) -> None:
         super().__init__()

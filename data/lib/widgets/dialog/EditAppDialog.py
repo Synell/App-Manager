@@ -1,8 +1,8 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
-from PyQt6.QtCore import Qt, pyqtSignal, QSize
+from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
+from PySide6.QtCore import Qt, Signal, QSize
 from datetime import datetime
 from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
 import json, os
@@ -18,7 +18,7 @@ class EditAppDialog(QDialog):
     folder_file_button_icon = None
     icon_path = None
     icon_size = 64
-    refresh_app_info = pyqtSignal()
+    refresh_app_info = Signal()
 
     def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True):
         super().__init__(parent)

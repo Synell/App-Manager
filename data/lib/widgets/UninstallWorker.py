@@ -1,14 +1,14 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtCore import QObject, pyqtSignal, QThread
+from PySide6.QtCore import QObject, Signal, QThread
 import traceback, shutil, os
 #----------------------------------------------------------------------
 
     # Class
 class __WorkerSignals__(QObject):
-        done = pyqtSignal(str)
-        failed = pyqtSignal(str, str)
+        done = Signal(str)
+        failed = Signal(str, str)
 
 class UninstallWorker(QThread):
     def __init__(self, path: str = None):

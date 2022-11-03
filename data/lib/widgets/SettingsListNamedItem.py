@@ -1,9 +1,9 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt, pyqtSignal
+from PySide6.QtWidgets import QPushButton
+from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt, Signal
 
 from data.lib.qtUtils import QDragListItem, QNamedLineEdit
 #----------------------------------------------------------------------

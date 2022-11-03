@@ -435,6 +435,9 @@
             "about": {
                 "PySide": "About PySide...",
                 "AppManager": "About App Manager..."
+            },
+            "donate": {
+                "title": "Donate"
             }
         },
         "QSystemTrayIcon": {

@@ -824,6 +824,21 @@ class Application(QBaseApplication):
         act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.save_data.language_data['QMenu']['about']['AppManager'])
         act.triggered.connect(self.about_clicked)
 
+        self.about_menu.addSeparator()
+
+        def create_donate_menu():
+            donate_menu = QMenu(self.save_data.language_data['QMenu']['donate']['title'], self.window)
+            donate_menu.setIcon(self.save_data.getIcon('menubar/donate.png'))
+
+            buymeacoffee_action = QAction(self.save_data.getIcon('menubar/buyMeACoffee.png'), 'Buy Me a Coffee', self.window)
+            buymeacoffee_action.triggered.connect(lambda: QDesktopServices.openUrl(QUrl('https://www.buymeacoffee.com/Synell')))
+
+            donate_menu.addAction(buymeacoffee_action)
+
+            return donate_menu
+
+        self.about_menu.addMenu(create_donate_menu())
+
     def about_menu_clicked(self) -> None:
         self.about_menu.popup(QCursor.pos())
 

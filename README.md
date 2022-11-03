@@ -27,7 +27,7 @@ App Manager is a simple app manager for Windows, Linux and MacOS. It allows you 
 
 ### Source Code
 - Python 3.10 or later
-  - PyQt6 (`pip install PyQt6`)
+  - PySide6 (`pip install PySide6`)
   - datetime (`pip install datetime`)
   - requests (`pip install requests`)
 

@@ -138,9 +138,7 @@ class Application(QBaseApplication):
         ).exec()
 
     def create_widgets(self) -> None:
-        self.root = QGridWidget()
-        self.root.grid_layout.setSpacing(0)
-        self.root.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.root = QSlidingStackedWidget()
 
         self.window.setCentralWidget(self.root)
 
@@ -151,7 +149,7 @@ class Application(QBaseApplication):
 
     def create_main_page(self) -> None:
         self.main_page = QGridWidget()
-        self.root.grid_layout.addWidget(self.main_page, 0, 0)
+        self.root.addWidget(self.main_page)
 
         self.main_page.left = QGridWidget()
         self.main_page.left.grid_layout.setSpacing(0)
@@ -192,7 +190,7 @@ class Application(QBaseApplication):
         left_top.grid_layout.addWidget(button, 0, 1)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
 
-        self.main_page.side_panel = QSidePanel(None, 240)
+        self.main_page.side_panel = QSidePanel(width = 240)
         self.main_page.side_panel.setProperty('border-right', True)
         self.main_page.left.grid_layout.addWidget(self.main_page.side_panel, 1, 0)
         self.main_page.side_panel.add_items([
@@ -330,10 +328,9 @@ class Application(QBaseApplication):
 
     def create_install_app_page(self) -> None:
         self.install_app_page = QGridWidget()
-        self.root.grid_layout.addWidget(self.install_app_page, 0, 0)
+        self.root.addWidget(self.install_app_page)
         self.install_app_page.grid_layout.setSpacing(0)
         self.install_app_page.grid_layout.setContentsMargins(0, 0, 0, 0)
-        self.install_app_page.setVisible(False)
 
         self.install_app_page.top = QGridFrame()
         self.install_app_page.grid_layout.addWidget(self.install_app_page.top, 0, 0)
@@ -659,8 +656,7 @@ class Application(QBaseApplication):
 
 
     def main_page_click(self) -> None:
-        self.install_app_page.setVisible(False)
-        self.main_page.setVisible(True)
+        self.root.slide_in_idx(0)
 
     def locate_app_click(self) -> None:
         path = QFileDialog.getOpenFileName(
@@ -704,8 +700,7 @@ class Application(QBaseApplication):
                 self.save_data.save()
 
     def install_app_click(self) -> None:
-        self.main_page.setVisible(False)
-        self.install_app_page.setVisible(True)
+        self.root.slide_in_idx(1)
         self.install_app_page_refresh_template()
 
 

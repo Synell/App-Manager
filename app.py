@@ -159,13 +159,13 @@ class Application(QBaseApplication):
         self.main_page.grid_layout.setContentsMargins(0, 0, 0, 0)
         self.main_page.grid_layout.setAlignment(self.main_page.left, Qt.AlignmentFlag.AlignLeft)
 
-        self.main_page.right = QGridWidget()
+        self.main_page.right = QSlidingStackedWidget()
+        self.main_page.right.set_orientation(Qt.Orientation.Vertical)
         self.main_page.grid_layout.addWidget(self.main_page.right, 0, 1)
-        self.main_page.right.grid_layout.setRowStretch(0, 1)
-        self.main_page.right.grid_layout.setColumnStretch(0, 1)
 
         self.create_apps_widget()
         self.create_downloads_widget()
+        self.main_page.right.slide_in_idx(0)
 
         left_top = QFrame()
         left_top.grid_layout = QGridLayout()
@@ -274,8 +274,7 @@ class Application(QBaseApplication):
 
         self.main_page.apps_widget.notebook.currentChanged.connect(self.refresh_apps_list)
 
-        self.main_page.right.grid_layout.addWidget(self.main_page.apps_widget, 0, 0)
-        self.main_page.apps_widget.setVisible(False)
+        self.main_page.right.addWidget(self.main_page.apps_widget)
 
 
     def create_downloads_widget(self) -> None:
@@ -322,8 +321,7 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.no_download.grid_layout.setContentsMargins(0, 0, 0, 0)
         self.main_page.downloads_widget.no_download.grid_layout.setRowStretch(3, 1)
 
-        self.main_page.right.grid_layout.addWidget(self.main_page.downloads_widget, 0, 0)
-        self.main_page.downloads_widget.setVisible(False)
+        self.main_page.right.addWidget(self.main_page.downloads_widget)
 
 
     def create_install_app_page(self) -> None:
@@ -645,14 +643,12 @@ class Application(QBaseApplication):
 
     def panel_select_apps(self) -> None:
         self.main_page.side_panel.set_current_index(0)
-        self.main_page.downloads_widget.setVisible(False)
-        self.main_page.apps_widget.setVisible(True)
+        self.main_page.right.slide_in_idx(0)
 
     def panel_select_downloads(self) -> None:
         if not self.main_page.isVisible(): self.main_page_click()
         self.main_page.side_panel.set_current_index(1)
-        self.main_page.apps_widget.setVisible(False)
-        self.main_page.downloads_widget.setVisible(True)
+        self.main_page.right.slide_in_idx(1)
 
 
     def main_page_click(self) -> None:

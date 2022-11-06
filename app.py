@@ -119,6 +119,8 @@ class Application(QBaseApplication):
         self.save_data.settings_menu(self)
         self.load_colors()
         self.refresh_apps()
+        InstallButton.token = self.save_data.token
+        RequestWorker.token = self.save_data.token
 
 
 

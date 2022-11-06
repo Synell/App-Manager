@@ -68,18 +68,7 @@ class EditAppDialog(QDialog):
         self.frame.setProperty('border-left', True)
         self.frame.setProperty('border-right', True)
 
-        self.root = QSidePanelWidget(widget = QGridWidget(), width = 220)
-        self.root.widget.layout().setSpacing(0)
-        self.root.widget.layout().setContentsMargins(16, 16, 16, 16)
-
-        def clear_root_widget(widget: QWidget):
-            for i in reversed(range(self.root.widget.layout().count())):
-                self.root.widget.layout().itemAt(i).widget().setHidden(True)
-            widget.setHidden(False)
-
-        def show_tab(widget, index):
-            clear_root_widget(widget)
-            self.root.sidepanel.set_current_index(index)
+        self.root = QSidePanelWidget(width = 220)
 
         self.tabs = {}
         self.tabs[self.lang['QSidePanel']['general']['title']] = self.general_tab_widget()
@@ -87,14 +76,8 @@ class EditAppDialog(QDialog):
         if self.release in ['official', 'prerelease']: self.tabs[self.lang['QSidePanel']['updates']['title']] = self.updates_tab_widget()
         self.tabs[self.lang['QSidePanel']['icon']['title']] = self.icon_tab_widget()
 
-
-        kLst = list(self.tabs.keys())
-        sendParam = lambda w, i: lambda: show_tab(w, i)
-        for index, key in enumerate(kLst):
-            self.root.widget.layout().addWidget(self.tabs[key][0])
-            self.root.sidepanel.add_item(QSidePanelItem(key, self.tabs[key][1], sendParam(self.tabs[key][0], index)))
-
-        show_tab(self.tabs[self.lang['QSidePanel']['general']['title']][0], 0)
+        for k, v in self.tabs.items():
+            self.root.add_widget(v[0], k, v[1])
 
         self.setMinimumSize(int(parent.window().size().width() * (205 / 256)), int(parent.window().size().height() * (13 / 15)))
 

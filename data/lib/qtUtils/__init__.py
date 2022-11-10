@@ -32,8 +32,8 @@ from .QColorPicker import QColorPicker
 from .QColorButton import QColorButton
 from .QColorDialog import QColorDialog
 from .QUtilsColor import QUtilsColor
-from .QLoginWidget import QLoginWidget
-from .QLoginDialog import QLoginDialog
+# from .QLoginWidget import QLoginWidget
+# from .QLoginDialog import QLoginDialog
 from .QToggleButton import QToggleButton
 from .QNamedToggleButton import QNamedToggleButton
 from .QDragList import QDragList, QDragListItem
@@ -44,4 +44,5 @@ from .QAnimatedSlider import QAnimatedSlider
 from .QSmoothScrollArea import QSmoothScrollArea
 from .QPlatform import QPlatform
 from .QCrashReport import QCrashReport
+from .QSavableDockWidget import QSavableDockWidget
 #----------------------------------------------------------------------

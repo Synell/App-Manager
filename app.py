@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e6e952'
+    BUILD = '07e6e97b'
     VERSION = 'Experimental'
 
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'

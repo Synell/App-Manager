@@ -18,7 +18,7 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e6e952'
+    BUILD = '07e6e97b'
     VERSION = 'Experimental'
 
     UPDATE_LINK = ''
@@ -31,7 +31,7 @@ class QUpdater(QBaseApplication):
         self.save_data.setStyleSheet(self)
         self.window.setProperty('color', updater_data.color)
 
-        self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
+        self.setWindowIcon(QIcon(updater_data.icon))
 
         self.window.setFixedSize(int(self.primaryScreen().size().width() * (7 / 30)), int(self.primaryScreen().size().height() * (16 / 27)))
 

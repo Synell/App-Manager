@@ -9,7 +9,7 @@
   <a href="https://github.com/Synell/App-Manager/blob/master/LICENSE">
     <img alt="License: LGPL" src="https://img.shields.io/badge/License-LGPL-green" target="_blank" />
   </a>
-  <img alt="Platforms: Windows, Linux, MacOS" src="https://img.shields.io/badge/Platforms-Windows%20|%20Linux%20|%20MacOS-yellow" />
+  <img alt="Platforms: Windows, Linux, MacOS" src="https://img.shields.io/badge/Platforms-Windows-yellow" />
 </p>
 
 ----------------------------------------------------------------------

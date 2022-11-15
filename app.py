@@ -848,7 +848,7 @@ class Application(QBaseApplication):
                 lang['texts'][0],
                 lang['texts'][1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">Synel</a>'),
                 lang['texts'][2].replace('%s', supports),
-                lang['texts'][3].replace('%s', f'<a href=\"https://github.com/App-Manager\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">App Manager Github</a>')
+                lang['texts'][3].replace('%s', f'<a href=\"https://github.com/Synell/App-Manager\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">App Manager Github</a>')
             ]
         ).exec()
 

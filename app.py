@@ -68,8 +68,8 @@ class Application(QBaseApplication):
 
         self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
 
-        self.create_widgets()
         self.load_colors()
+        self.create_widgets()
         self.update_title()
 
         self.refresh_apps()

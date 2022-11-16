@@ -9,12 +9,12 @@
   <a href="https://github.com/Synell/App-Manager/blob/master/LICENSE">
     <img alt="License: LGPL" src="https://img.shields.io/badge/License-LGPL-green" target="_blank" />
   </a>
-  <img alt="Platforms: Windows, Linux, MacOS" src="https://img.shields.io/badge/Platforms-Windows-yellow" />
+  <img alt="Platforms: Windows" src="https://img.shields.io/badge/Platforms-Windows-yellow" />
 </p>
 
 ----------------------------------------------------------------------
 
-App Manager is a simple app manager for Windows, Linux and MacOS. It allows you to install, uninstall, and update apps without using the command line or having to download and install the app from your browser. Everything is done in a simple and easy to use GUI.
+App Manager is a simple app manager for Windows (Linux and MacOS versions are not available as they're untested). It allows you to install, uninstall, and update apps without using the command line or having to download and install the app from your browser. Everything is done in a simple and easy to use GUI.
 
 
 ## Requirements

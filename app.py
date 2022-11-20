@@ -167,7 +167,7 @@ class Application(QBaseApplication):
 
         self.create_apps_widget()
         self.create_downloads_widget()
-        self.main_page.right.slide_in_idx(0)
+        self.main_page.right.slide_in_index(0)
 
         left_top = QFrame()
         left_top.grid_layout = QGridLayout()
@@ -645,16 +645,16 @@ class Application(QBaseApplication):
 
     def panel_select_apps(self) -> None:
         self.main_page.side_panel.set_current_index(0)
-        self.main_page.right.slide_in_idx(0)
+        self.main_page.right.slide_in_index(0)
 
     def panel_select_downloads(self) -> None:
         if not self.main_page.isVisible(): self.main_page_click()
         self.main_page.side_panel.set_current_index(1)
-        self.main_page.right.slide_in_idx(1)
+        self.main_page.right.slide_in_index(1)
 
 
     def main_page_click(self) -> None:
-        self.root.slide_in_idx(0)
+        self.root.slide_in_index(0)
 
     def locate_app_click(self) -> None:
         path = QFileDialog.getOpenFileName(
@@ -698,7 +698,7 @@ class Application(QBaseApplication):
                 self.save_data.save()
 
     def install_app_click(self) -> None:
-        self.root.slide_in_idx(1)
+        self.root.slide_in_index(1)
         self.install_app_page_refresh_template()
 
 

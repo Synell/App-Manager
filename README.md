@@ -10,6 +10,12 @@
     <img alt="License: LGPL" src="https://img.shields.io/badge/License-LGPL-green" target="_blank" />
   </a>
   <img alt="Platforms: Windows" src="https://img.shields.io/badge/Platforms-Windows-yellow" />
+  <a href="https://www.buymeacoffee.com/synell">
+    <img alt="Donate: Buy me a coffee" src="https://img.shields.io/badge/Donate-Buy%20Me%20a%20Coffee-orange" target="_blank" />
+  </a>
+  <a href="https://www.patreon.com/synel">
+    <img alt="Donate: Patreon" src="https://img.shields.io/badge/Donate-Patreon-red" target="_blank" />
+  </a>
 </p>
 
 ----------------------------------------------------------------------

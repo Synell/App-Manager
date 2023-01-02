@@ -51,6 +51,7 @@ class Application(QBaseApplication):
         EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/image.png', False)
         EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/folder.png', False)
         EditAppDialog.icon_path = './data/icons/sample'
+        EditAppDialog.categories = self.save_data.categories.copy()
 
         SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
 
@@ -121,6 +122,7 @@ class Application(QBaseApplication):
         self.refresh_apps()
         InstallButton.token = self.save_data.token
         RequestWorker.token = self.save_data.token
+        EditAppDialog.categories = self.save_data.categories.copy()
 
 
 

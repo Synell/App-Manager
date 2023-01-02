@@ -67,6 +67,18 @@
                                             "location": {
                                                 "title": "Emplacement",
                                                 "description": "L'emplacement de l'application."
+                                            },
+                                            "category": {
+                                                "title": "Catégorie",
+                                                "description": "La catégorie de l'application."
+                                            }
+                                        },
+                                        "QNamedComboBox": {
+                                            "category": {
+                                                "title": "Catégorie",
+                                                "values": {
+                                                    "none": "Aucune"
+                                                }
                                             }
                                         }
                                     },
@@ -392,6 +404,20 @@
                     "SettingsListNamedItem": {
                         "QNamedLineEdit": {
                             "url": "URL"
+                        }
+                    }
+                },
+                "categories": {
+                    "title": "Catégories",
+                    "QLabel": {
+                        "categories": {
+                            "title": "Catégories",
+                            "description": "Sélectionnez les catégories qui apparaîtront dans le menu d'édition des applications."
+                        }
+                    },
+                    "SettingsListNamedItem": {
+                        "QNamedLineEdit": {
+                            "category": "Catégorie"
                         }
                     }
                 }

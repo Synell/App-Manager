@@ -4,7 +4,7 @@
     <img alt="Python 3.11" src="https://img.shields.io/badge/Python-3.11-blue" />
   </a>
   <a href="https://doc.qt.io/qtforpython/index.html">
-    <img alt="PySide 6" src="https://img.shields.io/badge/PySide-6.3.1-brightgreen" />
+    <img alt="PySide 6" src="https://img.shields.io/badge/PySide-6.4.1-brightgreen" />
   </a>
   <a href="https://github.com/Synell/App-Manager/blob/master/LICENSE">
     <img alt="License: LGPL" src="https://img.shields.io/badge/License-LGPL-green" target="_blank" />
@@ -34,7 +34,7 @@ App Manager is a simple app manager for Windows (Linux and MacOS versions are no
 ### Source Code
 - Python 3.11 or later
   - PySide6 (`pip install PySide6`)
-  - datetime (`pip install datetime`)
+  - multipledispatch (`pip install multipledispatch`)
   - requests (`pip install requests`)
 
 

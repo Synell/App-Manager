@@ -54,6 +54,7 @@ class InstalledButton(QGridFrame):
             else:
                 self.check_for_updates = 0
                 self.auto_update = False
+            self.category = data['category'] if 'category' in data else None
 
         self.setFixedHeight(60)
         self.setProperty('color', 'main')
@@ -230,7 +231,7 @@ class InstalledButton(QGridFrame):
         subprocess.Popen(rf'explorer /select, "{path}"', shell = False)
 
     def edit(self) -> None:
-        edit_dialog = EditAppDialog(self, self.lang['EditAppDialog'], self.name, self.tag_name, self.release, self.created_at, self.raw_icon, self.cwd, self.command, self.path, self.check_for_updates, self.auto_update)
+        edit_dialog = EditAppDialog(self, self.lang['EditAppDialog'], self.name, self.tag_name, self.release, self.created_at, self.raw_icon, self.cwd, self.command, self.path, self.check_for_updates, self.auto_update, self.category)
         edit_dialog.refresh_app_info.connect(self.refresh_info)
         edit_dialog.exec()
 
@@ -273,6 +274,7 @@ class InstalledButton(QGridFrame):
             if self.release in ['official', 'prerelease']:
                 self.check_for_updates = data['checkForUpdates']
                 self.auto_update = data['autoUpdate']
+            self.category = data['category'] if 'category' in data else None
 #----------------------------------------------------------------------
 
     # Worker

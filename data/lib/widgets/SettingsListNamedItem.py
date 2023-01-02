@@ -5,14 +5,14 @@ from PySide6.QtWidgets import QPushButton
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import Qt, Signal
 
-from data.lib.qtUtils import QDragListItem, QNamedLineEdit
+from data.lib.qtUtils import QDragListItem, QNamedLineEdit, QNamedComboBox
 #----------------------------------------------------------------------
 
     # Class
 class SettingsListNamedItem(QDragListItem):
     remove_icon = None
 
-    def __init__(self, lang: dict, name: str):
+    def __init__(self, lang: dict, key: str, keyword: str):
         super().__init__(None)
 
         self.setProperty('color', 'main')
@@ -21,9 +21,9 @@ class SettingsListNamedItem(QDragListItem):
         self.grid_layout.setContentsMargins(10, 10, 10, 10)
         self.grid_layout.setSpacing(50)
 
-        self.line_edit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit']['url'])
-        self.line_edit.setText(name)
-        self.grid_layout.addWidget(self.line_edit, 0, 0)
+        self._keyword_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit'][key])
+        self._keyword_lineedit.setText(keyword)
+        self.grid_layout.addWidget(self._keyword_lineedit, 0, 0)
 
         self.remove_button = QPushButton(None)
         self.remove_button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -34,6 +34,6 @@ class SettingsListNamedItem(QDragListItem):
         self.remove_button.setFixedWidth(int(self.remove_button.sizeHint().height() * 1.5))
 
     @property
-    def url(self) -> str:
-        return self.line_edit.text()
+    def keyword(self) -> str:
+        return self._keyword_lineedit.text()
 #----------------------------------------------------------------------

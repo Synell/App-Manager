@@ -20,7 +20,9 @@ class EditAppDialog(QDialog):
     icon_size = 64
     refresh_app_info = Signal()
 
-    def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True):
+    categories: list[str] = []
+
+    def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True, category: str = None):
         super().__init__(parent)
 
         self.layout = QGridLayout()
@@ -38,6 +40,7 @@ class EditAppDialog(QDialog):
         self.command = command
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
+        self.category = category
 
         right_buttons = QGridWidget()
         right_buttons.grid_layout.setSpacing(16)
@@ -113,81 +116,100 @@ class EditAppDialog(QDialog):
 
 
         label = self.textGroup(lang['QLabel']['name']['title'], lang['QLabel']['name']['description'])
-        root_frame.grid_layout.addWidget(label, 0, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         app_name = QLabel(self.name)
         app_name.setProperty('title', True)
         app_name.setWordWrap(True)
         app_name.setFixedHeight(app_name.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_name, 1, 0)
+        root_frame.grid_layout.addWidget(app_name, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(app_name, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 2, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+
+
+        label = self.textGroup(lang['QLabel']['category']['title'], lang['QLabel']['category']['description'])
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
+        self.app_category = QNamedComboBox(None, lang['QNamedComboBox']['category']['title'])
+        self.app_category.setProperty('title', True)
+        self.app_category.combo_box.addItems([lang['QNamedComboBox']['category']['values']['none']] + self.categories)
+        if self.category:
+            if self.category in self.categories:
+                self.app_category.combo_box.setCurrentText(self.category)
+        root_frame.grid_layout.addWidget(self.app_category, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(self.app_category, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['version']['title'], lang['QLabel']['version']['description'])
-        root_frame.grid_layout.addWidget(label, 3, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         app_version = QLabel(self.tag_name)
         app_version.setProperty('title', True)
         app_version.setWordWrap(True)
         app_version.setFixedHeight(app_version.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_version, 4, 0)
+        root_frame.grid_layout.addWidget(app_version, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(app_version, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 5, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['release']['title'], lang['QLabel']['release']['description'])
-        root_frame.grid_layout.addWidget(label, 6, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         app_release = QLabel(lang['QLabel']['release'][self.release])
         app_release.setProperty('title', True)
         app_release.setWordWrap(True)
         app_release.setFixedHeight(app_release.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_release, 7, 0)
+        root_frame.grid_layout.addWidget(app_release, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(app_release, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 8, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['releaseDate']['title'], lang['QLabel']['releaseDate']['description'])
-        root_frame.grid_layout.addWidget(label, 9, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         app_release_date = QLabel(self.created_at.strftime('%d/%m/%Y %H:%M:%S')) if self.created_at else QLabel('???')
         app_release_date.setProperty('title', True)
         app_release_date.setWordWrap(True)
         app_release_date.setFixedHeight(app_release_date.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_release_date, 10, 0)
+        root_frame.grid_layout.addWidget(app_release_date, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(app_release_date, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 11, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['location']['title'], lang['QLabel']['location']['description'])
-        root_frame.grid_layout.addWidget(label, 12, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         app_location = QLabel(self.path)
         app_location.setProperty('title', True)
         app_location.setWordWrap(True)
         app_location.setFixedHeight(app_location.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_location, 13, 0)
+        root_frame.grid_layout.addWidget(app_location, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(app_location, Qt.AlignmentFlag.AlignLeft)
 
 
@@ -210,7 +232,7 @@ class EditAppDialog(QDialog):
 
 
         label = self.textGroup(lang['QLabel']['cwd']['title'], lang['QLabel']['cwd']['description'])
-        root_frame.grid_layout.addWidget(label, 0, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         self.cwd_button = QFileButton(
             self, lang['QFileButton']['cwd'],
@@ -218,20 +240,20 @@ class EditAppDialog(QDialog):
             self.folder_file_button_icon,
             QFiles.Dialog.ExistingDirectory
         )
-        root_frame.grid_layout.addWidget(self.cwd_button, 1, 0)
+        root_frame.grid_layout.addWidget(self.cwd_button, root_frame.grid_layout.count(), 0)
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 2, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['command']['title'], lang['QLabel']['command']['description'])
-        root_frame.grid_layout.addWidget(label, 3, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         self.command_lineedit = QNamedLineEdit(name = lang['QNamedLineEdit']['command'], placeholder = 'null')
         self.command_lineedit.setText(self.command)
-        root_frame.grid_layout.addWidget(self.command_lineedit, 4, 0)
+        root_frame.grid_layout.addWidget(self.command_lineedit, root_frame.grid_layout.count(), 0)
 
 
         return widget, self.advanced_tab_icon
@@ -253,7 +275,7 @@ class EditAppDialog(QDialog):
 
 
         label = self.textGroup(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
-        root_frame.grid_layout.addWidget(label, 0, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         self.check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForUpdates']['title'])
         self.check_for_updates_combobox.combo_box.addItems([
@@ -264,22 +286,22 @@ class EditAppDialog(QDialog):
             lang['QNamedComboBox']['checkForUpdates']['values']['atLaunch']
         ])
         self.check_for_updates_combobox.combo_box.setCurrentIndex(self.check_for_updates)
-        root_frame.grid_layout.addWidget(self.check_for_updates_combobox, 1, 0)
+        root_frame.grid_layout.addWidget(self.check_for_updates_combobox, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(self.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 2, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['autoUpdate']['title'], lang['QLabel']['autoUpdate']['description'])
-        root_frame.grid_layout.addWidget(label, 3, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         self.auto_update_checkbox = QNamedToggleButton()
         self.auto_update_checkbox.setText(lang['QToggleButton']['autoUpdate'])
         self.auto_update_checkbox.setChecked(self.auto_update)
-        root_frame.grid_layout.addWidget(self.auto_update_checkbox, 4, 0)
+        root_frame.grid_layout.addWidget(self.auto_update_checkbox, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(self.auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
@@ -303,7 +325,7 @@ class EditAppDialog(QDialog):
         widget.top = QGridFrame()
         widget.top.grid_layout.setSpacing(16)
         widget.top.grid_layout.setContentsMargins(0, 0, 0, 0)
-        root_frame.grid_layout.addWidget(widget.top, 0, 0)
+        root_frame.grid_layout.addWidget(widget.top, root_frame.grid_layout.count(), 0)
 
         label = self.textGroup(lang['QLabel']['icon']['title'], lang['QLabel']['icon']['description'])
         widget.top.grid_layout.addWidget(label, 0, 0, 1, 2)
@@ -326,17 +348,17 @@ class EditAppDialog(QDialog):
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, 1, 0)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['predefinedIcons']['title'], lang['QLabel']['predefinedIcons']['description'])
-        root_frame.grid_layout.addWidget(label, 2, 0)
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
 
         widget.bottom = QFlowWidget()
         widget.bottom.scroll_layout.setSpacing(16)
         widget.bottom.scroll_layout.setContentsMargins(0, 0, 0, 0)
-        root_frame.grid_layout.addWidget(widget.bottom, 3, 0)
+        root_frame.grid_layout.addWidget(widget.bottom, root_frame.grid_layout.count(), 0)
 
 
         return widget, self.icon_tab_icon
@@ -430,6 +452,7 @@ class EditAppDialog(QDialog):
             if self.release in ['official', 'prerelease']:
                 data['checkForUpdates'] = self.check_for_updates_combobox.combo_box.currentIndex()
                 data['autoUpdate'] = self.auto_update_checkbox.isChecked()
+            if self.app_category.combo_box.currentText(): data['category'] = self.app_category.combo_box.currentText() if self.app_category.combo_box.currentIndex() != 0 else None
 
             with open(f'{self.path}/manifest.json', 'w', encoding = 'utf-8') as outfile:
                 json.dump(data, outfile, indent = 4)

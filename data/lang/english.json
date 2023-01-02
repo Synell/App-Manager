@@ -67,6 +67,18 @@
                                             "location": {
                                                 "title": "Location",
                                                 "description": "The location of the app."
+                                            },
+                                            "category": {
+                                                "title": "Category",
+                                                "description": "The category of the app."
+                                            }
+                                        },
+                                        "QNamedComboBox": {
+                                            "category": {
+                                                "title": "Category",
+                                                "values": {
+                                                    "none": "None"
+                                                }
                                             }
                                         }
                                     },
@@ -392,6 +404,20 @@
                     "SettingsListNamedItem": {
                         "QNamedLineEdit": {
                             "url": "URL"
+                        }
+                    }
+                },
+                "categories": {
+                    "title": "Categories",
+                    "QLabel": {
+                        "categories": {
+                            "title": "Categories",
+                            "description": "Select categories to show in the app editor menu."
+                        }
+                    },
+                    "SettingsListNamedItem": {
+                        "QNamedLineEdit": {
+                            "category": "Category"
                         }
                     }
                 }

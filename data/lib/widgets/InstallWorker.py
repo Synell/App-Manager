@@ -122,8 +122,9 @@ class InstallWorker(QThread):
             d['created_at'] = self.data.created_at
             if (not ('icon' in d)): d['icon'] = file
             if (not ('cwd' in d)): d['cwd'] = self.out_path
-            d['checkForUpdates'] = self.check_for_updates
-            d['autoUpdate'] = self.auto_update
+            if (not ('checkForUpdates' in d)): d['checkForUpdates'] = self.check_for_updates
+            if (not ('autoUpdate' in d)): d['autoUpdate'] = self.auto_update
+            if (not ('category' in d)): d['category'] = None
 
             self.state = 4
 

@@ -238,6 +238,7 @@ class InstalledButton(QGridFrame):
     def mousePressEvent(self, a0: QMouseEvent) -> None:
         try:
             subprocess.Popen(rf'{self.command}', cwd = rf'{self.cwd}', shell = False)
+
         except Exception as e:
             print('oof: ' + str(e)) #todo
 

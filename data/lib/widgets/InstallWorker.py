@@ -3,7 +3,7 @@
     # Libraries
 from PySide6.QtWidgets import QProgressBar, QLabel
 from PySide6.QtCore import QObject, Signal, QThread
-import os, zipfile, shutil, json, traceback
+import os, zipfile, shutil, json
 from urllib.request import urlopen, Request
 from datetime import timedelta
 from time import sleep
@@ -27,15 +27,15 @@ class __WorkerSignals__(QObject):
 
 
 class InstallWorker(QThread):
-    def __init__(self, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True):
-        super(InstallWorker, self).__init__()
+    def __init__(self, parent: QObject, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True):
+        super(InstallWorker, self).__init__(parent)
         self.signals = __WorkerSignals__()
         self.data = data
         self.dest_path = f'{download_folder}/{data.name}'
         self.out_path = f'{install_folder}/{data.name}'
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
-        self.timer = TimeWorker(timedelta(milliseconds = 500))
+        self.timer = TimeWorker(self, timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0
         self.timed_chunk = 0
@@ -139,7 +139,6 @@ class InstallWorker(QThread):
             self.signals.install_speed_changed.emit(-1)
 
         except Exception as e:
-            print(traceback.format_exc())
             self.signals.install_failed.emit(str(e), self.state)
 
         self.timer.exit(0)
@@ -176,18 +175,26 @@ class InstallWorker(QThread):
 
     def get_file(self) -> str|None:
         for format in ['exe', 'bat']:
-                for file in os.listdir(self.out_path):
-                    if file.endswith(f'.{format}'):
-                        return f'{self.out_path}/{file}'
+            for file in os.listdir(self.out_path):
+                if file.endswith(f'.{format}'):
+                    return f'{self.out_path}/{file}'
         return None
+
+
+    def exit(self, retcode: int = 0) -> None:
+        self.timer.exit(retcode)
+        if self.timer.isRunning():
+            self.timer.terminate()
+
+        return super().exit(retcode)
 
 
 
 class TimeWorker(QThread):
     time_triggered = Signal(timedelta)
 
-    def __init__(self, interval: timedelta):
-        super(TimeWorker, self).__init__()
+    def __init__(self, parent: QObject, interval: timedelta):
+        super(TimeWorker, self).__init__(parent)
         self.interval = interval
 
     def run(self):
@@ -262,7 +269,7 @@ class Installer(QGridFrame):
 
 
     def start(self) -> None:
-        self.iw = InstallWorker(self.data, self.download_folder, self.install_folder, self.check_for_updates, self.auto_update)
+        self.iw = InstallWorker(self, self.data, self.download_folder, self.install_folder, self.check_for_updates, self.auto_update)
         self.iw.signals.download_progress_changed.connect(self.download_progress_changed)
         self.iw.signals.install_progress_changed.connect(self.install_progress_changed)
         self.iw.signals.download_speed_changed.connect(self.download_speed_changed)
@@ -304,10 +311,12 @@ class Installer(QGridFrame):
         self.install_label.setText(f'{self.lang["QLabel"]["install"]} - ' + self.lang['QLabel']['items'].replace('%s', f'{value:.1f}') if value >= 0 else self.lang['QLabel']['done'])
 
     def install_done(self) -> None:
+        self.iw.exit()
         self.install_progress.setValue(100)
         self.update_main()
         self.done.emit(f'{self.data.name}')
 
     def install_failed(self, message: str, exit_code: int) -> None:
+        self.iw.exit()
         self.failed.emit(f'{self.data.name}', message)
 #----------------------------------------------------------------------

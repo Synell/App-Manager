@@ -10,12 +10,13 @@ import traceback, shutil, os, requests
 class __WorkerSignals__(QObject):
     received = Signal(dict, str)
     failed = Signal(str)
+    finished = Signal()
 
 class RequestWorker(QThread):
     token: str = None
 
-    def __init__(self, followed_apps: list[str] = []):
-        super(RequestWorker, self).__init__()
+    def __init__(self, parent: QObject = None, followed_apps: list[str] = []):
+        super(RequestWorker, self).__init__(parent)
         self.signals = __WorkerSignals__()
         self.followed_apps = followed_apps
         self.time = datetime.now()
@@ -23,7 +24,7 @@ class RequestWorker(QThread):
     def run(self):
         for app in self.followed_apps:
             try:
-                response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases', headers = {'Authorization': self.token} if self.token else None)
+                response = requests.get(f'{app.replace("https://github.com/", "https://api.github.com/repos/")}/releases', headers = {'Authorization': f'token {self.token}'} if self.token else None)
                 if response.status_code != 200: continue
                 response = response.json()
                 if type(response) is not list: return self.signals.failed.emit('Invalid response')
@@ -53,4 +54,6 @@ class RequestWorker(QThread):
 
             except Exception as e:
                 self.signals.failed.emit(f'{e}')
+
+        self.signals.finished.emit()
 #----------------------------------------------------------------------

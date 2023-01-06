@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e6ff6a'
+    BUILD = '07e71531'
     VERSION = 'Experimental'
 
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -55,8 +55,8 @@ class Application(QBaseApplication):
 
         SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
 
-        self.downloads = {}
-        self.uninstalls = {}
+        self.downloads: dict[str, Installer] = {}
+        self.uninstalls: dict[str, UninstallWorker] = {}
         self.updates = {}
         self.is_updating = []
 
@@ -440,7 +440,7 @@ class Application(QBaseApplication):
 
         if self.install_page_worker:
             if self.install_page_worker.isRunning():
-                self.install_page_worker.terminate()
+                self.install_page_worker.exit()
 
         self.install_page_buttons = [[], []]
         self.clear_layout(self.install_app_page.tab_widget.official.inside.scroll_layout)
@@ -475,9 +475,14 @@ class Application(QBaseApplication):
                     break
             if not app_is_installed: followed_apps_not_installed.append(fapp)
 
-        self.install_page_worker = RequestWorker(followed_apps_not_installed + followed_apps_to_update)
+        if self.install_page_worker:
+            if self.install_page_worker.isRunning():
+                self.install_page_worker.exit()
+
+        self.install_page_worker = RequestWorker(self, followed_apps_not_installed + followed_apps_to_update)
         self.install_page_worker.signals.received.connect(self.release_received)
         self.install_page_worker.signals.failed.connect(self.release_failed)
+        self.install_page_worker.signals.finished.connect(self.release_finished)
         self.install_page_worker.start()
 
         self.save_data.last_check_for_apps_updates = datetime.now()
@@ -530,6 +535,9 @@ class Application(QBaseApplication):
             color = 'main'
         )
 
+    def release_finished(self) -> None:
+        self.install_page_worker.exit()
+
 
     def add_to_download_list(self, data: InstallButton.download_data) -> None:
         if len(list(self.downloads.keys())) == 0:
@@ -541,7 +549,7 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)
         iw.failed.connect(self.remove_from_download_list)
-        self.downloads[f'{data.name}'] = iw
+        self.downloads[data.name] = iw
 
         iw.start()
 
@@ -601,7 +609,7 @@ class Application(QBaseApplication):
 
     def add_to_uninstall_list(self, path: str) -> None:
         self.remove_from_install_list(path)
-        self.uninstalls[path] = UninstallWorker(path)
+        self.uninstalls[path] = UninstallWorker(self, path)
         self.uninstalls[path].signals.done.connect(self.remove_from_uninstall_list)
         self.uninstalls[path].signals.failed.connect(self.remove_from_uninstall_list)
         self.uninstalls[path].start()
@@ -720,7 +728,7 @@ class Application(QBaseApplication):
 
 
     def check_updates(self) -> None:
-        self.update_request = RequestWorker([self.UPDATE_LINK])
+        self.update_request = RequestWorker(self, [self.UPDATE_LINK])
         self.update_request.signals.received.connect(self.check_updates_release)
         self.update_request.signals.failed.connect(self.check_updates_failed)
         self.update_request.start()

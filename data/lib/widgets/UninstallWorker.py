@@ -11,8 +11,8 @@ class __WorkerSignals__(QObject):
         failed = Signal(str, str)
 
 class UninstallWorker(QThread):
-    def __init__(self, path: str = None):
-        super(UninstallWorker, self).__init__()
+    def __init__(self, parent: QObject = None, path: str = None):
+        super(UninstallWorker, self).__init__(parent)
         self.signals = __WorkerSignals__()
         self.path = path
 

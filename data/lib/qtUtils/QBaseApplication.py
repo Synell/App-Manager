@@ -30,6 +30,11 @@ class QBaseApplication(QApplication):
 
         self.platform = platform
 
+        self.must_update = None
+        self.must_update_link = None
+
+        self.must_restart = None
+
         self.save_data = None
 
         self._alerts = []

@@ -3,7 +3,7 @@
     # Libraries
 from typing import Callable
 from PySide6.QtGui import QIcon
-import json, os
+import json, os, shutil
 from enum import Enum
 
 from .QMessageBoxWithWidget import QMessageBoxWithWidget
@@ -124,7 +124,8 @@ class QSaveData:
 
     def settings_menu(self, app: QBaseApplication = None) -> list:
         dat = self.settings_menu_extra()
-        response = QSettingsDialog(
+
+        dialog = QSettingsDialog(
             parent = app.window,
             settings_data = self.language_data['QSettingsDialog'],
             lang_folder = self.lang_folder,
@@ -134,7 +135,14 @@ class QSaveData:
             current_theme_variant = self.theme_variant,
             extra_tabs = dat[0],
             get_function = dat[1]
-        ).exec()
+        )
+        dialog.close_app.connect(lambda: self._close_app(app))
+        dialog.restart_app.connect(lambda: self._restart_app(app))
+        dialog.clear_data.connect(self.clear_data)
+        dialog.import_data.connect(self.import_data)
+        dialog.export_data.connect(self.export_data)
+
+        response = dialog.exec()
         if response != None:
             self.language = response[0]
             self.theme = response[1]
@@ -153,4 +161,20 @@ class QSaveData:
 
     def settings_menu_extra(self) -> tuple[dict, Callable|None]:
         return {}, None
+
+    def _close_app(self, app: QBaseApplication) -> None:
+        app.exit()
+
+    def _restart_app(self, app: QBaseApplication) -> None:
+        app.must_restart = True
+        app.exit()
+
+    def clear_data(self) -> None:
+        os.remove(self.path)
+
+    def export_data(self, filename: str) -> None:
+        shutil.copyfile(self.path, filename)
+
+    def import_data(self, filename: str) -> None:
+        shutil.copyfile(filename, self.path)
 #----------------------------------------------------------------------

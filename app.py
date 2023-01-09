@@ -26,13 +26,17 @@ class Application(QBaseApplication):
 
     UPDATE_LINK = 'https://github.com/Synell/App-Manager'
 
+    APP_RELEASES = ['all', 'official', 'pre', 'custom']
+
     def __init__(self, platform: QPlatform) -> None:
         super().__init__(platform = platform)
 
+        self.setApplicationDisplayName('App Manager')
+        self.setApplicationName('App Manager')
+        self.setApplicationVersion(self.VERSION)
+
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
-        self.must_update = None
-        self.must_update_link = None
 
         InstallButton.platform = PlatformType.Windows if self.platform == QPlatform.Windows else PlatformType.Linux if self.platform == QPlatform.Linux else PlatformType.MacOS
         InstallButton.token = self.save_data.token
@@ -255,28 +259,23 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.notebook.tabBar().setCursor(Qt.CursorShape.PointingHandCursor)
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook, 2, 0)
 
-        self.main_page.apps_widget.notebook_tabs = QScrollableGridWidget()
+        self.main_page.apps_widget.notebook_tabs = QSlidingStackedWidget()
+        self.main_page.apps_widget.notebook_tabs.set_orientation(Qt.Orientation.Horizontal)
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook_tabs, 3, 0)
-        self.main_page.apps_widget.notebook_tabs.scroll_layout.setAlignment(self.main_page.apps_widget.notebook_tabs, Qt.AlignmentFlag.AlignTop)
-        self.main_page.apps_widget.notebook_tabs.scroll_layout.setSpacing(1)
+        # self.main_page.apps_widget.notebook_tabs.scroll_layout.setAlignment(self.main_page.apps_widget.notebook_tabs, Qt.AlignmentFlag.AlignTop)
+        # self.main_page.apps_widget.notebook_tabs.scroll_layout.setSpacing(0)
 
-        widget = QWidget()
-        widget.setFixedHeight(1)
-        self.main_page.apps_widget.notebook.addTab(widget, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QTabWidget']['all'])
+        for rel in self.APP_RELEASES:
+            widget = QWidget()
+            widget.setFixedHeight(1)
+            i = self.main_page.apps_widget.notebook.addTab(widget, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QTabWidget'][rel])
 
-        widget = QWidget()
-        widget.setFixedHeight(1)
-        self.main_page.apps_widget.notebook.addTab(widget, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QTabWidget']['official'])
+            sw = QScrollableGridWidget()
+            self.main_page.apps_widget.notebook_tabs.addWidget(sw)
+            sw.scroll_layout.setAlignment(sw, Qt.AlignmentFlag.AlignTop)
+            sw.scroll_layout.setSpacing(1)
 
-        widget = QWidget()
-        widget.setFixedHeight(1)
-        self.main_page.apps_widget.notebook.addTab(widget, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QTabWidget']['pre'])
-
-        widget = QWidget()
-        widget.setFixedHeight(1)
-        self.main_page.apps_widget.notebook.addTab(widget, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QTabWidget']['custom'])
-
-        self.main_page.apps_widget.notebook.currentChanged.connect(self.refresh_apps_list)
+        self.main_page.apps_widget.notebook.currentChanged.connect(self.apps_switch_index)
 
         self.main_page.right.addWidget(self.main_page.apps_widget)
 
@@ -764,57 +763,71 @@ class Application(QBaseApplication):
 
 
 
+    def apps_switch_index(self, index: int) -> None:
+        self.main_page.apps_widget.notebook_tabs.slide_in_index(index)
+
     def refresh_apps(self) -> None:
         for k in self.save_data.apps:
             for app in self.save_data.apps[k].copy():
                 if not os.path.exists(f'{app}/manifest.json'):
                     self.save_data.apps[k].remove(app)
                     if app in self.app_buttons:
-                        self.app_buttons[app].setParent(None)
+                        self.app_buttons[app].clear_parent()
                         del self.app_buttons[app]
                     continue
 
         self.refresh_apps_list()
 
     def refresh_apps_list(self, event: str|int = None) -> None:
-        match self.main_page.apps_widget.notebook.currentIndex():
-            case 0: k = 'all'
-            case 1: k = 'official'
-            case 2: k = 'pre'
-            case 3: k = 'custom'
-
         app_keys = list(self.app_buttons.keys())
 
         for button in self.app_buttons.values():
-            button.setParent(None)
+            button.clear_parent()
 
-        for i, app in enumerate(self.save_data.apps[k] if k != 'all' else [*self.save_data.apps['official'], *self.save_data.apps['pre'], *self.save_data.apps['custom']]):
-            name = app.split('/')[-1]
-            has_update = name in list(self.updates.keys())
-            compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
+        for index, k in enumerate(self.APP_RELEASES):
+            apps = []
 
-            if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                if app in app_keys:
-                    b: InstalledButton = self.app_buttons[app]
-                    if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
-                    if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
+            if k != 'all':
+                apps = self.save_data.apps[k]
 
-                else:
-                    b = InstalledButton(
-                        name,
-                        app,
-                        self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'],
-                        './data/icons/questionMark.svg',
-                        False,
-                        InstallButton.get_release(InstallButton.platform, self.updates[name], self.save_data.token) if has_update else None,
-                        compact_mode
-                    )
-                    b.remove_from_list.connect(self.remove_from_install_list)
-                    b.uninstall.connect(self.add_to_uninstall_list)
-                    b.update_app.connect(self.add_to_update_list)
-                    b.update_app_done.connect(self.remove_from_update_list)
-                    self.app_buttons[app] = b
-                self.main_page.apps_widget.notebook_tabs.scroll_layout.addWidget(b, i, 0)
+            else:
+                for key in self.APP_RELEASES[1:]:
+                    if key != 'all': apps += self.save_data.apps[key]
+
+                for app in apps:
+                    if not app in app_keys:
+                        name = app.split('/')[-1]
+                        has_update = name in list(self.updates.keys())
+                        compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
+
+                        b = InstalledButtonGroup(
+                            self.window,
+                            name,
+                            app,
+                            self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'],
+                            './data/icons/questionMark.svg',
+                            False,
+                            InstallButton.get_release(InstallButton.platform, self.updates[name], self.save_data.token) if has_update else None,
+                            compact_mode
+                        )
+
+                        b.remove_from_list.connect(self.remove_from_install_list)
+                        b.uninstall.connect(self.add_to_uninstall_list)
+                        b.update_app.connect(self.add_to_update_list)
+                        b.update_app_done.connect(self.remove_from_update_list)
+
+                        self.app_buttons[app] = b
+                        for key in self.APP_RELEASES:
+                            b.add_button(key)
+
+            for i, app in enumerate(apps):
+                name = app.split('/')[-1]
+
+                if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
+                    b: InstalledButtonGroup = self.app_buttons[app]
+
+                    w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(index)
+                    w.scroll_layout.addWidget(b.get_button(k), i, 0)
 
 
     def create_about_menu(self) -> None:

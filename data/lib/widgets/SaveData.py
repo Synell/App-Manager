@@ -39,7 +39,9 @@ class SaveData(QSaveData):
 
         self.compact_paths = 0
 
-        self.token = None
+        self.token = {
+            'github': ''
+        }
 
         self.goes_to_tray_notif = True
         self.exit_during_work_notif = True
@@ -60,7 +62,7 @@ class SaveData(QSaveData):
             self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.getIconsDir()}/sidepanel/updates.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.getIconsDir()}/sidepanel/notification.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['github']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/github.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['token']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/token.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']: (self.settings_menu_categories(), f'{self.getIconsDir()}/sidepanel/categories.png'),
             self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.getIconsDir()}/sidepanel/followedApps.png')
         }, self.get_extra
@@ -432,7 +434,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_github(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['github']
+        lang = self.language_data['QSettingsDialog']['QSidePanel']['token']
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -444,22 +446,22 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['token']['title'], lang['QLabel']['token']['description'])
+        label = QSettingsDialog.textGroup(lang['QLabel']['github']['title'], lang['QLabel']['github']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{lang["QLabel"]["createToken"]}</a>')
+        label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{lang["QLabel"]["github"]["createToken"]}</a>')
         label.setOpenExternalLinks(True)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('brightnormal', True)
         label.setWordWrap(True)
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        widget.token_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit']['token'])
-        widget.token_lineedit.line_edit.setEchoMode(QLineEdit.EchoMode.Password)
-        widget.token_lineedit.setText(self.token)
-        widget.token_lineedit.setFixedWidth(350)
-        root_frame.grid_layout.addWidget(widget.token_lineedit, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.token_lineedit, Qt.AlignmentFlag.AlignLeft)
+        widget.github_token_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit']['github'])
+        widget.github_token_lineedit.line_edit.setEchoMode(QLineEdit.EchoMode.Password)
+        widget.github_token_lineedit.setText(self.token['github'])
+        widget.github_token_lineedit.setFixedWidth(350)
+        root_frame.grid_layout.addWidget(widget.github_token_lineedit, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(widget.github_token_lineedit, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -549,7 +551,7 @@ class SaveData(QSaveData):
 
         self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
 
-        self.token = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['github']['title']].token_lineedit.text()
+        self.token['github'] = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['token']['title']].github_token_lineedit.text()
 
         self.categories = self.without_duplicates([item.keyword for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']].categories_list.items if item.keyword != ''])
 
@@ -639,7 +641,9 @@ class SaveData(QSaveData):
 
         with exc: self.compact_paths = extra_data['compactPaths']
 
-        with exc: self.token = extra_data['token']
+        with exc:
+            if isinstance(extra_data['token'], dict): self.token = extra_data['token']
+            else: self.token['github'] = extra_data['token']
 
         with exc: self.goes_to_tray_notif = extra_data['goesToTrayNotif']
         with exc: self.exit_during_work_notif = extra_data['exitDuringWorkNotif']

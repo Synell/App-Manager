@@ -4,13 +4,8 @@
 from PySide6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
 from PySide6.QtGui import QAction, QMouseEvent, QIcon
 from PySide6.QtCore import Qt, Signal, QPoint, QSize, QThread
-from datetime import datetime
-import subprocess, json, os
 
 from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
-from data.lib.widgets import InstallButton, InstallWorker
-
-from .dialog import EditAppDialog
 #----------------------------------------------------------------------
 
     # Class
@@ -21,45 +16,25 @@ class InstalledButton(QGridFrame):
     show_in_explorer_icon = None
     uninstall_icon = None
 
-    remove_from_list = Signal(str)
-    update_app = Signal(str)
-    update_app_done = Signal(str, bool)
-    uninstall = Signal(str)
+    remove_from_list = Signal()
+    update_app = Signal()
+    uninstall = Signal()
+    
+    mouse_pressed = Signal()
+    edit_clicked = Signal()
+    show_in_explorer_clicked = Signal()
 
-    def __init__(self, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: InstallButton.download_data = False, compact_mode: bool = False) -> None:
+    def __init__(self, name: str = '', tag_name: str = '', release: str = '', path: str = '', lang : dict = {}, icon: str = None, compact_mode: bool = False) -> None:
         super().__init__()
 
-        self.name = name
-        self.path = path
+        self.icon = QIconWidget(None, icon, QSize(36, 36))
+        self.release = release
         self.lang = lang
-        self.base_icon = icon
-        self.has_update = has_update
-        self.is_disabled = disabled
-        self.compact_mode = compact_mode
-        self.download_data = has_update
-        self.install_worker = None
-
-        with open(f'{path}/manifest.json', 'r', encoding = 'utf-8') as file:
-            data = json.load(file)
-            self.release = data['release']
-            self.tag_name = data['tag_name'] if data['tag_name'] else 'Custom'
-            self.command = data['command']
-            self.created_at = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%SZ') if data['created_at'] else None
-            self.cwd = data['cwd']
-            self.raw_icon = data['icon']
-            self.icon = QIconWidget(None, icon, QSize(36, 36))
-            if self.release in ['official', 'prerelease']:
-                self.check_for_updates = data['checkForUpdates']
-                self.auto_update = data['autoUpdate']
-            else:
-                self.check_for_updates = 0
-                self.auto_update = False
-            self.category = data['category'] if 'category' in data else None
 
         self.setFixedHeight(60)
         self.setProperty('color', 'main')
 
-        self.icon_couple = self.widget_icon_couple(self.icon, self.generate_text(compact_mode))
+        self.icon_couple = self.widget_icon_couple(self.icon, self.generate_text(compact_mode, name, tag_name, path))
         self.grid_layout.addWidget(self.icon_couple, 0, 0)
         self.grid_layout.setAlignment(self.icon_couple, Qt.AlignmentFlag.AlignLeft)
 
@@ -78,7 +53,7 @@ class InstalledButton(QGridFrame):
         self.update_button.setProperty('color', 'main')
         self.update_button.setProperty('transparent', True)
         self.update_button.setProperty('small', 'true')
-        self.update_button.clicked.connect(lambda: self.update_app.emit(self.path))
+        self.update_button.clicked.connect(lambda: self.update_app.emit())
         self.update_button.setVisible(False)
 
         self.settings_button = QPushButton()
@@ -93,16 +68,10 @@ class InstalledButton(QGridFrame):
         self.grid_layout.setAlignment(self.button_group, Qt.AlignmentFlag.AlignRight)
 
 
-        self.set_update(self.has_update != None)
-        self.set_disabled(self.is_disabled)
-
-        self.set_icon(self.raw_icon)
-
-
-    def set_icon(self, icon: str) -> None:
+    def set_icon(self, icon: str, base_icon: str) -> None:
         self.raw_icon = icon
         if QIconWidget.is_file_icon(self.raw_icon):
-            self.icon.icon = self.base_icon
+            self.icon.icon = base_icon
             self.icon_thread = __IconWorker__(icon)
             self.icon_thread.done.connect(self.icon_loaded)
             self.icon_thread.start()
@@ -114,26 +83,22 @@ class InstalledButton(QGridFrame):
         self.icon.icon = icon
 
 
-    def set_update(self, has_update: bool, download_data: InstallButton.download_data = None) -> None:
-        self.has_update = has_update
-        self.download_data = download_data
+    def set_update(self, visible: bool) -> None:
         self.progress_bar.setValue(0)
-        self.update_button.setVisible(self.has_update and self.release in ['official', 'prerelease'])
-
-        if self.auto_update and self.has_update: self.update_app.emit(self.path)
+        self.update_button.setVisible(visible)
 
 
     def set_disabled(self, disabled: bool) -> None:
-        self.is_disabled = disabled
         self.progress_bar.setVisible(disabled)
         self.button_group.setVisible(not disabled)
         self.setCursor(Qt.CursorShape.ArrowCursor if disabled else Qt.CursorShape.PointingHandCursor)
         self.setProperty('side', 'all' if disabled else 'all-hover')
         self.setDisabled(disabled)
 
-    def set_compact_mode(self, compact_mode: bool) -> None:
+
+    def set_compact_mode(self, compact_mode: bool, path: str) -> None:
         self.compact_mode = compact_mode
-        self.icon_couple.text_widget.desc.setText(self.small_path(self.path) if compact_mode else self.path)
+        self.icon_couple.text_widget.desc.setText(self.small_path(path) if compact_mode else path)
 
 
     def small_path(self, path: str) -> str:
@@ -149,17 +114,17 @@ class InstalledButton(QGridFrame):
 
         return path
 
-    def generate_text(self, compact_mode: bool) -> QGridWidget:
+    def generate_text(self, compact_mode: bool, name: str, tag_name: str, path: str) -> QGridWidget:
         widget = QGridWidget()
         widget.grid_layout.setSpacing(4)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        widget.title = QLabel(f'{self.name} ({self.tag_name})')
+        widget.title = QLabel(f'{name} ({tag_name})')
         widget.title.setProperty('brighttitle', True)
         widget.title.setFixedSize(widget.title.sizeHint())
         widget.grid_layout.addWidget(widget.title, 0, 1)
 
-        widget.desc = QLabel(self.small_path(self.path) if compact_mode else self.path)
+        widget.desc = QLabel(self.small_path(path) if compact_mode else path)
         widget.desc.setProperty('smallbrightnormal', True)
         widget.grid_layout.addWidget(widget.desc, 1, 1)
         widget.grid_layout.setRowStretch(2, 1)
@@ -215,67 +180,29 @@ class InstalledButton(QGridFrame):
 
         action_remove = QAction(self.lang['QAction']['removeFromList'])
         action_remove.setIcon(self.remove_from_list_icon)
-        action_remove.triggered.connect(lambda: self.remove_from_list.emit(self.path))
+        action_remove.triggered.connect(lambda: self.remove_from_list.emit())
         menu.addAction(action_remove)
 
         if self.release in ['official', 'prerelease']:
             action_uninstall = QAction(self.lang['QAction']['uninstall'])
             action_uninstall.setIcon(self.uninstall_icon)
-            action_uninstall.triggered.connect(lambda: self.uninstall.emit(self.path))
+            action_uninstall.triggered.connect(lambda: self.uninstall.emit())
             menu.addAction(action_uninstall)
 
         menu.exec(self.settings_button.mapToGlobal(QPoint(0, 0)))
 
     def show_in_explorer(self) -> None:
-        path = self.path.replace('/', '\\')
-        subprocess.Popen(rf'explorer /select, "{path}"', shell = False)
+        self.show_in_explorer_clicked.emit()
 
     def edit(self) -> None:
-        edit_dialog = EditAppDialog(self, self.lang['EditAppDialog'], self.name, self.tag_name, self.release, self.created_at, self.raw_icon, self.cwd, self.command, self.path, self.check_for_updates, self.auto_update, self.category)
-        edit_dialog.refresh_app_info.connect(self.refresh_info)
-        edit_dialog.exec()
+        self.edit_clicked.emit()
 
-    def mousePressEvent(self, a0: QMouseEvent) -> None:
-        try:
-            subprocess.Popen(rf'{self.command}', cwd = rf'{self.cwd}', shell = False)
-
-        except Exception as e:
-            print('oof: ' + str(e)) #todo
-
-        return super().mousePressEvent(a0)
-
-    def init_update(self, download_path: str) -> None:
-        if not self.download_data: return print('missing dl data')
-        self.set_disabled(True)
-        self.install_worker = InstallWorker(self.download_data, download_path, os.path.dirname(self.path))
-        self.install_worker.signals.download_progress_changed.connect(lambda val: self.progress_changed(val / 2))
-        self.install_worker.signals.install_progress_changed.connect(lambda val: self.progress_changed(0.5 + (val / 2)))
-        self.install_worker.signals.install_done.connect(lambda: self.progress_done(True))
-        self.install_worker.signals.install_failed.connect(lambda: self.progress_done(False))
-        self.install_worker.start()
+    def mousePressEvent(self, event: QMouseEvent) -> None:
+        self.mouse_pressed.emit()
+        return super().mousePressEvent(event)
 
     def progress_changed(self, value: float) -> None:
         self.progress_bar.setValue(int(value * 100))
-
-    def progress_done(self, success: bool) -> None:
-        self.set_disabled(False)
-        if success:
-            self.set_update(False)
-            self.download_data = None
-        self.install_worker = None
-        self.update_app_done.emit(self.path, success)
-
-    def refresh_info(self):
-        with open(f'{self.path}/manifest.json', 'r', encoding = 'utf-8') as file:
-            data = json.load(file)
-            self.command = data['command']
-            self.cwd = data['cwd']
-            self.raw_icon = data['icon']
-            self.set_icon(self.raw_icon)
-            if self.release in ['official', 'prerelease']:
-                self.check_for_updates = data['checkForUpdates']
-                self.auto_update = data['autoUpdate']
-            self.category = data['category'] if 'category' in data else None
 #----------------------------------------------------------------------
 
     # Worker

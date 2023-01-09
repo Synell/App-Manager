@@ -154,6 +154,7 @@ class QSidePanel(QScrollableGridFrame):
                 item._widget.clicked.connect(send_param(index))
                 # item._widget.setChecked(index == self._current_index)
                 item._widget.setProperty('selected', True) if index == self._current_index else item._widget.setProperty('selected', False)
+                item._widget.clearFocus()
                 item._widget.update()
             self.scroll_layout.addWidget(item._widget, index, 0)
 

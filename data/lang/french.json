@@ -233,11 +233,11 @@
                     "QFileButton": {
                         "installsLocation": {
                             "title": "Emplacement des Installations",
-                            "dialog": "App Manager > Paramètres > Emplacement des Installations"
+                            "dialog": "App Manager > Paramètres > Installations > Emplacement des Installations"
                         },
                         "downloadsLocation": {
                             "title": "Emplacement des Téléchargements",
-                            "dialog": "App Manager > Paramètres > Emplacement des Téléchargements"
+                            "dialog": "App Manager > Paramètres > Installations > Emplacement des Téléchargements"
                         }
                     }
                 },
@@ -380,17 +380,17 @@
                         "requestWorkerFailed": "Requête Échouée"
                     }
                 },
-                "github": {
-                    "title": "GitHub",
+                "token": {
+                    "title": "Jeton d'Authentification",
                     "QLabel": {
-                        "token": {
-                            "title": "Jeton d'Authentification",
-                            "description": "Utilise un jeton d'authentification qui d'augmenter le nombre de requêtes autorisées."
-                        },
-                        "createToken": "Consulter la documentation pour créer un jeton d'authentification."
+                        "github": {
+                            "title": "Jeton d'Authentification GitHub",
+                            "description": "Utilise un jeton d'authentification qui d'augmenter le nombre de requêtes autorisées.",
+                            "createToken": "Consulter la documentation pour créer un jeton d'authentification."
+                        }
                     },
                     "QNamedLineEdit": {
-                        "token": "Jeton d'Authentification"
+                        "github": "Jeton d'Authentification GitHub"
                     }
                 },
                 "followedApps": {
@@ -418,6 +418,32 @@
                     "SettingsListNamedItem": {
                         "QNamedLineEdit": {
                             "category": "Catégorie"
+                        }
+                    },
+                    "data": {
+                        "title": "Données",
+                        "QLabel": {
+                            "clearData": {
+                                "title": "Effacer les Données",
+                                "description": "Efface toutes les données et redémarre l'application."
+                            },
+                            "importData": {
+                                "title": "Importer les Données",
+                                "description": "Importe des données à partir d'un fichier et redémarre l'application."
+                            },
+                            "exportData": {
+                                "title": "Exporter les Données",
+                                "description": "Exporte les données vers un fichier."
+                            }
+                        },
+                        "QPushButton": {
+                            "clearData": "Effacer les Données",
+                            "importData": "Importer les Données",
+                            "exportData": "Exporter les Données"
+                        },
+                        "QFileDialog": {
+                            "importData": "App Manager > Paramètres > Données > Importer les Données",
+                            "exportData": "App Manager > Paramètres > Données > Exporter les Données"
                         }
                     }
                 }

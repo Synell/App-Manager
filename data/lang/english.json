@@ -233,11 +233,11 @@
                     "QFileButton": {
                         "installsLocation": {
                             "title": "Installs Location",
-                            "dialog": "App Manager > Settings > Installs Location"
+                            "dialog": "App Manager > Settings > Installs > Installs Location"
                         },
                         "downloadsLocation": {
                             "title": "Downloads Location",
-                            "dialog": "App Manager > Settings > Downloads Location"
+                            "dialog": "App Manager > Settings > Installs > Downloads Location"
                         }
                     }
                 },
@@ -380,17 +380,17 @@
                         "requestWorkerFailed": "Request Failed"
                     }
                 },
-                "github": {
-                    "title": "GitHub",
+                "token": {
+                    "title": "Token",
                     "QLabel": {
-                        "token": {
-                            "title": "Token",
-                            "description": "The GitHub token used to increase the rate limit."
-                        },
-                        "createToken": "Check out the documentation to learn how to create a token."
+                        "github": {
+                            "title": "GitHub Token",
+                            "description": "The GitHub token used to increase the rate limit.",
+                            "createToken": "Check out the documentation to learn how to create a token."
+                        }
                     },
                     "QNamedLineEdit": {
-                        "token": "Token"
+                        "github": "GitHub Token"
                     }
                 },
                 "followedApps": {
@@ -419,6 +419,32 @@
                         "QNamedLineEdit": {
                             "category": "Category"
                         }
+                    }
+                },
+                "data": {
+                    "title": "Data",
+                    "QLabel": {
+                        "clearData": {
+                            "title": "Clear Data",
+                            "description": "Clears all data stored by App Manager and restarts the app."
+                        },
+                        "importData": {
+                            "title": "Import Data",
+                            "description": "Imports data from a file and restarts the app. This will overwrite all data."
+                        },
+                        "exportData": {
+                            "title": "Export Data",
+                            "description": "Exports data to a file."
+                        }
+                    },
+                    "QPushButton": {
+                        "clearData": "Clear Data",
+                        "importData": "Import Data",
+                        "exportData": "Export Data"
+                    },
+                    "QFileDialog": {
+                        "importData": "App Manager > Settings > Data > Import Data",
+                        "exportData": "App Manager > Settings > Data > Export Data"
                     }
                 }
             },

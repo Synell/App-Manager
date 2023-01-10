@@ -601,7 +601,8 @@ class Application(QBaseApplication):
                 else: self.exit()
 
     def remove_from_install_list(self, path: str) -> None:
-        for i in ['official', 'pre', 'custom']:
+        for i in self.APP_RELEASES[1:]:
+            if i == 'all': continue
             if path in self.save_data.apps[i]: self.save_data.apps[i].remove(path)
         self.refresh_apps()
         self.save_data.save()

@@ -74,12 +74,12 @@ class QSidePanelSeparator:
 
     @property
     def shape(self) -> Shape:
-        return self.__shape__
+        return self.shape_
 
     @shape.setter
     def shape(self, shape: Shape) -> None:
-        if type(shape) is QFrame.Shape:
-            self.__shape__ = shape
+        if type(shape) is QSidePanelSeparator.Shape:
+            self.shape_ = shape
         else: raise ValueError(f'Argument must be a \'QSidePanelSeparator.Shape\'.')
 
 

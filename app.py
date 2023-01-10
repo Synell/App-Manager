@@ -205,6 +205,7 @@ class Application(QBaseApplication):
             QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['title'], f'{self.save_data.getIconsDir()}/sidepanel/apps.png', self.panel_select_apps),
             QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['title'], f'{self.save_data.getIconsDir()}/sidepanel/downloads.png', self.panel_select_downloads),
         ])
+        self.build_categories_widget()
         self.panel_select_apps()
 
 
@@ -262,8 +263,6 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.notebook_tabs = QSlidingStackedWidget()
         self.main_page.apps_widget.notebook_tabs.set_orientation(Qt.Orientation.Horizontal)
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook_tabs, 3, 0)
-        # self.main_page.apps_widget.notebook_tabs.scroll_layout.setAlignment(self.main_page.apps_widget.notebook_tabs, Qt.AlignmentFlag.AlignTop)
-        # self.main_page.apps_widget.notebook_tabs.scroll_layout.setSpacing(0)
 
         for rel in self.APP_RELEASES:
             widget = QWidget()
@@ -325,6 +324,55 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.no_download.grid_layout.setRowStretch(3, 1)
 
         self.main_page.right.addWidget(self.main_page.downloads_widget)
+
+
+    def build_categories_widget(self) -> None:
+        sp: QSidePanel = self.main_page.side_panel
+        sw: QSlidingStackedWidget = self.main_page.right
+
+        for item in sp.items.copy()[2:]:
+            sp.remove_item(item)
+            item._widget.deleteLater()
+
+        for i in range(2, sw.count()):
+            item = sw.widget(i)
+            sw.removeWidget(item)
+            item.deleteLater()
+
+        if self.save_data.categories:
+            sp.add_item(QSidePanelSeparator(shape = QSidePanelSeparator.Shape.Sunken))
+
+        for index, cat in enumerate(self.save_data.categories):
+            root_widget = QGridWidget()
+
+            root_widget.top = QGridWidget()
+            root_widget.grid_layout.addWidget(root_widget.top, 0, 0)
+            root_widget.grid_layout.setAlignment(root_widget.top, Qt.AlignmentFlag.AlignTop)
+
+            label = QLabel(cat)
+            label.setProperty('h', '1')
+            root_widget.top.grid_layout.addWidget(label, 0, 0)
+            root_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
+
+            right_panel = QGridWidget()
+            root_widget.top.grid_layout.addWidget(right_panel, 0, 1, 2, 1)
+            root_widget.top.grid_layout.setAlignment(right_panel, Qt.AlignmentFlag.AlignRight)
+
+            root_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
+            root_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
+            root_widget.searchbar.textChanged.connect(self.refresh_apps_list)
+            right_panel.grid_layout.addWidget(root_widget.searchbar, 1, 1, 1, 2)
+            right_panel.grid_layout.setAlignment(root_widget.searchbar, Qt.AlignmentFlag.AlignTop)
+
+            root_widget.app_list = QScrollableGridWidget()
+            root_widget.grid_layout.addWidget(root_widget.app_list, 2, 0)
+            # root_widget.app_list.scroll_layout.setAlignment(root_widget.app_list, Qt.AlignmentFlag.AlignTop)
+            # root_widget.app_list.scroll_layout.setSpacing(1)
+
+            send_param = lambda i: lambda: self.panel_select_categories(i + 2)
+            sp.add_item(QSidePanelItem(text= cat, icon = f'{self.save_data.getIconsDir()}sidepanel/category.png', connect = send_param(index)))
+
+            sw.addWidget(root_widget)
 
 
     def create_install_app_page(self) -> None:
@@ -663,6 +711,11 @@ class Application(QBaseApplication):
         self.main_page.right.slide_in_index(1)
 
 
+    def panel_select_categories(self, id: int) -> None:
+        self.main_page.side_panel.set_current_index(id + 1)
+        self.main_page.right.slide_in_index(id)
+
+
     def main_page_click(self) -> None:
         self.root.slide_in_index(0)
 
@@ -780,6 +833,12 @@ class Application(QBaseApplication):
         self.refresh_apps_list()
 
     def refresh_apps_list(self, event: str|int = None) -> None:
+        if isinstance(event, str):
+            self.main_page.apps_widget.searchbar.setText(event)
+
+            for index, cat in enumerate(self.save_data.categories):
+                self.main_page.right.widget(index + 2).searchbar.setText(event)
+
         app_keys = list(self.app_buttons.keys())
 
         for button in self.app_buttons.values():

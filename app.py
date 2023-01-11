@@ -17,6 +17,8 @@ class Application(QBaseApplication):
     BUILD = '07e71531'
     VERSION = 'Experimental'
 
+    SERVER_NAME = 'AppManager'
+
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
     MESSAGE_DURATION = 5000
 
@@ -34,6 +36,8 @@ class Application(QBaseApplication):
         self.setApplicationDisplayName('App Manager')
         self.setApplicationName('App Manager')
         self.setApplicationVersion(self.VERSION)
+
+        self.another_instance_opened.connect(self.on_another_instance)
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
@@ -107,6 +111,12 @@ class Application(QBaseApplication):
                     if deltatime > timedelta(weeks = 4): self.check_updates()
 
         self.window.setMinimumSize(int(self.primaryScreen().size().width() * (8 / 15)), int(self.primaryScreen().size().height() * (14 / 27))) # 128x71 -> 1022x568
+
+
+
+    def on_another_instance(self) -> None:
+        self.window.showMinimized()
+        self.window.setWindowState(self.window.windowState() and (not Qt.WindowState.WindowMinimized or Qt.WindowState.WindowActive))
 
 
 

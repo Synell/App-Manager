@@ -3,7 +3,8 @@
     # Libraries
 from sys import argv
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
-from PySide6.QtCore import QPauseAnimation, QRect, QEvent, QSequentialAnimationGroup, QPauseAnimation, QPropertyAnimation, Qt, QEasingCurve
+from PySide6.QtCore import QPauseAnimation, QRect, QEvent, QSequentialAnimationGroup, QPauseAnimation, QPropertyAnimation, Qt, QEasingCurve, Signal
+from PySide6.QtNetwork import QLocalSocket, QLocalServer
 from PySide6.QtGui import QIcon, QPixmap
 
 from .QPlatform import QPlatform
@@ -21,6 +22,10 @@ from .QLinkLabel import QLinkLabel
 
     # Class
 class QBaseApplication(QApplication):
+    another_instance_opened = Signal()
+
+    SERVER_NAME = 'myApp'
+
     COLOR_LINK = QUtilsColor.from_hex('#cccccc')
 
     def __init__(self, platform: QPlatform) -> None:
@@ -40,6 +45,21 @@ class QBaseApplication(QApplication):
         self._alerts = []
         self._has_alert_queue = True
         self._has_installed_event_filter = False
+
+
+
+    def is_unique(self) -> bool:
+        socket = QLocalSocket()
+        socket.connectToServer(self.SERVER_NAME)
+        return not socket.state() == QLocalSocket.LocalSocketState.ConnectedState
+
+    def start_listener(self) -> None:
+        self._listener = QLocalServer(self)
+        self._listener.setSocketOptions(self._listener.SocketOption.WorldAccessOption)
+        self._listener.newConnection.connect(lambda: self.another_instance_opened.emit())
+        self._listener.listen(self.SERVER_NAME)
+        print(f'Waiting for connections on "{self._listener.serverName()}"')
+
 
     def has_alert_queue(self) -> bool:
         return self._has_alert_queue

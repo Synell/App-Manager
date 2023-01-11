@@ -121,12 +121,13 @@ class Application(QBaseApplication):
 
 
     def settings_menu(self) -> None:
-        self.save_data.settings_menu(self)
-        self.load_colors()
-        self.refresh_apps()
-        InstallButton.token = self.save_data.token
-        RequestWorker.token = self.save_data.token
-        EditAppDialog.categories = self.save_data.categories.copy()
+        if self.save_data.settings_menu(self):
+            self.load_colors()
+            self.build_categories_widget()
+            self.refresh_apps()
+            InstallButton.token = self.save_data.token
+            RequestWorker.token = self.save_data.token
+            EditAppDialog.categories = self.save_data.categories.copy()
 
 
 
@@ -335,9 +336,15 @@ class Application(QBaseApplication):
             item._widget.deleteLater()
 
         for i in range(2, sw.count()):
-            item = sw.widget(i)
-            sw.removeWidget(item)
-            item.deleteLater()
+            item = sw.widget(2)
+
+            if isinstance(item, QWidget):
+                sw.removeWidget(item)
+
+                try: item.deleteLater()
+                except: pass
+
+                del item
 
         if self.save_data.categories:
             sp.add_item(QSidePanelSeparator(shape = QSidePanelSeparator.Shape.Sunken))

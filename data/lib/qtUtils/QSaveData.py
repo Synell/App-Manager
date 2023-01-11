@@ -122,7 +122,7 @@ class QSaveData:
             if asQIcon: return QIcon(f'./data/lib/qtUtils/themes/{self.theme}/{self.theme_variant}/icons/{path}')
             return f'./data/lib/qtUtils/themes/{self.theme}/{self.theme_variant}/icons/{path}'
 
-    def settings_menu(self, app: QBaseApplication = None) -> list:
+    def settings_menu(self, app: QBaseApplication = None) -> bool:
         dat = self.settings_menu_extra()
 
         dialog = QSettingsDialog(
@@ -158,6 +158,9 @@ class QSaveData:
                 QMessageBoxWithWidget.Icon.Information,
                 None
             ).exec()
+
+            return True
+        return False
 
     def settings_menu_extra(self) -> tuple[dict, Callable|None]:
         return {}, None

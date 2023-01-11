@@ -334,8 +334,9 @@ class Application(QBaseApplication):
         for item in sp.items.copy()[2:]:
             sp.remove_item(item)
             item._widget.deleteLater()
+            del item
 
-        for i in range(2, sw.count()):
+        for _ in range(2, sw.count()):
             item = sw.widget(2)
 
             if isinstance(item, QWidget):

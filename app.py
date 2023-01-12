@@ -522,8 +522,13 @@ class Application(QBaseApplication):
                 if app.split('/')[-1] == name:
                     app_is_installed = True
 
-                    with open(f'{app}/manifest.json', 'r') as infile:
+                    with open(f'{app}/manifest.json', 'r', encoding = 'utf-8') as infile:
                         manifest = json.load(infile)
+                        if not 'lastCheckForUpdates' in manifest:
+                            manifest['lastCheckForUpdates'] = datetime.now().strftime(self.TIME_FORMAT)
+
+                            with open(f'{app}/manifest.json', 'w', encoding = 'utf-8') as outfile:
+                                json.dump(manifest, outfile, indent = 4)
 
                     if manifest['checkForUpdates'] == 4: followed_apps_to_update.append(fapp)
                     elif manifest['checkForUpdates'] > 0 and manifest['checkForUpdates'] < 4:

@@ -632,6 +632,8 @@ class SaveData(QSaveData):
 
         with exc: self.check_for_updates = extra_data['checkForUpdates']
         with exc: self.check_for_apps_updates = extra_data['checkForAppsUpdates']
+        with exc: self.new_apps_check_for_updates = extra_data['newAppsCheckForUpdates']
+        with exc: self.new_apps_auto_update = extra_data['newAppsAutoUpdate']
 
         with exc: self.last_check_for_updates = datetime.strptime(extra_data['lastCheckForUpdates'], self.dateformat)
         with exc: self.last_check_for_apps_updates = datetime.strptime(extra_data['lastCheckForAppsUpdates'], self.dateformat)

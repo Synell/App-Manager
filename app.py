@@ -602,6 +602,7 @@ class Application(QBaseApplication):
 
     def release_finished(self) -> None:
         self.install_page_worker.exit()
+        if self.install_page_worker.isRunning(): self.install_page_worker.terminate()
 
 
     def add_to_download_list(self, data: InstallButton.download_data) -> None:
@@ -806,12 +807,18 @@ class Application(QBaseApplication):
 
     def check_updates_release(self, rel: dict, app: str) -> None:
         self.update_request.exit()
+        if self.update_request.isRunning():
+            self.update_request.terminate()
+
         self.must_update_link = InstallButton.get_release(rel, None).link
         if rel['tag_name'] > self.BUILD: self.set_update(True)
         else: self.save_data.last_check_for_updates = datetime.now()
 
     def check_updates_failed(self, error: str) -> None:
         self.update_request.exit()
+        if self.update_request.isRunning():
+            self.update_request.terminate()
+
         print('Failed to check for updates:', error)
 
     def set_update(self, update: bool) -> None:
@@ -883,11 +890,11 @@ class Application(QBaseApplication):
                 apps = all_apps
 
                 for app in apps:
-                    if not app in app_keys:
-                        name = app.split('/')[-1]
-                        has_update = name in list(self.updates.keys())
-                        compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
+                    name = app.split('/')[-1]
+                    has_update = name in list(self.updates.keys())
+                    compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
 
+                    if not app in app_keys:
                         b = InstalledButtonGroup(
                             self.window,
                             name,
@@ -913,8 +920,12 @@ class Application(QBaseApplication):
                         for key in [key for key in self.save_data.categories if key not in keys]:
                             b.add_button(key)
 
-                        if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
-                        if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
+                    else:
+                        b = self.app_buttons[app]
+
+                    if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
+                    if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
+                        
 
             for i, app in enumerate(apps):
                 name = app.split('/')[-1]
@@ -1034,6 +1045,13 @@ class Application(QBaseApplication):
             )
             self.must_exit_after_download = True
             return
+
+        if self.install_page_worker:
+            self.install_page_worker.exit()
+
+            if self.install_page_worker.isRunning():
+                self.install_page_worker.terminate()
+
         super().exit()
 #----------------------------------------------------------------------
 

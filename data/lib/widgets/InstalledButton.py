@@ -201,8 +201,8 @@ class InstalledButton(QGridFrame):
         self.mouse_pressed.emit()
         return super().mousePressEvent(event)
 
-    def progress_changed(self, value: float) -> None:
-        self.progress_bar.setValue(int(value * 100))
+    def progress_changed(self, value: int) -> None:
+        self.progress_bar.setValue(value)
 #----------------------------------------------------------------------
 
     # Worker

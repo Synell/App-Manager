@@ -142,7 +142,7 @@ class InstalledButtonGroup(QObject):
     def init_update(self, download_path: str) -> None:
         if not self.download_data: return print('missing dl data')
         self.set_disabled(True)
-        self.install_worker = InstallWorker(self.download_data, download_path, os.path.dirname(self.path))
+        self.install_worker = InstallWorker(self, self.download_data, download_path, os.path.dirname(self.path))
         self.install_worker.signals.download_progress_changed.connect(lambda val: self.progress_changed(val / 2))
         self.install_worker.signals.install_progress_changed.connect(lambda val: self.progress_changed(0.5 + (val / 2)))
         self.install_worker.signals.install_done.connect(lambda: self.progress_done(True))
@@ -150,8 +150,9 @@ class InstalledButtonGroup(QObject):
         self.install_worker.start()
 
     def progress_changed(self, value: float) -> None:
+        v = int(value * 100)
         for button in self.buttons.values():
-            button.progress_changed(int(value * 100))
+            button.progress_changed(v)
 
     def progress_done(self, success: bool) -> None:
         self.set_disabled(False)
@@ -159,6 +160,12 @@ class InstalledButtonGroup(QObject):
         if success:
             self.set_update(False)
             self.download_data = None
+
+        if self.install_worker:
+            self.install_worker.exit()
+
+            if self.install_worker.isRunning():
+                self.install_worker.terminate()
 
         self.install_worker = None
         self.update_app_done.emit(self.path, success)

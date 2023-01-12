@@ -854,13 +854,24 @@ class Application(QBaseApplication):
         if isinstance(event, str):
             self.main_page.apps_widget.searchbar.setText(event)
 
-            for index, cat in enumerate(self.save_data.categories):
-                self.main_page.right.widget(index + 2).searchbar.setText(event)
+            for i in range(2, len(self.save_data.categories) + 2):
+                self.main_page.right.widget(i).searchbar.setText(event)
 
         app_keys = list(self.app_buttons.keys())
 
         for button in self.app_buttons.values():
             button.clear_parent()
+
+            for k in [k for k in button.keys() if k not in self.APP_RELEASES if k not in self.save_data.categories]:
+                button.remove_button(k)
+
+            keys = button.keys()
+            for k in [k for k in self.save_data.categories if k not in keys]:
+                button.add_button(k)
+
+        all_apps = []
+        for key in self.APP_RELEASES[1:]:
+            if key != 'all': all_apps += self.save_data.apps[key]
 
         for index, k in enumerate(self.APP_RELEASES):
             apps = []
@@ -869,8 +880,7 @@ class Application(QBaseApplication):
                 apps = self.save_data.apps[k]
 
             else:
-                for key in self.APP_RELEASES[1:]:
-                    if key != 'all': apps += self.save_data.apps[key]
+                apps = all_apps
 
                 for app in apps:
                     if not app in app_keys:
@@ -893,19 +903,29 @@ class Application(QBaseApplication):
                         b.uninstall.connect(self.add_to_uninstall_list)
                         b.update_app.connect(self.add_to_update_list)
                         b.update_app_done.connect(self.remove_from_update_list)
+                        b.info_changed.connect(lambda _: self.refresh_apps())
 
                         self.app_buttons[app] = b
                         for key in self.APP_RELEASES:
                             b.add_button(key)
 
-            for i, app in enumerate(apps):
-                name = app.split('/')[-1]
+                        keys = b.keys()
+                        for key in [key for key in self.save_data.categories if key not in keys]:
+                            b.add_button(key)
 
-                if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                    b: InstalledButtonGroup = self.app_buttons[app]
+            if k == 'all':
+                for i, app in enumerate(apps):
+                    name = app.split('/')[-1]
 
-                    w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(index)
-                    w.scroll_layout.addWidget(b.get_button(k), i, 0)
+                    if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
+                        b: InstalledButtonGroup = self.app_buttons[app]
+
+                        w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(index)
+                        w.scroll_layout.addWidget(b.get_button(k), i, 0)
+
+                        if b.category in self.save_data.categories:
+                            sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.categories.index(b.category) + 2).app_list
+                            sw.scroll_layout.addWidget(b.get_button(b.category), i, 0)
 
 
     def create_about_menu(self) -> None:

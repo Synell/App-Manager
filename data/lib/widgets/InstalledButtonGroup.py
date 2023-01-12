@@ -15,10 +15,13 @@ from .dialog import EditAppDialog
 
     # Class
 class InstalledButtonGroup(QObject):
-    remove_from_list = Signal(str)
     update_app = Signal(str)
     update_app_done = Signal(str, bool)
+
+    remove_from_list = Signal(str)
     uninstall = Signal(str)
+
+    info_changed = Signal(str)
 
     def __init__(self, mw: QMainWindow, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: InstallButton.download_data = False, compact_mode: bool = False) -> None:
         super().__init__()
@@ -77,6 +80,10 @@ class InstalledButtonGroup(QObject):
 
     def remove_button(self, key: str) -> None:
         self.buttons.pop(key)
+
+
+    def keys(self) -> list[str]:
+        return list(self.buttons.keys())
 
 
     def set_icon(self, icon: str) -> None:
@@ -167,6 +174,8 @@ class InstalledButtonGroup(QObject):
                 self.check_for_updates = data['checkForUpdates']
                 self.auto_update = data['autoUpdate']
             self.category = data['category'] if 'category' in data else None
+
+        self.info_changed.emit(self.path)
 
     def clear_parent(self) -> None:
         for button in self.buttons.values():

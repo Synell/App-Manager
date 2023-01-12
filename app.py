@@ -532,7 +532,7 @@ class Application(QBaseApplication):
 
                     if manifest['checkForUpdates'] == 4: followed_apps_to_update.append(fapp)
                     elif manifest['checkForUpdates'] > 0 and manifest['checkForUpdates'] < 4:
-                        deltatime = datetime.now() - manifest['lastCheckForUpdates']
+                        deltatime = datetime.now() - datetime.strptime(manifest['lastCheckForUpdates'], self.TIME_FORMAT)
 
                         match manifest['checkForUpdates']:
                             case 1:

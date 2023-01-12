@@ -412,7 +412,7 @@
                     "QLabel": {
                         "categories": {
                             "title": "Catégories",
-                            "description": "Sélectionnez les catégories qui apparaîtront dans le menu d'édition des applications."
+                            "description": "Sélectionnez les catégories qui apparaîtront dans la barre latérale. Vous pouvez modifier la catégorie d'une application dans ses paramètres."
                         }
                     },
                     "SettingsListNamedItem": {

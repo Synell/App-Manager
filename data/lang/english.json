@@ -412,7 +412,7 @@
                     "QLabel": {
                         "categories": {
                             "title": "Categories",
-                            "description": "Select categories to show in the app editor menu."
+                            "description": "Select categories to show in the app side panel. You can edit the category of an application in its settings."
                         }
                     },
                     "SettingsListNamedItem": {

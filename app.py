@@ -33,7 +33,7 @@ class Application(QBaseApplication):
     def __init__(self, platform: QPlatform) -> None:
         super().__init__(platform = platform)
 
-        self.setApplicationDisplayName('App Manager')
+        # self.setApplicationDisplayName('App Manager')
         self.setApplicationName('App Manager')
         self.setApplicationVersion(self.VERSION)
 
@@ -70,7 +70,7 @@ class Application(QBaseApplication):
 
         self.install_page_worker = None
         self.install_page_buttons = [[], []]
-        self.app_buttons = {}
+        self.app_buttons: dict[str, InstalledButtonGroup] = {}
 
         self.save_data.setStyleSheet(self)
         self.window.setProperty('color', 'cyan')
@@ -384,8 +384,8 @@ class Application(QBaseApplication):
 
             root_widget.app_list = QScrollableGridWidget()
             root_widget.grid_layout.addWidget(root_widget.app_list, 2, 0)
-            # root_widget.app_list.scroll_layout.setAlignment(root_widget.app_list, Qt.AlignmentFlag.AlignTop)
-            # root_widget.app_list.scroll_layout.setSpacing(1)
+            root_widget.app_list.scroll_layout.setAlignment(root_widget.app_list, Qt.AlignmentFlag.AlignTop)
+            root_widget.app_list.scroll_layout.setSpacing(1)
 
             send_param = lambda i: lambda: self.panel_select_categories(i + 2)
             sp.add_item(QSidePanelItem(text= cat, icon = f'{self.save_data.getIconsDir()}sidepanel/category.png', connect = send_param(index)))
@@ -913,16 +913,19 @@ class Application(QBaseApplication):
                         for key in [key for key in self.save_data.categories if key not in keys]:
                             b.add_button(key)
 
-            if k == 'all':
-                for i, app in enumerate(apps):
-                    name = app.split('/')[-1]
+                        if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
+                        if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
 
-                    if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                        b: InstalledButtonGroup = self.app_buttons[app]
+            for i, app in enumerate(apps):
+                name = app.split('/')[-1]
 
-                        w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(index)
-                        w.scroll_layout.addWidget(b.get_button(k), i, 0)
+                if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
+                    b: InstalledButtonGroup = self.app_buttons[app]
 
+                    w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(index)
+                    w.scroll_layout.addWidget(b.get_button(k), i, 0)
+
+                    if k == 'all':
                         if b.category in self.save_data.categories:
                             sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.categories.index(b.category) + 2).app_list
                             sw.scroll_layout.addWidget(b.get_button(b.category), i, 0)

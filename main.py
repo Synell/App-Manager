@@ -80,6 +80,7 @@ def main() -> None:
 
     except Exception as err:
         print(err)
+        if app.thread().isRunning(): app.thread().exit()
         app = ApplicationError(err)
 #----------------------------------------------------------------------
 

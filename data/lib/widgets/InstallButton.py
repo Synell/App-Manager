@@ -3,11 +3,10 @@
     # Libraries
 from collections import namedtuple
 from PySide6.QtWidgets import QPushButton, QLabel
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtSvgWidgets import QSvgWidget
+from PySide6.QtCore import Qt, Signal, QSize
 from .PlatformType import PlatformType
 
-from data.lib.qtUtils import QGridWidget, QGridFrame
+from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
 #----------------------------------------------------------------------
 
     # Class
@@ -66,10 +65,9 @@ class InstallButton(QGridFrame):
         widget.grid_layout.setSpacing(16)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        pixmap = QSvgWidget(icon)
-        pixmap.setFixedSize(40, 40)
+        iw = QIconWidget(None, icon, QSize(40, 40))
 
-        widget.grid_layout.addWidget(pixmap, 0, 0)
+        widget.grid_layout.addWidget(iw, 0, 0)
         widget.grid_layout.addWidget(text_widget, 0, 1)
 
         widget.grid_layout.setColumnStretch(2, 1)

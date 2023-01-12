@@ -560,10 +560,13 @@ class Application(QBaseApplication):
         for button in self.install_page_buttons[0] + self.install_page_buttons[1]:
             button.set_disabled(button.name in installed_releases)
 
-    def release_received(self, rel: dict) -> None:
+    def release_received(self, rel: dict, app: str) -> None:
+        def get_icon_path(link: str) -> str:
+            if link.startswith('https://github.com/'): return self.save_data.getIcon('installbutton/github.png', asQIcon = False)
+            return './data/icons/questionMark.svg'
+
         installed_releases = self.get_installed_releases()
-        icon = './data/icons/questionMark.svg'
-        button = InstallButton(rel, self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['install'], rel['name'], rel['tag_name'], icon, f'{rel["name"]}' in installed_releases or f'{rel["name"]}' in list(self.downloads.keys()) + [j.split('/')[-1] for j in list(self.uninstalls.keys())])
+        button = InstallButton(rel, self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['install'], rel['name'], rel['tag_name'], get_icon_path(app), f'{rel["name"]}' in installed_releases or f'{rel["name"]}' in list(self.downloads.keys()) + [j.split('/')[-1] for j in list(self.uninstalls.keys())])
         button.download.connect(self.add_to_download_list)
         if rel['prerelease']: self.install_app_page.tab_widget.pre.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.pre.inside.scroll_layout.count(), 0)
         else: self.install_app_page.tab_widget.official.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.official.inside.scroll_layout.count(), 0)
@@ -585,7 +588,7 @@ class Application(QBaseApplication):
         self.updates[rel['name']] = InstallButton.get_release(rel, self.save_data.token)
         self.refresh_apps()
 
-    def release_failed(self, error: str) -> None:
+    def release_failed(self, error: str, app: str) -> None:
         if self.save_data.request_worker_failed_notif: self.sys_tray.showMessage(
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['title'],
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['message'].replace('%s', error),

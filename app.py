@@ -1054,6 +1054,12 @@ class Application(QBaseApplication):
             self.must_exit_after_download = True
             return
 
+        if self.update_request:
+            self.update_request.exit()
+
+            if self.update_request.isRunning():
+                self.update_request.terminate()
+
         if self.install_page_worker:
             self.install_page_worker.exit()
 

@@ -658,4 +658,9 @@ class SaveData(QSaveData):
         with exc: self.request_worker_failed_notif = extra_data['requestWorkerFailedNotif']
 
         self.save()
+
+    def export_extra_data(self) -> dict:
+        dct = self.save_extra_data()
+        del dct['apps']
+        return dct
 #----------------------------------------------------------------------

@@ -3,8 +3,9 @@
     # Libraries
 from typing import Callable
 from PySide6.QtGui import QIcon
-import json, os, shutil
+import json, os
 from enum import Enum
+from contextlib import suppress
 
 from .QMessageBoxWithWidget import QMessageBoxWithWidget
 from .QBaseApplication import QBaseApplication
@@ -46,17 +47,18 @@ class QSaveData:
         try:
             with open(self.path, 'r', encoding = 'utf-8') as infile:
                 data = json.load(infile)
-            self.language = data['language']
-            self.theme = data['theme']
-            self.theme_variant = data['themeVariant']
+
+            exc = suppress(Exception)
+
+            with exc: self.language = data['language']
+            with exc: self.theme = data['theme']
+            with exc: self.theme_variant = data['themeVariant']
+
             self.load_language_data()
             self.load_theme_data()
             self.load_extra_data(data)
 
         except Exception as e:
-            self.language = 'english'
-            self.theme = 'neutron'
-            self.theme_variant = 'dark'
             self.save()
             if not safe_mode: self.load()
 
@@ -176,8 +178,20 @@ class QSaveData:
         os.remove(self.path)
 
     def export_data(self, filename: str) -> None:
-        shutil.copyfile(self.path, filename)
+        new_data = {'language': self.language, 'theme': self.theme, 'themeVariant': self.theme_variant} | self.export_extra_data()
+
+        with open(filename, 'w', encoding = 'utf-8') as outfile:
+            json.dump(new_data, outfile)
+
+    def export_extra_data(self) -> dict: return {}
 
     def import_data(self, filename: str) -> None:
-        shutil.copyfile(filename, self.path)
+        with open(filename, 'r', encoding = 'utf-8') as infile:
+            data = json.load(infile)
+
+        self.language = data['language']
+        self.theme = data['theme']
+        self.theme_variant = data['themeVariant']
+        self.load_extra_data(data)
+        self.save()
 #----------------------------------------------------------------------

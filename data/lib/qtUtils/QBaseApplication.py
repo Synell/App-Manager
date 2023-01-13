@@ -46,14 +46,20 @@ class QBaseApplication(QApplication):
         self._has_alert_queue = True
         self._has_installed_event_filter = False
 
+        self._start_listener()
 
+
+
+    @staticmethod
+    def instance_exists(server_name: str) -> bool:
+        socket = QLocalSocket()
+        socket.connectToServer(server_name)
+        return socket.state() == QLocalSocket.LocalSocketState.ConnectedState
 
     def is_unique(self) -> bool:
-        socket = QLocalSocket()
-        socket.connectToServer(self.SERVER_NAME)
-        return not socket.state() == QLocalSocket.LocalSocketState.ConnectedState
+        return not QBaseApplication.instance_exists(self.SERVER_NAME)
 
-    def start_listener(self) -> None:
+    def _start_listener(self) -> None:
         self._listener = QLocalServer(self)
         self._listener.setSocketOptions(self._listener.SocketOption.WorldAccessOption)
         self._listener.newConnection.connect(lambda: self.another_instance_opened.emit())

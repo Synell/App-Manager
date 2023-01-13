@@ -53,30 +53,26 @@ def main() -> None:
 
         if platf not in [QPlatform.Windows, QPlatform.Linux, QPlatform.MacOS]: raise Exception('Unknown platform')
 
-        app = Application(platf)
-
-        if app.is_unique():
-            app.start_listener()
-            app.window.showNormal()
-            exit_code = app.exec()
-            if exit_code == 0:
-                if app.must_update and (not app.must_restart):
-                    ex = 'py main.py' if sys.argv[0].endswith('.py') else f'{sys.executable}'
-                    try: subprocess.Popen(rf'{"py updater.py" if sys.argv[0].endswith(".py") else "./Updater"} "{app.must_update}" "{ex}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd(), shell = False)
-                    except Exception as e:
-                        exit_code = 1
-
-                elif app.must_restart:
-                    try: subprocess.Popen(rf'{"py main.py" if sys.argv[0].endswith(".py") else sys.argv[0]}', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd(), shell = False)
-                    except Exception as e:
-                        exit_code = 1
-
-            sys.exit(exit_code)
-
-        else:
+        if Application.instance_exists(Application.SERVER_NAME):
             print('App is already running, exiting...')
-            if app.thread().isRunning(): app.thread().exit()
             sys.exit(0)
+
+        app = Application(platf)
+        app.window.showNormal()
+        exit_code = app.exec()
+        if exit_code == 0:
+            if app.must_update and (not app.must_restart):
+                ex = 'py main.py' if sys.argv[0].endswith('.py') else f'{sys.executable}'
+                try: subprocess.Popen(rf'{"py updater.py" if sys.argv[0].endswith(".py") else "./Updater"} "{app.must_update}" "{ex}"', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd(), shell = False)
+                except Exception as e:
+                    exit_code = 1
+
+            elif app.must_restart:
+                try: subprocess.Popen(rf'{"py main.py" if sys.argv[0].endswith(".py") else sys.argv[0]}', creationflags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP, cwd = os.getcwd(), shell = False)
+                except Exception as e:
+                    exit_code = 1
+
+        sys.exit(exit_code)
 
     except Exception as err:
         print(err)

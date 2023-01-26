@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e7157b'
+    BUILD = '07e715d5'
     VERSION = 'Experimental'
 
     SERVER_NAME = 'AppManager'
@@ -31,7 +31,9 @@ class Application(QBaseApplication):
     APP_RELEASES = ['all', 'official', 'pre', 'custom']
 
     def __init__(self, platform: QPlatform) -> None:
-        super().__init__(platform = platform)
+        super().__init__(platform = platform, start_listener = True)
+
+        self.update_request = None
 
         # self.setApplicationDisplayName('App Manager')
         self.setApplicationName('App Manager')

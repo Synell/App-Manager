@@ -68,17 +68,18 @@ class InstalledButtonGroup(QObject):
         button.update_app.connect(lambda: self.update_app.emit(self.path))
         button.uninstall.connect(lambda: self.uninstall.emit(self.path))
 
-        button.set_update(self.has_update != None)
+        button.set_update(bool(self.has_update))
         button.set_disabled(self.is_disabled)
 
         button.set_icon(self.raw_icon, self.base_icon)
-        
+
         return button
 
     def get_button(self, key: str) -> InstalledButton:
         return self.buttons[key]
 
     def remove_button(self, key: str) -> None:
+        self.buttons[key].deleteLater()
         self.buttons.pop(key)
 
 

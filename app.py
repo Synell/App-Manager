@@ -263,7 +263,7 @@ class Application(QBaseApplication):
 
         self.main_page.apps_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
         self.main_page.apps_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
-        self.main_page.apps_widget.searchbar.textChanged.connect(self.refresh_apps_list)
+        self.main_page.apps_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
         right_buttons.grid_layout.addWidget(self.main_page.apps_widget.searchbar, 1, 1, 1, 2)
         right_buttons.grid_layout.setAlignment(self.main_page.apps_widget.searchbar, Qt.AlignmentFlag.AlignTop)
 
@@ -380,7 +380,7 @@ class Application(QBaseApplication):
 
             root_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
             root_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
-            root_widget.searchbar.textChanged.connect(self.refresh_apps_list)
+            root_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
             right_panel.grid_layout.addWidget(root_widget.searchbar, 1, 1, 1, 2)
             right_panel.grid_layout.setAlignment(root_widget.searchbar, Qt.AlignmentFlag.AlignTop)
 
@@ -867,89 +867,86 @@ class Application(QBaseApplication):
 
         self.refresh_apps_list()
 
-    def refresh_apps_list(self, event: str|int = None) -> None:
-        if isinstance(event, str):
-            self.main_page.apps_widget.searchbar.setText(event)
-
-            for i in range(2, len(self.save_data.categories) + 2):
-                self.main_page.right.widget(i).searchbar.setText(event)
-
+    def refresh_apps_list(self, event: int = None) -> None:
         app_keys = list(self.app_buttons.keys())
 
         for button in self.app_buttons.values():
             button.clear_parent()
 
-            for k in [k for k in button.keys() if k not in self.APP_RELEASES if k not in self.save_data.categories]:
+            for k in [k for k in button.keys() if k not in self.APP_RELEASES]:
                 button.remove_button(k)
 
-            keys = button.keys()
-            for k in [k for k in self.save_data.categories if k not in keys]:
-                button.add_button(k)
+            if button.category:
+                if button.category not in button.keys():
+                    button.add_button(button.category)
 
         all_apps = []
         for key in self.APP_RELEASES[1:]:
             if key != 'all': all_apps += self.save_data.apps[key]
 
-        for index, k in enumerate(self.APP_RELEASES):
-            apps = []
+        for app in all_apps:
+            name = app.split('/')[-1]
+            has_update = name in list(self.updates.keys())
+            compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
 
-            if k != 'all':
-                apps = self.save_data.apps[k]
+            if not app in app_keys:
+                b = InstalledButtonGroup(
+                    self.window,
+                    name,
+                    app,
+                    self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'],
+                    './data/icons/questionMark.svg',
+                    False,
+                    InstallButton.get_release(InstallButton.platform, self.updates[name], self.save_data.token) if has_update else None,
+                    compact_mode
+                )
+
+                b.remove_from_list.connect(self.remove_from_install_list)
+                b.uninstall.connect(self.add_to_uninstall_list)
+                b.update_app.connect(self.add_to_update_list)
+                b.update_app_done.connect(self.remove_from_update_list)
+                b.info_changed.connect(lambda _: self.refresh_apps())
+
+                self.app_buttons[app] = b
+                b.add_button('all')
+                b.add_button(b.release)
+                if b.category: b.add_button(b.category)
 
             else:
-                apps = all_apps
+                b = self.app_buttons[app]
 
-                for app in apps:
-                    name = app.split('/')[-1]
-                    has_update = name in list(self.updates.keys())
-                    compact_mode = (self.devicePixelRatio() > 1) if self.save_data.compact_paths == 0 else (self.save_data.compact_paths == 1)
+            if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
+            if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
 
-                    if not app in app_keys:
-                        b = InstalledButtonGroup(
-                            self.window,
-                            name,
-                            app,
-                            self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'],
-                            './data/icons/questionMark.svg',
-                            False,
-                            InstallButton.get_release(InstallButton.platform, self.updates[name], self.save_data.token) if has_update else None,
-                            compact_mode
-                        )
+            w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index('all'))
+            w.scroll_layout.addWidget(b.get_button('all'), w.scroll_layout.count(), 0)
 
-                        b.remove_from_list.connect(self.remove_from_install_list)
-                        b.uninstall.connect(self.add_to_uninstall_list)
-                        b.update_app.connect(self.add_to_update_list)
-                        b.update_app_done.connect(self.remove_from_update_list)
-                        b.info_changed.connect(lambda _: self.refresh_apps())
+            w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index(b.release))
+            w.scroll_layout.addWidget(b.get_button(b.release), w.scroll_layout.count(), 0)
 
-                        self.app_buttons[app] = b
-                        for key in self.APP_RELEASES:
-                            b.add_button(key)
+            if b.category in self.save_data.categories:
+                sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.categories.index(b.category) + 2).app_list
+                sw.scroll_layout.addWidget(b.get_button(b.category), sw.scroll_layout.count(), 0)
 
-                        keys = b.keys()
-                        for key in [key for key in self.save_data.categories if key not in keys]:
-                            b.add_button(key)
+        self.refresh_apps_visibility(self.main_page.apps_widget.searchbar.text())
 
-                    else:
-                        b = self.app_buttons[app]
 
-                    if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
-                    if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
-                        
+    def refresh_apps_visibility(self, event: str) -> None:
+        self.main_page.apps_widget.searchbar.setText(event)
 
-            for i, app in enumerate(apps):
-                name = app.split('/')[-1]
+        for i in range(2, len(self.save_data.categories) + 2):
+            self.main_page.right.widget(i).searchbar.setText(event)
 
-                if self.main_page.apps_widget.searchbar.text().lower() in name.lower():
-                    b: InstalledButtonGroup = self.app_buttons[app]
+        all_apps = []
+        for key in self.APP_RELEASES[1:]:
+            if key != 'all': all_apps += self.save_data.apps[key]
 
-                    w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(index)
-                    w.scroll_layout.addWidget(b.get_button(k), i, 0)
+        for app in all_apps:
+            b = self.app_buttons[app]
+            visible = self.main_page.apps_widget.searchbar.text().lower() in b.name.lower()
 
-                    if k == 'all':
-                        if b.category in self.save_data.categories:
-                            sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.categories.index(b.category) + 2).app_list
-                            sw.scroll_layout.addWidget(b.get_button(b.category), i, 0)
+            for key in b.keys():
+                b.get_button(key).setVisible(visible)
 
 
     def create_about_menu(self) -> None:

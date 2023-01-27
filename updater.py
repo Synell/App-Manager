@@ -18,13 +18,17 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e715d5'
+    BUILD = '07e715de'
     VERSION = 'Experimental'
 
     UPDATE_LINK = ''
 
     def __init__(self,  platform: QPlatform):
         super().__init__(platform)
+
+        # self.setApplicationDisplayName('App Manager')
+        self.setApplicationName('App Manager')
+        self.setApplicationVersion(self.VERSION)
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
 

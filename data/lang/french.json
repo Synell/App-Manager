@@ -419,32 +419,32 @@
                         "QNamedLineEdit": {
                             "category": "Catégorie"
                         }
-                    },
-                    "data": {
-                        "title": "Données",
-                        "QLabel": {
-                            "clearData": {
-                                "title": "Effacer les Données",
-                                "description": "Efface toutes les données et redémarre l'application."
-                            },
-                            "importData": {
-                                "title": "Importer les Données",
-                                "description": "Importe des données à partir d'un fichier et redémarre l'application."
-                            },
-                            "exportData": {
-                                "title": "Exporter les Données",
-                                "description": "Exporte les données vers un fichier."
-                            }
+                    }
+                },
+                "data": {
+                    "title": "Données",
+                    "QLabel": {
+                        "clearData": {
+                            "title": "Effacer les Données",
+                            "description": "Efface toutes les données et redémarre l'application."
                         },
-                        "QPushButton": {
-                            "clearData": "Effacer les Données",
-                            "importData": "Importer les Données",
-                            "exportData": "Exporter les Données"
+                        "importData": {
+                            "title": "Importer les Données",
+                            "description": "Importe des données à partir d'un fichier et redémarre l'application."
                         },
-                        "QFileDialog": {
-                            "importData": "App Manager > Paramètres > Données > Importer les Données",
-                            "exportData": "App Manager > Paramètres > Données > Exporter les Données"
+                        "exportData": {
+                            "title": "Exporter les Données",
+                            "description": "Exporte les données vers un fichier."
                         }
+                    },
+                    "QPushButton": {
+                        "clearData": "Effacer les Données",
+                        "importData": "Importer les Données",
+                        "exportData": "Exporter les Données"
+                    },
+                    "QFileDialog": {
+                        "importData": "App Manager > Paramètres > Données > Importer les Données",
+                        "exportData": "App Manager > Paramètres > Données > Exporter les Données"
                     }
                 }
             },

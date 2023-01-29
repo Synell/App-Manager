@@ -32,6 +32,8 @@ class ApplicationError(QApplication):
 
     # Main Function
 def main() -> None:
+    app = None
+
     try:
         os.chdir(os.path.dirname(os.path.abspath(__file__ if sys.argv[0].endswith('.py') else sys.executable)))
 
@@ -76,7 +78,8 @@ def main() -> None:
 
     except Exception as err:
         print(err)
-        if app.thread().isRunning(): app.thread().exit()
+        if app:
+            if app.thread().isRunning(): app.thread().exit()
         app = ApplicationError(err)
 #----------------------------------------------------------------------
 

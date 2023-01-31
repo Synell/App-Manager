@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Français",
-        "version": 1.0,
+        "version": "07e715ff",
         "description": "Langage français pour l'application App Manager."
     },
     "data": {
@@ -428,7 +428,7 @@
                             "QLabel": {
                                 "icon": {
                                     "title": "Icône",
-                                    "dialog": "App Manager > Paramètres > Catégories > Modifier l'icône de la catégorie > Sélectionner une icône"
+                                    "description": "Sélectionnez une icône pour la catégorie. Vous pouvez utiliser une icône prédéfinie ou une icône personnalisée."
                                 },
                                 "predefinedIcons": {
                                     "title": "Icônes Prédéfinies",
@@ -437,7 +437,10 @@
                                 "currentIcon": "Icône actuelle"
                             },
                             "QFileButton": {
-                                "icon": "Icône"
+                                "icon": {
+                                    "title": "Icône",
+                                    "dialog": "App Manager > Paramètres > Catégories > Modifier l'icône de la catégorie > Sélectionner une icône"
+                                }
                             }
                         }
                     }

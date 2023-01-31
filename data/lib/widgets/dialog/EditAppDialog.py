@@ -23,12 +23,12 @@ class EditAppDialog(QDialog):
 
     categories: list[Category] = []
 
-    def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True, category: str = None):
+    def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True, category: str = None) -> None:
         super().__init__(parent)
 
-        self.layout = QGridLayout()
-        self.layout.setSpacing(0)
-        self.layout.setContentsMargins(0, 0, 0, 0)
+        self._layout = QGridLayout()
+        self._layout.setSpacing(0)
+        self._layout.setContentsMargins(0, 0, 0, 0)
 
         self.path = path
         self.lang = lang
@@ -85,10 +85,10 @@ class EditAppDialog(QDialog):
 
         self.setMinimumSize(int(parent.window().size().width() * (205 / 256)), int(parent.window().size().height() * (13 / 15)))
 
-        self.layout.addWidget(self.root, 0, 0)
-        self.layout.addWidget(self.frame, 1, 0)
+        self._layout.addWidget(self.root, 0, 0)
+        self._layout.addWidget(self.frame, 1, 0)
 
-        self.setLayout(self.layout)
+        self.setLayout(self._layout)
 
 
         w = self.tabs[self.lang['QSidePanel']['icon']['title']][0]
@@ -102,7 +102,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def general_tab_widget(self):
+    def general_tab_widget(self) -> tuple[QWidget, str]:
         lang = self.lang['QSidePanel']['general']
 
         widget = QScrollableGridWidget()
@@ -218,7 +218,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def advanced_tab_widget(self):
+    def advanced_tab_widget(self) -> tuple[QWidget, str]:
         lang = self.lang['QSidePanel']['advanced']
 
         widget = QScrollableGridWidget()
@@ -261,7 +261,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def updates_tab_widget(self):
+    def updates_tab_widget(self) -> tuple[QWidget, str]:
         lang = self.lang['QSidePanel']['updates']
 
         widget = QScrollableGridWidget()
@@ -310,7 +310,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def icon_tab_widget(self):
+    def icon_tab_widget(self) -> tuple[QWidget, str]:
         lang = self.lang['QSidePanel']['icon']
 
         widget = QGridFrame()
@@ -366,7 +366,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def update(self, path: str = None):
+    def update(self, path: str = None) -> None:
         if not path: return
         if not os.path.isfile(path): return
 
@@ -376,7 +376,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def icon_file_button_path_changed(self, path: str = None):
+    def icon_file_button_path_changed(self, path: str = None) -> None:
         if not path: return
         self.update(path)
 
@@ -404,7 +404,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def icon_with_text(self, icon: str = None, text: str = ''):
+    def icon_with_text(self, icon: str = None, text: str = '') -> QGridWidget:
         widget = QGridWidget()
         widget.grid_layout.setSpacing(16)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
@@ -425,7 +425,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def generate_button(self, path: str = None):
+    def generate_button(self, path: str = None) -> QIconWidget:
         button = QIconWidget(None, path, QSize(self.icon_size, self.icon_size))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('imagebutton', True)
@@ -435,7 +435,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def icon_click(self, path: str = None):
+    def icon_click(self, path: str = None) -> None:
         if not path: return
         if not os.path.exists(path) or not os.path.isfile(path): return
 
@@ -443,7 +443,7 @@ class EditAppDialog(QDialog):
 
 
 
-    def exec(self):
+    def exec(self) -> None:
         if super().exec():
             with open(f'{self.path}/manifest.json', 'r', encoding = 'utf-8') as infile:
                 data = json.load(infile)

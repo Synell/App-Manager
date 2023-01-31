@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e715de'
+    BUILD = '07e715ff'
     VERSION = 'Experimental'
 
     SERVER_NAME = 'AppManager'
@@ -58,10 +58,12 @@ class Application(QBaseApplication):
         EditAppDialog.advanced_tab_icon = self.save_data.getIcon('sidepanel/advanced.png', False)
         EditAppDialog.updates_tab_icon = self.save_data.getIcon('sidepanel/updates.png', False)
         EditAppDialog.icon_tab_icon = self.save_data.getIcon('sidepanel/icon.png', False)
-        EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/image.png', False)
         EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/folder.png', False)
         EditAppDialog.icon_path = './data/icons/sample'
         EditAppDialog.categories = self.save_data.categories.copy()
+
+        EditCategoryIconDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/folder.png', False)
+        EditCategoryIconDialog.icon_path = './data/icons/sample'
 
         SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
         CategoryListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')

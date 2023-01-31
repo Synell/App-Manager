@@ -415,9 +415,30 @@
                             "description": "Sélectionnez les catégories qui apparaîtront dans la barre latérale. Vous pouvez modifier la catégorie d'une application dans ses paramètres."
                         }
                     },
-                    "SettingsListNamedItem": {
+                    "CategoryListNamedItem": {
                         "QNamedLineEdit": {
                             "category": "Catégorie"
+                        },
+                        "EditCategoryIconDialog": {
+                            "title": "App Manager > Paramètres > Catégories > Modifier l'icône de la catégorie",
+                            "QPushButton": {
+                                "cancel": "Annuler",
+                                "apply": "Appliquer"
+                            },
+                            "QLabel": {
+                                "icon": {
+                                    "title": "Icône",
+                                    "dialog": "App Manager > Paramètres > Catégories > Modifier l'icône de la catégorie > Sélectionner une icône"
+                                },
+                                "predefinedIcons": {
+                                    "title": "Icônes Prédéfinies",
+                                    "description": "Une liste d'icônes prédéfinies disponibles pour l'application."
+                                },
+                                "currentIcon": "Icône actuelle"
+                            },
+                            "QFileButton": {
+                                "icon": "Icône"
+                            }
                         }
                     }
                 },

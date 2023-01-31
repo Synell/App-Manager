@@ -415,9 +415,33 @@
                             "description": "Select categories to show in the app side panel. You can edit the category of an application in its settings."
                         }
                     },
-                    "SettingsListNamedItem": {
+                    "CategoryListNamedItem": {
                         "QNamedLineEdit": {
                             "category": "Category"
+                        },
+                        "EditCategoryIconDialog": {
+                            "title": "App Manager > Settings > Categories > Edit Icon",
+                            "QPushButton": {
+                                "cancel": "Cancel",
+                                "apply": "Apply"
+                            },
+                            "QLabel": {
+                                "icon": {
+                                    "title": "Icon",
+                                    "description": "The icon of the category."
+                                },
+                                "predefinedIcons": {
+                                    "title": "Predefined Icons",
+                                    "description": "A list of predefined icons available for the app."
+                                },
+                                "currentIcon": "Current Icon"
+                            },
+                            "QFileButton": {
+                                "icon": {
+                                    "title": "Icon",
+                                    "dialog": "App Manager > Settings > Categories > Edit Icon > Icon"
+                                }
+                            }
                         }
                     }
                 },

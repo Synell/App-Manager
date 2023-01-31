@@ -7,6 +7,7 @@ from PySide6.QtCore import Qt, Signal
 
 from data.lib.qtUtils import QDragListItem, QNamedLineEdit, QNamedComboBox, QGridWidget
 from .Category import Category
+from .dialog import EditCategoryIconDialog
 #----------------------------------------------------------------------
 
     # Class
@@ -19,8 +20,10 @@ class CategoryListNamedItem(QDragListItem):
         self.setProperty('color', 'main')
         self.setProperty('side', 'all')
 
+        self.lang = lang
+
         self.grid_layout.setContentsMargins(10, 10, 10, 10)
-        self.grid_layout.setSpacing(50)
+        self.grid_layout.setSpacing(32)
 
         self._keyword_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit'][key])
         self._keyword_lineedit.setText(category.keyword)
@@ -30,7 +33,7 @@ class CategoryListNamedItem(QDragListItem):
 
         widget = QGridWidget(None)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
-        widget.grid_layout.setSpacing(16)
+        widget.grid_layout.setSpacing(8)
         self.grid_layout.addWidget(widget, 0, 1, Qt.AlignmentFlag.AlignRight)
 
         self._icon_button = QPushButton(None)
@@ -58,5 +61,8 @@ class CategoryListNamedItem(QDragListItem):
         return self._icon
 
     def icon_button_clicked(self):
-        print('icon_button_clicked')
+        icon = EditCategoryIconDialog(self.window(), self.lang['EditCategoryIconDialog'], self._icon).exec()
+        if icon:
+            self._icon = icon
+            self._icon_button.setIcon(QIcon(self._icon))
 #----------------------------------------------------------------------

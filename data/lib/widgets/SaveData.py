@@ -531,13 +531,13 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(widget.categories_list, root_frame.grid_layout.count(), 0)
 
         for cat in self.categories:
-            widget.categories_list.add_item(CategoryListNamedItem(lang['SettingsListNamedItem'], key, cat))
+            widget.categories_list.add_item(CategoryListNamedItem(lang['CategoryListNamedItem'], key, cat))
 
         button = QPushButton()
         button.setIcon(self.getIcon('pushbutton/plus.png'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
-        button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang['SettingsListNamedItem'], key, Category('', './data/icons/questionMark.svg'))))
+        button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang['CategoryListNamedItem'], key, Category('', './data/icons/questionMark.svg'))))
         root_frame.grid_layout.addWidget(button, root_frame.grid_layout.count(), 0)
 
 

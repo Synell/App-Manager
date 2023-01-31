@@ -25,13 +25,13 @@ class SettingsListNamedItem(QDragListItem):
         self._keyword_lineedit.setText(keyword)
         self.grid_layout.addWidget(self._keyword_lineedit, 0, 0)
 
-        self.remove_button = QPushButton(None)
-        self.remove_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.remove_button.setIcon(QIcon(self.remove_icon))
-        self.grid_layout.addWidget(self.remove_button, 0, 3)
-        self.grid_layout.setAlignment(self.remove_button, Qt.AlignmentFlag.AlignRight)
-        self.remove_button.clicked.connect(self.deleteLater)
-        self.remove_button.setFixedWidth(int(self.remove_button.sizeHint().height() * 1.5))
+        self._remove_button = QPushButton(None)
+        self._remove_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self._remove_button.setIcon(QIcon(self.remove_icon))
+        self.grid_layout.addWidget(self._remove_button, 0, 1)
+        self.grid_layout.setAlignment(self._remove_button, Qt.AlignmentFlag.AlignRight)
+        self._remove_button.clicked.connect(self.deleteLater)
+        self._remove_button.setFixedWidth(int(self._remove_button.sizeHint().height() * 1.5))
 
     @property
     def keyword(self) -> str:

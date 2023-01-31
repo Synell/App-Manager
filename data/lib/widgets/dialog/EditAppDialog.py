@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt, Signal, QSize
 from datetime import datetime
 from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
 import json, os
+from data.lib.widgets import Category
 #----------------------------------------------------------------------
 
     # Class
@@ -20,7 +21,7 @@ class EditAppDialog(QDialog):
     icon_size = 64
     refresh_app_info = Signal()
 
-    categories: list[str] = []
+    categories: list[Category] = []
 
     def __init__(self, parent = None, lang = {}, name: str = '', tag_name: str = '', release: str = '', created_at: datetime = '', raw_icon: str = '', cwd: str = '', command: str = '', path: str = '', check_for_updates: int = 4, auto_update: bool = True, category: str = None):
         super().__init__(parent)
@@ -137,9 +138,9 @@ class EditAppDialog(QDialog):
 
         self.app_category = QNamedComboBox(None, lang['QNamedComboBox']['category']['title'])
         self.app_category.setProperty('title', True)
-        self.app_category.combo_box.addItems([lang['QNamedComboBox']['category']['values']['none']] + self.categories)
+        self.app_category.combo_box.addItems([lang['QNamedComboBox']['category']['values']['none']] + [cat.keyword for cat in self.categories])
         if self.category:
-            if self.category in self.categories:
+            if self.category in [cat.keyword for cat in self.categories]:
                 self.app_category.combo_box.setCurrentText(self.category)
         root_frame.grid_layout.addWidget(self.app_category, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(self.app_category, Qt.AlignmentFlag.AlignLeft)

@@ -64,6 +64,7 @@ class Application(QBaseApplication):
         EditAppDialog.categories = self.save_data.categories.copy()
 
         SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
+        CategoryListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
 
         self.downloads: dict[str, Installer] = {}
         self.uninstalls: dict[str, UninstallWorker] = {}
@@ -369,7 +370,7 @@ class Application(QBaseApplication):
             root_widget.grid_layout.addWidget(root_widget.top, 0, 0)
             root_widget.grid_layout.setAlignment(root_widget.top, Qt.AlignmentFlag.AlignTop)
 
-            label = QLabel(cat)
+            label = QLabel(cat.keyword)
             label.setProperty('h', '1')
             root_widget.top.grid_layout.addWidget(label, 0, 0)
             root_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
@@ -390,7 +391,7 @@ class Application(QBaseApplication):
             root_widget.app_list.scroll_layout.setSpacing(1)
 
             send_param = lambda i: lambda: self.panel_select_categories(i + 2)
-            sp.add_item(QSidePanelItem(text= cat, icon = f'{self.save_data.getIconsDir()}sidepanel/category.png', connect = send_param(index)))
+            sp.add_item(QSidePanelItem(text= cat.keyword, icon = cat.icon, connect = send_param(index)))
 
             sw.addWidget(root_widget)
 
@@ -877,8 +878,13 @@ class Application(QBaseApplication):
                 button.remove_button(k)
 
             if button.category:
-                if button.category not in button.keys():
-                    button.add_button(button.category)
+                if button.category in self.save_data.category_keywords:
+                    if button.category not in button.keys():
+                        button.add_button(button.category)
+
+                else:
+                    if button.category in button.keys():
+                        button.remove_button(button.category)
 
         all_apps = []
         for key in self.APP_RELEASES[1:]:
@@ -910,7 +916,7 @@ class Application(QBaseApplication):
                 self.app_buttons[app] = b
                 b.add_button('all')
                 b.add_button(b.release)
-                if b.category: b.add_button(b.category)
+                if b.category and b.category in self.save_data.category_keywords: b.add_button(b.category)
 
             else:
                 b = self.app_buttons[app]
@@ -924,8 +930,8 @@ class Application(QBaseApplication):
             w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index(b.release))
             w.scroll_layout.addWidget(b.get_button(b.release), w.scroll_layout.count(), 0)
 
-            if b.category in self.save_data.categories:
-                sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.categories.index(b.category) + 2).app_list
+            if b.category in self.save_data.category_keywords:
+                sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.category_keywords.index(b.category) + 2).app_list
                 sw.scroll_layout.addWidget(b.get_button(b.category), sw.scroll_layout.count(), 0)
 
         self.refresh_apps_visibility(self.main_page.apps_widget.searchbar.text())
@@ -934,7 +940,7 @@ class Application(QBaseApplication):
     def refresh_apps_visibility(self, event: str) -> None:
         self.main_page.apps_widget.searchbar.setText(event)
 
-        for i in range(2, len(self.save_data.categories) + 2):
+        for i in range(2, len(self.save_data.category_keywords) + 2):
             self.main_page.right.widget(i).searchbar.setText(event)
 
         all_apps = []

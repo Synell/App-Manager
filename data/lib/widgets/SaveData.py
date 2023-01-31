@@ -7,6 +7,8 @@ from PySide6.QtCore import Qt
 
 from .PlatformType import PlatformType
 from .SettingsListNamedItem import SettingsListNamedItem
+from .CategoryListNamedItem import CategoryListNamedItem
+from .Category import Category
 from datetime import datetime
 from contextlib import suppress
 import os
@@ -24,7 +26,7 @@ class SaveData(QSaveData):
         self.apps_folder = os.path.abspath('./data/apps/').replace('\\', '/')
         self.downloads_folder = os.path.abspath('./data/downloads/').replace('\\', '/')
         self.apps = {'official': [], 'pre': [], 'custom': []}
-        self.categories = []
+        self.categories: list[Category] = []
         self.followed_apps = []
         self.check_for_updates = 4
         self.check_for_apps_updates = 4
@@ -54,6 +56,11 @@ class SaveData(QSaveData):
         self.request_worker_failed_notif = True
 
         super().__init__(save_path)
+
+
+    @property
+    def category_keywords(self) -> list[str]:
+        return [category.keyword for category in self.categories]
 
 
     def settings_menu_extra(self):
@@ -523,14 +530,14 @@ class SaveData(QSaveData):
         widget.categories_list = QDragList()
         root_frame.grid_layout.addWidget(widget.categories_list, root_frame.grid_layout.count(), 0)
 
-        for app in self.categories:
-            widget.categories_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], key, app))
+        for cat in self.categories:
+            widget.categories_list.add_item(CategoryListNamedItem(lang['SettingsListNamedItem'], key, cat))
 
         button = QPushButton()
         button.setIcon(self.getIcon('pushbutton/plus.png'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
-        button.clicked.connect(lambda: widget.categories_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], key, '')))
+        button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang['SettingsListNamedItem'], key, Category('', './data/icons/questionMark.svg'))))
         root_frame.grid_layout.addWidget(button, root_frame.grid_layout.count(), 0)
 
 
@@ -553,7 +560,7 @@ class SaveData(QSaveData):
 
         self.token['github'] = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['token']['title']].github_token_lineedit.text()
 
-        self.categories = self.without_duplicates([item.keyword for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']].categories_list.items if item.keyword != ''])
+        self.categories = self.without_duplicates([Category(item.keyword, item.icon) for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']].categories_list.items if item.keyword != ''])
 
         self.followed_apps = self.without_duplicates([item.keyword for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']].followed_apps_list.items if self.valid_url(item.keyword) if item.keyword != ''])
 
@@ -588,7 +595,7 @@ class SaveData(QSaveData):
                 'apps': self.apps_folder,
                 'downloads': self.downloads_folder
             },
-            'categories': self.categories,
+            'categories': [[cat.keyword, cat.icon] for cat in self.categories],
             'followedApps': self.followed_apps,
 
             'checkForUpdates': self.check_for_updates,
@@ -627,7 +634,17 @@ class SaveData(QSaveData):
         with exc: self.apps_folder = extra_data['folders']['apps']
         with exc: self.downloads_folder = extra_data['folders']['downloads']
 
-        with exc: self.categories = extra_data['categories']
+        cat_list = []
+        with exc: cat_list = extra_data['categories']
+        self.categories = []
+
+        for cat in cat_list:
+            if not isinstance(cat, list):
+                self.categories.append(Category(cat, './data/icons/questionMark.svg'))
+
+            elif len(cat) == 2:
+                self.categories.append(Category(*cat))
+
         with exc: self.followed_apps = extra_data['followedApps']
 
         with exc: self.check_for_updates = extra_data['checkForUpdates']

@@ -636,14 +636,21 @@ class SaveData(QSaveData):
 
         cat_list = []
         with exc: cat_list = extra_data['categories']
+        cat_list_good = []
         self.categories = []
 
         for cat in cat_list:
             if not isinstance(cat, list):
-                self.categories.append(Category(cat, './data/icons/questionMark.svg'))
+                cat_list_good.append(Category(cat, './data/icons/questionMark.svg'))
 
             elif len(cat) == 2:
-                self.categories.append(Category(*cat))
+                cat_list_good.append(Category(*cat))
+
+        cat_names = []
+        for cat in cat_list_good:
+            if cat.keyword not in cat_names:
+                cat_names.append(cat.keyword)
+                self.categories.append(cat)
 
         with exc: self.followed_apps = extra_data['followedApps']
 

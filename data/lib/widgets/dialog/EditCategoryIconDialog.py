@@ -1,12 +1,10 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
-from PySide6.QtCore import Qt, Signal, QSize
-from datetime import datetime
-from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
-import json, os
-from data.lib.widgets import Category
+from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton
+from PySide6.QtCore import Qt, QSize
+from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QFlowWidget, QIconWidget
+import os
 #----------------------------------------------------------------------
 
     # Class

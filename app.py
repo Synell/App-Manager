@@ -35,6 +35,7 @@ class Application(QBaseApplication):
 
         self.update_request = None
 
+        self.setOrganizationName('Synell')
         # self.setApplicationDisplayName('App Manager')
         self.setApplicationName('App Manager')
         self.setApplicationVersion(self.VERSION)

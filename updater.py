@@ -26,6 +26,7 @@ class QUpdater(QBaseApplication):
     def __init__(self,  platform: QPlatform):
         super().__init__(platform)
 
+        self.setOrganizationName('Synell')
         # self.setApplicationDisplayName('App Manager')
         self.setApplicationName('App Manager')
         self.setApplicationVersion(self.VERSION)

@@ -576,10 +576,27 @@ class Application(QBaseApplication):
             return './data/icons/questionMark.svg'
 
         installed_releases = self.get_installed_releases()
-        button = InstallButton(rel, self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['install'], rel['name'], rel['tag_name'], get_icon_path(app), f'{rel["name"]}' in installed_releases or f'{rel["name"]}' in list(self.downloads.keys()) + [j.split('/')[-1] for j in list(self.uninstalls.keys())])
+
+        button = InstallButton(
+            rel,
+            self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['install'],
+            rel['name'],
+            rel['tag_name'],
+            get_icon_path(app),
+            f'{rel["name"]}' in installed_releases or
+            f'{rel["name"]}' in list(self.downloads.keys()) + [
+                j.split('/')[-1] for j in list(self.uninstalls.keys())
+            ]
+        )
+
         button.download.connect(self.add_to_download_list)
-        if rel['prerelease']: self.install_app_page.tab_widget.pre.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.pre.inside.scroll_layout.count(), 0)
-        else: self.install_app_page.tab_widget.official.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.official.inside.scroll_layout.count(), 0)
+
+        if rel['prerelease']:
+            self.install_app_page.tab_widget.pre.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.pre.inside.scroll_layout.count(), 0)
+
+        else:
+            self.install_app_page.tab_widget.official.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.official.inside.scroll_layout.count(), 0)
+
         self.install_page_buttons[int(rel['prerelease'])].append(button)
 
         if not (rel['name'] in installed_releases and os.path.exists(os.path.join(self.save_data.apps_folder, rel['name'], 'manifest.json'))): return

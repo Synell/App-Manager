@@ -29,9 +29,14 @@ class RequestWorker(QThread):
                     headers = {'Authorization': f'token {self.token["github"]}'} if self.token['github'] else None
                 )
 
-                if response.status_code != 200: continue
+                if response.status_code != 200:
+                    self.signals.failed.emit(f'[{response.status_code}] {response.reason}')
+                    continue
+
                 response = response.json()
-                if type(response) is not list: return self.signals.failed.emit('Invalid response')
+
+                if type(response) is not list:
+                    return self.signals.failed.emit('Invalid response')
 
                 name = f'{app.replace("https://github.com/", "").split("/")[-1].replace("-", " ")}'
 

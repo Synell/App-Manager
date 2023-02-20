@@ -14,20 +14,20 @@ from data.lib.qtUtils import QGridFrame, QGridWidget
 
     # Class
 class __WorkerSignals__(QObject):
-        download_progress_changed = Signal(float)
-        install_progress_changed = Signal(float)
-        download_speed_changed = Signal(float)
-        install_speed_changed = Signal(float)
-        download_eta_changed = Signal(timedelta)
-        install_eta_changed = Signal(timedelta)
-        download_done = Signal()
-        install_done = Signal()
-        install_failed = Signal(str, int)
+    download_progress_changed = Signal(float)
+    install_progress_changed = Signal(float)
+    download_speed_changed = Signal(float)
+    install_speed_changed = Signal(float)
+    download_eta_changed = Signal(timedelta)
+    install_eta_changed = Signal(timedelta)
+    download_done = Signal()
+    install_done = Signal()
+    install_failed = Signal(str, int)
 
 
 
 class InstallWorker(QThread):
-    def __init__(self, parent: QObject, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True):
+    def __init__(self, parent: QObject, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
         super(InstallWorker, self).__init__(parent)
         self.signals = __WorkerSignals__()
         self.data = data
@@ -49,7 +49,7 @@ class InstallWorker(QThread):
         # self.len_speeds = 4
 
 
-    def run(self):
+    def run(self) -> None:
         self.timer.start()
 
         try:
@@ -145,7 +145,7 @@ class InstallWorker(QThread):
         self.done = True
 
 
-    def time_triggered(self, deltatime: timedelta):
+    def time_triggered(self, deltatime: timedelta) -> None:
         if self.done: return
 
         if not self.install:
@@ -173,7 +173,7 @@ class InstallWorker(QThread):
         self.timed_chunk = 0
 
 
-    def get_file(self) -> str|None:
+    def get_file(self) -> str | None:
         for format in ['exe', 'bat']:
             for file in os.listdir(self.out_path):
                 if file.endswith(f'.{format}'):
@@ -193,11 +193,11 @@ class InstallWorker(QThread):
 class TimeWorker(QThread):
     time_triggered = Signal(timedelta)
 
-    def __init__(self, parent: QObject, interval: timedelta):
+    def __init__(self, parent: QObject, interval: timedelta) -> None:
         super(TimeWorker, self).__init__(parent)
         self.interval = interval
 
-    def run(self):
+    def run(self) -> None:
         while True:
             self.time_triggered.emit(self.interval)
             sleep(self.interval.total_seconds())
@@ -248,7 +248,7 @@ class Installer(QGridFrame):
         widget = QGridWidget()
 
         self.install_label = QLabel(f'{self.lang["QLabel"]["install"]} - {self.lang["QLabel"]["waiting"]}')
-        label.setProperty('smallbrightnormal', True)
+        self.install_label.setProperty('smallbrightnormal', True)
         widget.grid_layout.addWidget(self.install_label, 0, 0)
 
         self.install_progress = QProgressBar()

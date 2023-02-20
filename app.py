@@ -841,9 +841,11 @@ class Application(QBaseApplication):
         if self.update_request.isRunning():
             self.update_request.terminate()
 
-        self.must_update_link = InstallButton.get_release(rel, None).link
-        if rel['tag_name'] > self.BUILD: self.set_update(True)
-        else: self.save_data.last_check_for_updates = datetime.now()
+        update_link = InstallButton.get_release(rel, None)
+        if update_link:
+            self.must_update_link = update_link.link
+            if rel['tag_name'] > self.BUILD: self.set_update(True)
+            else: self.save_data.last_check_for_updates = datetime.now()
 
     def check_updates_failed(self, error: str) -> None:
         self.update_request.exit()

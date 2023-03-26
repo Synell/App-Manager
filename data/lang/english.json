@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "English",
-        "version": "07e72a10",
+        "version": "07e73fd5",
         "description": "English language for App Manager."
     },
     "data": {
@@ -498,7 +498,7 @@
                 "title": "About App Manager",
                 "texts": [
                     "App Manager is an open-source software that allows you to install, update and manage apps in a simple and intuitive way, without the need to use the command line or even having to manually download and install the apps.",
-                    "App Manager was programmed by %s, is written in Python, uses PySide 6 for the interface and is available for Windows. (MacOS and Linux versions are in development as they're untested)",
+                    "App Manager was programmed by %s, is written in Python, uses PySide 6 for the interface and is available for Windows, MacOS and Linux.",
                     "Right now, App Manager supports the installation of apps from the following sources:\n%s",
                     "Go to the %s for more information."
                 ]

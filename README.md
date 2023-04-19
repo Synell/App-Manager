@@ -33,9 +33,7 @@ App Manager is a simple app manager for Windows (Linux and MacOS versions are no
 
 ### Source Code
 - Python 3.11 or later
-  - PySide6 (`pip install PySide6`)
-  - multipledispatch (`pip install multipledispatch`)
-  - requests (`pip install requests`)
+  - Dependencies (use `pip install -r requirements.txt` in the project root folder to install them)
 
 
 ## Installation

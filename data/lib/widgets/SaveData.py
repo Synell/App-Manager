@@ -65,13 +65,13 @@ class SaveData(QSaveData):
 
     def settings_menu_extra(self):
         return {
-            self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.getIconsDir()}/sidepanel/installs.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.getIconsDir()}/sidepanel/updates.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.getIconsDir()}/sidepanel/interface.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.getIconsDir()}/sidepanel/notification.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['token']['title']: (self.settings_menu_github(), f'{self.getIconsDir()}/sidepanel/token.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']: (self.settings_menu_categories(), f'{self.getIconsDir()}/sidepanel/categories.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.getIconsDir()}/sidepanel/followedApps.png')
+            self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.get_icon_dir()}/sidepanel/installs.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.get_icon_dir()}/sidepanel/updates.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.get_icon_dir()}/sidepanel/interface.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.get_icon_dir()}/sidepanel/notification.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['token']['title']: (self.settings_menu_github(), f'{self.get_icon_dir()}/sidepanel/token.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']: (self.settings_menu_categories(), f'{self.get_icon_dir()}/sidepanel/categories.png'),
+            self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.get_icon_dir()}/sidepanel/followedApps.png')
         }, self.get_extra
 
 
@@ -95,7 +95,7 @@ class SaveData(QSaveData):
             None,
             lang['QFileButton']['installsLocation'],
             self.apps_folder,
-            f'{self.getIconsDir()}filebutton/folder.png',
+            f'{self.get_icon_dir()}filebutton/folder.png',
             QFiles.Dialog.ExistingDirectory
         )
         widget.installs_folder_button.setFixedWidth(350)
@@ -116,7 +116,7 @@ class SaveData(QSaveData):
             None,
             lang['QFileButton']['downloadsLocation'],
             self.downloads_folder,
-            f'{self.getIconsDir()}filebutton/folder.png',
+            f'{self.get_icon_dir()}filebutton/folder.png',
             QFiles.Dialog.ExistingDirectory
         )
         widget.downloads_folder_button.setFixedWidth(350)
@@ -499,7 +499,7 @@ class SaveData(QSaveData):
             widget.followed_apps_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], key, app))
 
         button = QPushButton()
-        button.setIcon(self.getIcon('pushbutton/plus.png'))
+        button.setIcon(self.get_icon('pushbutton/plus.png'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: widget.followed_apps_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], key, '')))
@@ -534,7 +534,7 @@ class SaveData(QSaveData):
             widget.categories_list.add_item(CategoryListNamedItem(lang['CategoryListNamedItem'], key, cat))
 
         button = QPushButton()
-        button.setIcon(self.getIcon('pushbutton/plus.png'))
+        button.setIcon(self.get_icon('pushbutton/plus.png'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang['CategoryListNamedItem'], key, Category('', './data/icons/questionMark.svg'))))

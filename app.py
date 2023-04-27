@@ -49,25 +49,25 @@ class Application(QBaseApplication):
         InstallButton.token = self.save_data.token
         RequestWorker.token = self.save_data.token
 
-        InstalledButton.settings_icon = self.save_data.getIcon('pushbutton/settings.png')
-        InstalledButton.remove_from_list_icon = self.save_data.getIcon('popup/removeFromList.png')
-        InstalledButton.edit_icon = self.save_data.getIcon('popup/edit.png')
-        InstalledButton.show_in_explorer_icon = self.save_data.getIcon('popup/showInExplorer.png')
-        InstalledButton.uninstall_icon = self.save_data.getIcon('popup/uninstall.png')
+        InstalledButton.settings_icon = self.save_data.get_icon('pushbutton/settings.png')
+        InstalledButton.remove_from_list_icon = self.save_data.get_icon('popup/removeFromList.png')
+        InstalledButton.edit_icon = self.save_data.get_icon('popup/edit.png')
+        InstalledButton.show_in_explorer_icon = self.save_data.get_icon('popup/showInExplorer.png')
+        InstalledButton.uninstall_icon = self.save_data.get_icon('popup/uninstall.png')
 
-        EditAppDialog.general_tab_icon = self.save_data.getIcon('sidepanel/general.png', False)
-        EditAppDialog.advanced_tab_icon = self.save_data.getIcon('sidepanel/advanced.png', False)
-        EditAppDialog.updates_tab_icon = self.save_data.getIcon('sidepanel/updates.png', False)
-        EditAppDialog.icon_tab_icon = self.save_data.getIcon('sidepanel/icon.png', False)
-        EditAppDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/folder.png', False)
+        EditAppDialog.general_tab_icon = self.save_data.get_icon('sidepanel/general.png', False)
+        EditAppDialog.advanced_tab_icon = self.save_data.get_icon('sidepanel/advanced.png', False)
+        EditAppDialog.updates_tab_icon = self.save_data.get_icon('sidepanel/updates.png', False)
+        EditAppDialog.icon_tab_icon = self.save_data.get_icon('sidepanel/icon.png', False)
+        EditAppDialog.icon_file_button_icon = self.save_data.get_icon('filebutton/folder.png', False)
         EditAppDialog.icon_path = './data/icons/sample'
         EditAppDialog.categories = self.save_data.categories.copy()
 
-        EditCategoryIconDialog.icon_file_button_icon = self.save_data.getIcon('filebutton/folder.png', False)
+        EditCategoryIconDialog.icon_file_button_icon = self.save_data.get_icon('filebutton/folder.png', False)
         EditCategoryIconDialog.icon_path = './data/icons/sample'
 
-        SettingsListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
-        CategoryListNamedItem.remove_icon = self.save_data.getIcon('pushbutton/delete.png')
+        SettingsListNamedItem.remove_icon = self.save_data.get_icon('pushbutton/delete.png')
+        CategoryListNamedItem.remove_icon = self.save_data.get_icon('pushbutton/delete.png')
 
         self.downloads: dict[str, Installer] = {}
         self.uninstalls: dict[str, UninstallWorker] = {}
@@ -78,7 +78,7 @@ class Application(QBaseApplication):
         self.install_page_buttons = [[], []]
         self.app_buttons: dict[str, InstalledButtonGroup] = {}
 
-        self.save_data.setStyleSheet(self)
+        self.save_data.set_stylesheet(self)
         self.window.setProperty('color', 'cyan')
 
         self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
@@ -203,14 +203,14 @@ class Application(QBaseApplication):
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
-        button.setIcon(self.save_data.getIcon('/pushbutton/note.png'))
+        button.setIcon(self.save_data.get_icon('/pushbutton/note.png'))
         button.clicked.connect(self.about_menu_clicked)
         left_top.grid_layout.addWidget(button, 0, 0)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
-        button.setIcon(self.save_data.getIcon('/pushbutton/settings.png'))
+        button.setIcon(self.save_data.get_icon('/pushbutton/settings.png'))
         button.clicked.connect(self.settings_menu)
         left_top.grid_layout.addWidget(button, 0, 1)
         left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
@@ -219,8 +219,8 @@ class Application(QBaseApplication):
         self.main_page.side_panel.setProperty('border-right', True)
         self.main_page.left.grid_layout.addWidget(self.main_page.side_panel, 1, 0)
         self.main_page.side_panel.add_items([
-            QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['title'], f'{self.save_data.getIconsDir()}/sidepanel/apps.png', self.panel_select_apps),
-            QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['title'], f'{self.save_data.getIconsDir()}/sidepanel/downloads.png', self.panel_select_downloads),
+            QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['title'], f'{self.save_data.get_icon_dir()}/sidepanel/apps.png', self.panel_select_apps),
+            QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['title'], f'{self.save_data.get_icon_dir()}/sidepanel/downloads.png', self.panel_select_downloads),
         ])
         self.build_categories_widget()
         self.panel_select_apps()
@@ -265,7 +265,7 @@ class Application(QBaseApplication):
         right_buttons.grid_layout.setRowStretch(2, 1)
         right_buttons.grid_layout.setColumnStretch(2, 1)
 
-        self.main_page.apps_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
+        self.main_page.apps_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
         self.main_page.apps_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
         self.main_page.apps_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
         right_buttons.grid_layout.addWidget(self.main_page.apps_widget.searchbar, 1, 1, 1, 2)
@@ -318,7 +318,7 @@ class Application(QBaseApplication):
         label = QLabel()
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setProperty('normal', True)
-        label.setPixmap(QPixmap(f'{self.save_data.getIconsDir()}/download/dl.png'))
+        label.setPixmap(QPixmap(f'{self.save_data.get_icon_dir()}/download/dl.png'))
         label.setPixmap(label.pixmap().scaledToHeight(64, Qt.TransformationMode.SmoothTransformation))
         self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 0, 0)
         self.main_page.downloads_widget.no_download.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
@@ -382,7 +382,7 @@ class Application(QBaseApplication):
             root_widget.top.grid_layout.addWidget(right_panel, 0, 1, 2, 1)
             root_widget.top.grid_layout.setAlignment(right_panel, Qt.AlignmentFlag.AlignRight)
 
-            root_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
+            root_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
             root_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
             root_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
             right_panel.grid_layout.addWidget(root_widget.searchbar, 1, 1, 1, 2)
@@ -427,12 +427,12 @@ class Application(QBaseApplication):
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
-        button.setIcon(self.save_data.getIcon('pushbutton/refresh.png'))
+        button.setIcon(self.save_data.get_icon('pushbutton/refresh.png'))
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: self.install_app_page_refresh_template(True))
         frame.grid_layout.addWidget(button, 0, 0)
 
-        self.install_app_page.top.searchbar = QIconLineEdit(icon = f'{self.save_data.getIconsDir()}lineedit/search.png')
+        self.install_app_page.top.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
         self.install_app_page.top.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['installAppPage']['QLineEdit']['search'])
         self.install_app_page.top.searchbar.textChanged.connect(self.refresh_install_apps_list)
         frame.grid_layout.addWidget(self.install_app_page.top.searchbar, 0, 1)
@@ -573,7 +573,7 @@ class Application(QBaseApplication):
 
     def release_received(self, rel: dict, app: str) -> None:
         def get_icon_path(link: str) -> str:
-            if link.startswith('https://github.com/'): return self.save_data.getIcon('installbutton/github.png', asQIcon = False)
+            if link.startswith('https://github.com/'): return self.save_data.get_icon('installbutton/github.png', asQIcon = False)
             return './data/icons/questionMark.svg'
 
         installed_releases = self.get_installed_releases()
@@ -981,7 +981,7 @@ class Application(QBaseApplication):
         self.about_menu = QMenu(self.window)
         self.about_menu.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        act = self.about_menu.addAction(self.save_data.getIcon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.save_data.language_data['QMenu']['about']['PySide'])
+        act = self.about_menu.addAction(self.save_data.get_icon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.save_data.language_data['QMenu']['about']['PySide'])
         act.triggered.connect(self.aboutQt)
 
         act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.save_data.language_data['QMenu']['about']['AppManager'])
@@ -991,9 +991,9 @@ class Application(QBaseApplication):
 
         def create_donate_menu():
             donate_menu = QMenu(self.save_data.language_data['QMenu']['donate']['title'], self.window)
-            donate_menu.setIcon(self.save_data.getIcon('menubar/donate.png'))
+            donate_menu.setIcon(self.save_data.get_icon('menubar/donate.png'))
 
-            buymeacoffee_action = QAction(self.save_data.getIcon('menubar/buyMeACoffee.png'), 'Buy Me a Coffee', self.window)
+            buymeacoffee_action = QAction(self.save_data.get_icon('menubar/buyMeACoffee.png'), 'Buy Me a Coffee', self.window)
             buymeacoffee_action.triggered.connect(lambda: QDesktopServices.openUrl(QUrl('https://www.buymeacoffee.com/Synell')))
 
             donate_menu.addAction(buymeacoffee_action)
@@ -1035,7 +1035,7 @@ class Application(QBaseApplication):
         self.sys_tray_menu = QMenu(self.window)
         self.sys_tray_menu.setCursor(Qt.CursorShape.PointingHandCursor)
         self.sys_tray_menu.setProperty('QSystemTrayIcon', True)
-        act = self.sys_tray_menu.addAction(self.save_data.getIcon('popup/exit.png'), self.save_data.language_data['QSystemTrayIcon']['QMenu']['exit'])
+        act = self.sys_tray_menu.addAction(self.save_data.get_icon('popup/exit.png'), self.save_data.language_data['QSystemTrayIcon']['QMenu']['exit'])
         act.triggered.connect(self.exit)
 
 

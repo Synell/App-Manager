@@ -9,7 +9,7 @@
   <a href="https://github.com/Synell/App-Manager/blob/master/LICENSE">
     <img alt="License: LGPL" src="https://img.shields.io/badge/License-LGPL-green" target="_blank" />
   </a>
-  <img alt="Platforms: Windows" src="https://img.shields.io/badge/Platforms-Windows-yellow" />
+  <img alt="Platforms: Windows, Linux and MacOS" src="https://img.shields.io/badge/Platforms-Windows%20|%20Linux%20|%20MacOS-yellow" />
   <a href="https://www.buymeacoffee.com/synell">
     <img alt="Donate: Buy me a coffee" src="https://img.shields.io/badge/Donate-Buy%20Me%20a%20Coffee-orange" target="_blank" />
   </a>
@@ -20,15 +20,20 @@
 
 ----------------------------------------------------------------------
 
-App Manager is a simple app manager for Windows (Linux and MacOS versions are not available as they're untested). It allows you to install, uninstall, and update apps without using the command line or having to download and install the app from your browser. Everything is done in a simple and easy to use GUI.
+App Manager is a simple app manager for Windows, Linux and MacOS. It allows you to install, uninstall, and update apps without using the command line or having to download and install the app from your browser. Everything is done in a simple and easy to use GUI.
 
 
 ## Requirements
 
 ### Windows
-
 - Windows 7 or later
 - VC++ 2015 Redistributable
+
+### Linux
+- All Linux distributions supported by PySide6
+
+### MacOS
+- MacOS 10.14 (Mojave) or later
 
 
 ### Source Code
@@ -40,7 +45,7 @@ App Manager is a simple app manager for Windows (Linux and MacOS versions are no
 
 ## Installation
 
-### Windows
+### Windows, Linux and MacOS
 
 <a href="https://github.com/Synell/App-Manager/releases/latest">
   <img alt="Release: Latest" src="https://img.shields.io/badge/Release-Latest-00B4BE?style=for-the-badge" target="_blank" />

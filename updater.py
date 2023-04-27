@@ -26,14 +26,14 @@ class QUpdater(QBaseApplication):
     def __init__(self,  platform: QPlatform):
         super().__init__(platform)
 
-        self.setOrganizationName('Synell')
+        self.setOrganizationName('Synel')
         # self.setApplicationDisplayName('App Manager')
         self.setApplicationName('App Manager')
         self.setApplicationVersion(self.VERSION)
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
 
-        self.save_data.setStyleSheet(self)
+        self.save_data.set_stylesheet(self)
         self.window.setProperty('color', updater_data.color)
 
         self.setWindowIcon(QIcon(updater_data.icon))

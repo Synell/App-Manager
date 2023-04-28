@@ -624,8 +624,9 @@ class SaveData(QSaveData):
             'requestWorkerFailedNotif': self.request_worker_failed_notif
         }
 
-    def load_extra_data(self, extra_data: dict = ..., reload: list = []) -> None:
+    def load_extra_data(self, extra_data: dict = ..., reload: list = []) -> bool:
         exc = suppress(Exception)
+        res = False
 
         with exc: self.apps['official'] = extra_data['apps']['official']
         with exc: self.apps['pre'] = extra_data['apps']['pre']
@@ -681,7 +682,7 @@ class SaveData(QSaveData):
         with exc: self.app_uninstall_failed_notif = extra_data['appUninstallFailedNotif']
         with exc: self.request_worker_failed_notif = extra_data['requestWorkerFailedNotif']
 
-        self.save()
+        return res
 
     def export_extra_data(self) -> dict:
         dct = self.save_extra_data()

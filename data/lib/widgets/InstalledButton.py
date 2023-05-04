@@ -101,6 +101,11 @@ class InstalledButton(QGridFrame):
         self.icon_couple.text_widget.desc.setText(self.small_path(path) if compact_mode else path)
 
 
+    def set_text(self, name: str, tag_name: str, path: str) -> None:
+        self.icon_couple.text_widget.title.setText(f'{name} ({tag_name})')
+        self.icon_couple.text_widget.desc.setText(self.small_path(path) if self.compact_mode else path)
+
+
     def small_path(self, path: str) -> str:
         limit = 5
         folders = path.split('/')

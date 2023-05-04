@@ -55,6 +55,8 @@ class InstalledButtonGroup(QObject):
                 self.auto_update = False
             self.category = data['category'] if 'category' in data else None
 
+        self.set_compact_mode(self.compact_mode)
+
 
     def add_button(self, key: str) -> InstalledButton:
         button = InstalledButton(self.name, self.tag_name, self.release, self.path, self.lang, self.base_icon, self.compact_mode)
@@ -70,6 +72,7 @@ class InstalledButtonGroup(QObject):
 
         button.set_update(bool(self.has_update))
         button.set_disabled(self.is_disabled)
+        button.set_compact_mode(self.compact_mode, self.path)
 
         button.set_icon(self.raw_icon, self.base_icon)
 
@@ -170,10 +173,12 @@ class InstalledButtonGroup(QObject):
 
         self.install_worker = None
         self.update_app_done.emit(self.path, success)
+        self.refresh_info()
 
     def refresh_info(self):
         with open(f'{self.path}/manifest.json', 'r', encoding = 'utf-8') as file:
             data = json.load(file)
+            self.tag_name = data['tag_name']
             self.command = data['command']
             self.cwd = data['cwd']
             self.raw_icon = data['icon']
@@ -182,6 +187,9 @@ class InstalledButtonGroup(QObject):
                 self.check_for_updates = data['checkForUpdates']
                 self.auto_update = data['autoUpdate']
             self.category = data['category'] if 'category' in data else None
+
+        for button in self.buttons.values():
+            button.set_text(self.name, self.tag_name, self.path)
 
         self.info_changed.emit(self.path)
 

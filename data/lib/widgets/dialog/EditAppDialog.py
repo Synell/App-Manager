@@ -4,7 +4,7 @@
 from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
 from PySide6.QtCore import Qt, Signal, QSize
 from datetime import datetime
-from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QNamedTextEdit, QFlowWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
+from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QFlowScrollableWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
 import json, os
 from data.lib.widgets import Category
 #----------------------------------------------------------------------
@@ -356,7 +356,7 @@ class EditAppDialog(QDialog):
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
 
-        widget.bottom = QFlowWidget()
+        widget.bottom = QFlowScrollableWidget()
         widget.bottom.scroll_layout.setSpacing(16)
         widget.bottom.scroll_layout.setContentsMargins(0, 0, 0, 0)
         root_frame.grid_layout.addWidget(widget.bottom, root_frame.grid_layout.count(), 0)

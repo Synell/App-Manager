@@ -27,6 +27,20 @@ class __WorkerSignals__(QObject):
 
 
 class InstallWorker(QThread):
+    FILE_CONFIG = [
+        ('exe', None, None),
+        ('bat', 'cmd /c', None),
+        ('cmd', 'cmd /c', None),
+        ('sh', 'sh', None),
+        ('py', 'py', None),
+        ('jar', 'java -jar', None),
+        ('app', 'open', None),
+        ('dmg', 'open', None),
+        ('pkg', 'open', None),
+        ('deb', 'dpkg -i', None),
+        ('rpm', 'rpm -i', None),
+    ]
+
     def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
         super(InstallWorker, self).__init__(parent)
         self.signals = __WorkerSignals__()
@@ -122,8 +136,8 @@ class InstallWorker(QThread):
             else: d = {}
             d['release'] = 'pre' if self.data.prerelease else 'official'
             d['tag_name'] = self.data.tag_name
-            file = self.get_file()
-            if (not ('command' in d)): d['command'] = f'"{file}"' if file else ''
+            file, cmd = InstallWorker.get_file(self.out_path)
+            if (not ('command' in d)): d['command'] = cmd
             d['created_at'] = self.data.created_at
             if (not ('icon' in d)): d['icon'] = file
             if (not ('cwd' in d)): d['cwd'] = self.out_path
@@ -178,12 +192,20 @@ class InstallWorker(QThread):
         self.timed_chunk = 0
 
 
-    def get_file(self) -> str | None:
-        for format in ['exe', 'bat']:
-            for file in os.listdir(self.out_path):
+    @staticmethod
+    def get_file(path: str) -> tuple[str | None, str]:
+        for format, prefix, suffix in InstallWorker.FILE_CONFIG:
+            for file in os.listdir(path):
                 if file.endswith(f'.{format}'):
-                    return f'{self.out_path}/{file}'
-        return None
+                    l = []
+
+                    if prefix: l.append(prefix.strip())
+                    l.append(f'"{path}/{file}"')
+                    if suffix: l.append(suffix.strip())
+
+                    return f'{path}/{file}', ' '.join(l)
+
+        return None, ''
 
 
     def exit(self, retcode: int = 0) -> None:

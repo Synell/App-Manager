@@ -427,6 +427,9 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
+        label = QSettingsDialog.textGroup(lang['QLabel']['appExecFailed']['title'], lang['QLabel']['appExecFailed']['description'])
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
         widget.app_exec_failed_notif_checkbox = QNamedToggleButton()
         widget.app_exec_failed_notif_checkbox.setText(lang['QToggleButton']['appExecFailed'])
         widget.app_exec_failed_notif_checkbox.setChecked(self.app_exec_failed_notif)

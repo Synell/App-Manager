@@ -721,7 +721,7 @@ class Application(QBaseApplication):
         name = path.split('/')[-1]
 
         if error:
-            self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(
+            if self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['title'],
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'].replace('%s', name, 1).replace('%s', error),
                 QSystemTrayIcon.MessageIcon.Critical,
@@ -735,7 +735,7 @@ class Application(QBaseApplication):
                 color = 'main'
             )
         else:
-            self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(
+            if self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'],
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name),
                 QSystemTrayIcon.MessageIcon.Information,
@@ -751,7 +751,7 @@ class Application(QBaseApplication):
 
 
     def app_exec_failed(self, name: str, error: str) -> None:
-        self.save_data.app_exec_failed_notif: self.sys_tray.showMessage(
+        if self.save_data.app_exec_failed_notif: self.sys_tray.showMessage(
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['title'],
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['message'].replace('%s', name, 1).replace('%s', error),
             QSystemTrayIcon.MessageIcon.Information,
@@ -790,22 +790,35 @@ class Application(QBaseApplication):
             parent = self.window,
             dir = self.save_data.apps_folder,
             caption = self.save_data.language_data['QFileDialog']['locateApp'],
-            filter = 'All supported files (*.exe *.bat *.cmd manifest.json);;Manifest (manifest.json);;Application (*.exe);;Command Line (*.bat *.cmd)'
+            filter = ';;'.join([
+                'All supported files (*.exe *.bat *.cmd *.sh *.py *.jar *.app *.dmg *.pkg *.deb *.rpm manifest.json)',
+                'Manifest (manifest.json)',
+                'Application (*.exe)',
+                'Command Line (*.bat *.cmd)',
+                'Shell Script (*.sh)',
+                'Python (*.py)',
+                'Java (*.jar)',
+                'MacOS (*.app *.dmg *.pkg)',
+                'Linux (*.deb *.rpm)',
+                'All files (*.*)'
+            ])
         )[0]
         if not path: return
-        if path.endswith('.exe'): self.create_app(path)
-        else: self.locate_app(path)
+
+        if os.path.split(path)[-1] == 'manifest.json': self.locate_app(path)
+        else: self.create_app(path)
 
     def create_app(self, path: str) -> None:
         filename = os.path.basename(path)
         path = os.path.dirname(path).replace('\\', '/')
+        _, cmd = InstallWorker.get_file(path)
         if os.path.exists(f'{path}/manifest.json'): return self.locate_app(f'{path}/manifest.json')
 
         with open(f'{path}/manifest.json', 'w', encoding = 'utf-8') as f:
             json.dump(obj = {
                 'release': 'custom',
                 'tag_name': None,
-                'command': f'"{path}/{filename}"',
+                'command': cmd,
                 'created_at': None,
                 'icon': f'{path}/{filename}',
                 'cwd': f'{path}/'

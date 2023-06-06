@@ -53,6 +53,7 @@ class SaveData(QSaveData):
         self.app_install_failed_notif = True
         self.app_uninstall_done_notif = True
         self.app_uninstall_failed_notif = True
+        self.app_exec_failed_notif = True
         self.request_worker_failed_notif = True
 
         super().__init__(save_path)
@@ -426,6 +427,19 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
+        widget.app_exec_failed_notif_checkbox = QNamedToggleButton()
+        widget.app_exec_failed_notif_checkbox.setText(lang['QToggleButton']['appExecFailed'])
+        widget.app_exec_failed_notif_checkbox.setChecked(self.app_exec_failed_notif)
+        root_frame.grid_layout.addWidget(widget.app_exec_failed_notif_checkbox, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(widget.app_exec_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+
+
         label = QSettingsDialog.textGroup(lang['QLabel']['requestWorkerFailed']['title'], lang['QLabel']['requestWorkerFailed']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
@@ -572,6 +586,7 @@ class SaveData(QSaveData):
         self.app_install_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_failed_notif_checkbox.isChecked()
         self.app_uninstall_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_done_notif_checkbox.isChecked()
         self.app_uninstall_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_failed_notif_checkbox.isChecked()
+        self.app_exec_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_exec_failed_notif_checkbox.isChecked()
         self.request_worker_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].request_worker_failed_notif_checkbox.isChecked()
 
 
@@ -621,6 +636,7 @@ class SaveData(QSaveData):
             'appInstallFailedNotif': self.app_install_failed_notif,
             'appUninstallDoneNotif': self.app_uninstall_done_notif,
             'appUninstallFailedNotif': self.app_uninstall_failed_notif,
+            'appExecFailedNotif': self.app_exec_failed_notif,
             'requestWorkerFailedNotif': self.request_worker_failed_notif
         }
 
@@ -680,6 +696,7 @@ class SaveData(QSaveData):
         with exc: self.app_install_failed_notif = extra_data['appInstallFailedNotif']
         with exc: self.app_uninstall_done_notif = extra_data['appUninstallDoneNotif']
         with exc: self.app_uninstall_failed_notif = extra_data['appUninstallFailedNotif']
+        with exc: self.app_exec_failed_notif = extra_data['appExecFailedNotif']
         with exc: self.request_worker_failed_notif = extra_data['requestWorkerFailedNotif']
 
         return res

@@ -23,6 +23,8 @@ class InstalledButtonGroup(QObject):
 
     info_changed = Signal(str)
 
+    exec_failed = Signal(str, str)
+
     def __init__(self, mw: QMainWindow, name: str = '', path: str = '', lang : dict = {}, icon: str = None, disabled: bool = False, has_update: InstallButton.download_data = False, compact_mode: bool = False) -> None:
         super().__init__()
 
@@ -141,12 +143,12 @@ class InstalledButtonGroup(QObject):
             subprocess.Popen(rf'{self.command}', cwd = rf'{self.cwd}', shell = False)
 
         except Exception as e:
-            print('oof: ' + str(e)) #todo
+            self.exec_failed.emit(self.name, str(e))
 
     def init_update(self, download_path: str) -> None:
         if not self.download_data: return print('missing dl data')
         self.set_disabled(True)
-        self.install_worker = InstallWorker(self, self.download_data, download_path, os.path.dirname(self.path))
+        self.install_worker = InstallWorker(self, self.download_data, self.download_data.files_data[0], download_path, os.path.dirname(self.path))
         self.install_worker.signals.download_progress_changed.connect(lambda val: self.progress_changed(val / 2))
         self.install_worker.signals.install_progress_changed.connect(lambda val: self.progress_changed(0.5 + (val / 2)))
         self.install_worker.signals.install_done.connect(lambda: self.progress_done(True))

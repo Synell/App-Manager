@@ -616,7 +616,7 @@ class Application(QBaseApplication):
         self.updates[rel['name']] = InstallButton.get_release(rel, self.save_data.token)
         self.refresh_apps()
 
-    def release_failed(self, error: str, app: str) -> None:
+    def release_failed(self, error: str, app: str = None) -> None:
         if self.save_data.request_worker_failed_notif: self.sys_tray.showMessage(
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['title'],
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['message'].replace('%s', error),
@@ -721,7 +721,7 @@ class Application(QBaseApplication):
         name = path.split('/')[-1]
 
         if error:
-            if self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(
+            self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['title'],
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'].replace('%s', name, 1).replace('%s', error),
                 QSystemTrayIcon.MessageIcon.Critical,
@@ -735,7 +735,7 @@ class Application(QBaseApplication):
                 color = 'main'
             )
         else:
-            if self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(
+            self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'],
                 self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name),
                 QSystemTrayIcon.MessageIcon.Information,
@@ -748,6 +748,22 @@ class Application(QBaseApplication):
                 fade_duration = self.ALERT_FADE_DURATION,
                 color = 'main'
             )
+
+
+    def app_exec_failed(self, name: str, error: str) -> None:
+        self.save_data.app_exec_failed_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['message'].replace('%s', name, 1).replace('%s', error),
+            QSystemTrayIcon.MessageIcon.Information,
+            self.MESSAGE_DURATION * 1.5
+        )
+        self.show_alert(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['message'].replace('%s', name, 1).replace('%s', error),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION * 1.5,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
 
 
 
@@ -843,7 +859,7 @@ class Application(QBaseApplication):
 
         update_link = InstallButton.get_release(rel, None)
         if update_link:
-            self.must_update_link = update_link.link
+            self.must_update_link = update_link.files_data[0].link
             if rel['tag_name'] > self.BUILD: self.set_update(True)
             else: self.save_data.last_check_for_updates = datetime.now()
 
@@ -934,6 +950,7 @@ class Application(QBaseApplication):
                 b.update_app.connect(self.add_to_update_list)
                 b.update_app_done.connect(self.remove_from_update_list)
                 b.info_changed.connect(lambda _: self.refresh_apps())
+                b.exec_failed.connect(self.app_exec_failed)
 
                 self.app_buttons[app] = b
                 b.add_button('all')

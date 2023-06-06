@@ -27,10 +27,11 @@ class __WorkerSignals__(QObject):
 
 
 class InstallWorker(QThread):
-    def __init__(self, parent: QObject, data: InstallButton.download_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
+    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
         super(InstallWorker, self).__init__(parent)
         self.signals = __WorkerSignals__()
         self.data = data
+        self.which_data = which_data
         self.dest_path = f'{download_folder}/{data.name}'
         self.out_path = f'{install_folder}/{data.name}'
         self.check_for_updates = check_for_updates
@@ -56,14 +57,14 @@ class InstallWorker(QThread):
             if not os.path.exists(self.dest_path):
                 os.makedirs(self.dest_path)
 
-            filename = self.data.link.split('/')[-1].replace(' ', '_')
+            filename = self.which_data.link.split('/')[-1].replace(' ', '_')
             file_path = os.path.join(self.dest_path, filename)
             exclude_path = ['MACOSX', '__MACOSX']
 
             read_bytes = 0
             chunk_size = 1024
 
-            with urlopen(Request(self.data.link, headers = {'Authorization': f'token {self.data.token}'}) if self.data.token else self.data.link) as r:
+            with urlopen(Request(self.which_data.link, headers = {'Authorization': f'token {self.data.token}'}) if self.data.token else self.which_data.link) as r:
                 total = int(r.info()['Content-Length'])
                 with open(file_path, 'ab') as f:
                     self.signals.download_speed_changed.emit(0)
@@ -89,24 +90,28 @@ class InstallWorker(QThread):
             if not os.path.exists(self.out_path):
                 os.makedirs(self.out_path)
 
-            self.zipfile = zipfile.ZipFile(file_path)
+            if self.which_data.compressed:
+                self.zipfile = zipfile.ZipFile(file_path)
 
-            items = self.zipfile.infolist()
-            total_n = len(items)
+                items = self.zipfile.infolist()
+                total_n = len(items)
 
-            self.signals.install_speed_changed.emit(0)
-            self.install = True
-            self.speeds = []
+                self.signals.install_speed_changed.emit(0)
+                self.install = True
+                self.speeds = []
 
-            for n, item in enumerate(items, 1):
-                if not any(item.filename.startswith(p) for p in exclude_path):
-                    self.zipfile.extract(item, self.out_path)
+                for n, item in enumerate(items, 1):
+                    if not any(item.filename.startswith(p) for p in exclude_path):
+                        self.zipfile.extract(item, self.out_path)
 
-                # self.install_left = total_n - n
-                self.signals.install_progress_changed.emit(n / total_n)
-                self.timed_items += 1
+                    # self.install_left = total_n - n
+                    self.signals.install_progress_changed.emit(n / total_n)
+                    self.timed_items += 1
 
-            self.zipfile.close()
+                self.zipfile.close()
+
+            else:
+                shutil.copy(file_path, self.out_path)
 
             self.state = 3
 
@@ -118,7 +123,7 @@ class InstallWorker(QThread):
             d['release'] = 'pre' if self.data.prerelease else 'official'
             d['tag_name'] = self.data.tag_name
             file = self.get_file()
-            if (not ('command' in d)): d['command'] = f'"{file}"'
+            if (not ('command' in d)): d['command'] = f'"{file}"' if file else ''
             d['created_at'] = self.data.created_at
             if (not ('icon' in d)): d['icon'] = file
             if (not ('cwd' in d)): d['cwd'] = self.out_path
@@ -269,7 +274,15 @@ class Installer(QGridFrame):
 
 
     def start(self) -> None:
-        self.iw = InstallWorker(self, self.data, self.download_folder, self.install_folder, self.check_for_updates, self.auto_update)
+        self.iw = InstallWorker(
+            self,
+            self.data,
+            self.data.files_data[0],
+            self.download_folder,
+            self.install_folder,
+            self.check_for_updates,
+            self.auto_update
+        )
         self.iw.signals.download_progress_changed.connect(self.download_progress_changed)
         self.iw.signals.install_progress_changed.connect(self.install_progress_changed)
         self.iw.signals.download_speed_changed.connect(self.download_speed_changed)

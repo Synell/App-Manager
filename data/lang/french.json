@@ -363,6 +363,10 @@
                             "title": "Notification de Désinstallation d'Application Échouée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une désinstallation d'application échoue."
                         },
+                        "appExecFailed": {
+                            "title": "Notification d'Exécution d'Application Échouée",
+                            "description": "Détermine si App Manager affiche une notification lorsque le lancement d'une application échoue."
+                        },
                         "requestWorkerFailed": {
                             "title": "Notification de Requête Échouée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une requête pour chercher des mises à jour ou des applications échoue."
@@ -377,6 +381,7 @@
                         "appInstallFailed": "Installation d'Application Échouée",
                         "appUninstallDone": "Désinstallation d'Application Terminée",
                         "appUninstallFailed": "Désinstallation d'Application Échouée",
+                        "appExecFailed": "Exécution d'Application Échouée",
                         "requestWorkerFailed": "Requête Échouée"
                     }
                 },
@@ -552,6 +557,10 @@
                 "appUninstallError": {
                     "title": "Erreur de Désinstallation de l'Application",
                     "message": "Une erreur est survenue lors de la désinstallation de %s.\n%s"
+                },
+                "appExecFailed": {
+                    "title": "Erreur d'Exécution de l'Application",
+                    "message": "Une erreur est survenue lors du lancement de %s.\nEssayez d'éditer la commande de lancement dans les paramètres avancés de l'application.\nErreur: %s"
                 },
                 "requestWorkerFailed": {
                     "title": "Erreur de Requête",

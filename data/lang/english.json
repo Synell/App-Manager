@@ -363,6 +363,10 @@
                             "title": "App Uninstall Failed Notification",
                             "description": "Determines if a notification will be sent when an app uninstall fails."
                         },
+                        "appExecFailed": {
+                            "title": "App Launch Failed Notification",
+                            "description": "Determines if a notification will be sent when an app launch fails."
+                        },
                         "requestWorkerFailed": {
                             "title": "Request Failed Notification",
                             "description": "Determines if a notification will be sent when a request for getting updates or apps fails."
@@ -377,6 +381,7 @@
                         "appInstallFailed": "App Install Failed",
                         "appUninstallDone": "App Uninstall Done",
                         "appUninstallFailed": "App Uninstall Failed",
+                        "appExecFailed": "App Launch Failed",
                         "requestWorkerFailed": "Request Failed"
                     }
                 },
@@ -552,6 +557,10 @@
                 "appUninstallFailed": {
                     "title": "App Uninstall Failed",
                     "message": "An error occurred while uninstalling %s.\n%s"
+                },
+                "appExecFailed": {
+                    "title": "App Launch Failed",
+                    "message": "An error occurred while launching %s.\nTry to edit the launch command in the advanced app settings.\nError: %s"
                 },
                 "requestWorkerFailed": {
                     "title": "Request Failed",

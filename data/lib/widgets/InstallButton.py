@@ -12,7 +12,8 @@ from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
     # Class
 class InstallButton(QGridFrame):
     lang = {}
-    download_data = namedtuple('download_data', ['name', 'tag_name', 'link', 'prerelease', 'created_at', 'token'])
+    download_data = namedtuple('download_data', ['name', 'tag_name', 'files_data', 'prerelease', 'created_at', 'token'])
+    file_data = namedtuple('file_data', ['link', 'compressed'])
     platform = PlatformType.Windows
     token: str = None
 
@@ -76,13 +77,13 @@ class InstallButton(QGridFrame):
 
 
     @staticmethod
-    def get_release(data: dict, token: str = None) -> download_data:
-        def in_platform(s: str) -> bool:
-            for i in InstallButton.platform.value:
-                if i in s: return True
-            return False
+    def get_release(data: dict, token: str = None) -> download_data | None:
+        # def in_platform(s: str) -> bool:
+        #     for i in InstallButton.platform.value:
+        #         if i in s: return True
+        #     return False
 
-        def is_content_type(s: str) -> bool:
+        def is_compressed_content_type(s: str) -> bool:
             types = []
             match InstallButton.platform:
                 case PlatformType.Windows:
@@ -106,14 +107,57 @@ class InstallButton(QGridFrame):
             for i in types:
                 if i == s: return True
             return False
+        
+        def is_binary_content_type(s: str) -> bool:
+            return s == 'binary/octet-stream'
 
-        def better_file(files: list) -> str:
+        def better_file(files: list[InstallButton.file_data]) -> list[InstallButton.file_data]:
+            f = [i.link for i in files]
             for i in InstallButton.platform.value:
-                for j in files:
-                    if i.lower() in j.lower(): return j
+                for j in f:
+                    if i.lower() in j.lower(): return [files[f.index(j)]]
 
-        files = [asset['browser_download_url'] for asset in data['assets'] if is_content_type(asset['content_type']) if in_platform(asset['name'].lower())]
-        if files: return InstallButton.download_data(data['name'], data['tag_name'], better_file(files), data['prerelease'], data['created_at'], token)
+            return files
+
+
+        # files = [
+        #     InstallButton.file_data(
+        #         asset['browser_download_url'],
+        #         is_compressed_content_type(asset['content_type'])
+        #     )
+        #     for asset in data['assets']
+        #         if in_platform(asset['name'].lower()) and
+        #         (
+        #             is_binary_content_type(asset['content_type']) or
+        #             is_compressed_content_type(asset['content_type'])
+        #         )
+        # ]
+        # if files:
+        #     return InstallButton.download_data(
+        #         data['name'],
+        #         data['tag_name'],
+        #         better_file(files),
+        #         data['prerelease'], data['created_at'],
+        #         token
+        #     )
+
+        files = [
+            InstallButton.file_data(
+                asset['browser_download_url'],
+                is_compressed_content_type(asset['content_type'])
+            )
+            for asset in data['assets']
+                if is_binary_content_type(asset['content_type']) or
+                    is_compressed_content_type(asset['content_type'])
+        ]
+        if files:
+            return InstallButton.download_data(
+                data['name'],
+                data['tag_name'],
+                better_file(files),
+                data['prerelease'], data['created_at'],
+                token
+            )
 
 
     def install_click(self) -> None:

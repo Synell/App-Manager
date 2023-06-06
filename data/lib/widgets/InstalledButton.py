@@ -69,6 +69,8 @@ class InstalledButton(QGridFrame):
 
 
     def set_icon(self, icon: str, base_icon: str) -> None:
+        if not icon: return
+
         self.raw_icon = icon
         if QIconWidget.is_file_icon(self.raw_icon):
             self.icon.icon = base_icon

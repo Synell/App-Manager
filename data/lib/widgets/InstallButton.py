@@ -109,14 +109,32 @@ class InstallButton(QGridFrame):
             return False
         
         def is_binary_content_type(s: str) -> bool:
-            return s == 'binary/octet-stream'
+            return s in ['binary/octet-stream', 'application/octet-stream']
+        
+        def is_portable(s: str) -> bool:
+            return 'portable' in s.lower()
 
         def better_file(files: list[InstallButton.file_data]) -> list[InstallButton.file_data]:
-            f = [i.link for i in files]
-            for i in InstallButton.platform.value:
-                for j in f:
-                    if i.lower() in j.lower(): return [files[f.index(j)]]
+            def get_platform_file(lst: list[InstallButton.file_data]) -> InstallButton.file_data | None:
+                for i in InstallButton.platform.value:
+                    for j in lst:
+                        if i.lower() in j.link.lower(): return lst[lst.index(j)]
 
+                return None
+
+            f = [i for i in files if is_portable(i.link)] # Portable version
+
+            result = get_platform_file(f)
+            print(f, result)
+            if result: return [result]
+
+            f = [i for i in files if not is_portable(i.link)] # Normal version
+
+            result = get_platform_file(f)
+            print(f, result)
+            if result: return [result]
+
+            print('Unable to find a suitable file')
             return files
 
 
@@ -150,7 +168,10 @@ class InstallButton(QGridFrame):
                 if is_binary_content_type(asset['content_type']) or
                     is_compressed_content_type(asset['content_type'])
         ]
+
         if files:
+            a = better_file(files)
+            print(a)
             return InstallButton.download_data(
                 data['name'],
                 data['tag_name'],

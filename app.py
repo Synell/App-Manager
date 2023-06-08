@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e76a29'
+    BUILD = '07e77f41'
     VERSION = 'Experimental'
 
     SERVER_NAME = 'AppManager'

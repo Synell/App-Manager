@@ -346,7 +346,6 @@ class SaveData(QSaveData):
 
 
         def generate_notif(key: str, checked: bool) -> QNamedToggleButton:
-            # if subframe.grid_layout.count():
             frame = QFrame()
             frame.setProperty('border-top', True)
             frame.setFixedHeight(1)

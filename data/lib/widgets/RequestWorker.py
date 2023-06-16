@@ -7,17 +7,17 @@ import traceback, shutil, os, requests
 #----------------------------------------------------------------------
 
     # Class
-class __WorkerSignals__(QObject):
-    received = Signal(dict, str)
-    failed = Signal(str)
-    finished = Signal()
-
 class RequestWorker(QThread):
+    class _WorkerSignals(QObject):
+        received = Signal(dict, str)
+        failed = Signal(str)
+        finished = Signal()
+
     token: str = None
 
     def __init__(self, parent: QObject = None, followed_apps: list[str] = []):
         super(RequestWorker, self).__init__(parent)
-        self.signals = __WorkerSignals__()
+        self.signals = RequestWorker._WorkerSignals()
         self.followed_apps = followed_apps
         self.time = datetime.now()
 

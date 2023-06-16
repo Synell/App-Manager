@@ -29,6 +29,7 @@
                             "QAction": {
                                 "showInExplorer": "Ouvrir dans l'Explorateur de Fichiers",
                                 "edit": "Éditer",
+                                "killProcess": "Arrêter le Processus",
                                 "removeFromList": "Supprimer de la Liste",
                                 "uninstall": "Désinstaller"
                             },
@@ -370,6 +371,18 @@
                         "requestWorkerFailed": {
                             "title": "Notification de Requête Échouée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une requête pour chercher des mises à jour ou des applications échoue."
+                        },
+                        "processAlreadyRunning": {
+                            "title": "Notification de Processus Déjà en Cours",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'un processus est déjà en cours."
+                        },
+                        "processEnded": {
+                            "title": "Notification de Processus Arrêté",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'un processus est arrêté."
+                        },
+                        "processKilled": {
+                            "title": "Notification de Processus Tué",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'un processus est tué."
                         }
                     },
                     "QToggleButton": {
@@ -382,7 +395,10 @@
                         "appUninstallDone": "Désinstallation d'Application Terminée",
                         "appUninstallFailed": "Désinstallation d'Application Échouée",
                         "appExecFailed": "Exécution d'Application Échouée",
-                        "requestWorkerFailed": "Requête Échouée"
+                        "requestWorkerFailed": "Requête Échouée",
+                        "processAlreadyRunning": "Processus Déjà en Cours",
+                        "processEnded": "Processus Arrêté",
+                        "processKilled": "Processus Tué"
                     }
                 },
                 "token": {
@@ -565,6 +581,18 @@
                 "requestWorkerFailed": {
                     "title": "Erreur de Requête",
                     "message": "Une erreur est survenue lors de la requête.\n%s"
+                },
+                "processAlreadyRunning": {
+                    "title": "Processus Déjà en Cours",
+                    "message": "Le processus %s est déjà en cours."
+                },
+                "processEnded": {
+                    "title": "Processus Arrêté",
+                    "message": "Le processus %s a été arrêté."
+                },
+                "processKilled": {
+                    "title": "Processus Tué",
+                    "message": "Le processus %s a été tué."
                 }
             }
         },

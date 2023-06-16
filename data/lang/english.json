@@ -29,6 +29,7 @@
                             "QAction": {
                                 "showInExplorer": "Show in Explorer",
                                 "edit": "Edit",
+                                "killProcess": "Kill Process",
                                 "removeFromList": "Remove from List",
                                 "uninstall": "Uninstall"
                             },
@@ -370,6 +371,18 @@
                         "requestWorkerFailed": {
                             "title": "Request Failed Notification",
                             "description": "Determines if a notification will be sent when a request for getting updates or apps fails."
+                        },
+                        "processAlreadyRunning": {
+                            "title": "Process Already Running Notification",
+                            "description": "Determines if a notification will be sent when a process is already running."
+                        },
+                        "processEnded": {
+                            "title": "Process Ended Notification",
+                            "description": "Determines if a notification will be sent when a process ends."
+                        },
+                        "processKilled": {
+                            "title": "Process Killed Notification",
+                            "description": "Determines if a notification will be sent when a process is killed."
                         }
                     },
                     "QToggleButton": {
@@ -382,7 +395,10 @@
                         "appUninstallDone": "App Uninstall Done",
                         "appUninstallFailed": "App Uninstall Failed",
                         "appExecFailed": "App Launch Failed",
-                        "requestWorkerFailed": "Request Failed"
+                        "requestWorkerFailed": "Request Failed",
+                        "processAlreadyRunning": "Process Already Running",
+                        "processEnded": "Process Ended",
+                        "processKilled": "Process Killed"
                     }
                 },
                 "token": {
@@ -565,6 +581,18 @@
                 "requestWorkerFailed": {
                     "title": "Request Failed",
                     "message": "An error occurred while requesting.\n%s"
+                },
+                "processAlreadyRunning": {
+                    "title": "Process Already Running",
+                    "message": "The process %s is already running."
+                },
+                "processEnded": {
+                    "title": "Process Ended",
+                    "message": "The process %s has ended."
+                },
+                "processKilled": {
+                    "title": "Process Killed",
+                    "message": "The process %s has been killed."
                 }
             }
         },

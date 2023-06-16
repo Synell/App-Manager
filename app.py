@@ -50,6 +50,7 @@ class Application(QBaseApplication):
         RequestWorker.token = self.save_data.token
 
         InstalledButton.settings_icon = self.save_data.get_icon('pushbutton/settings.png')
+        InstalledButton.kill_process_icon = self.save_data.get_icon('popup/killProcess.png')
         InstalledButton.remove_from_list_icon = self.save_data.get_icon('popup/removeFromList.png')
         InstalledButton.edit_icon = self.save_data.get_icon('popup/edit.png')
         InstalledButton.show_in_explorer_icon = self.save_data.get_icon('popup/showInExplorer.png')
@@ -698,6 +699,51 @@ class Application(QBaseApplication):
                 if self.window.isVisible(): self.must_exit_after_download = False
                 else: self.exit()
 
+    def process_already_running(self, name: str) -> None:
+        if self.save_data.process_already_running_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['message'].replace('%s', name),
+            QSystemTrayIcon.MessageIcon.Critical,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['message'].replace('%s', name),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
+
+    def process_ended(self, name: str) -> None:
+        if self.save_data.process_ended_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['message'].replace('%s', name),
+            QSystemTrayIcon.MessageIcon.Information,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['message'].replace('%s', name),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
+
+    def process_killed(self, name: str) -> None:
+        if self.save_data.process_killed_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['message'].replace('%s', name),
+            QSystemTrayIcon.MessageIcon.Critical,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['message'].replace('%s', name),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
+
     def remove_from_install_list(self, path: str) -> None:
         for i in self.APP_RELEASES[1:]:
             if i == 'all': continue
@@ -958,6 +1004,9 @@ class Application(QBaseApplication):
                     compact_mode
                 )
 
+                b.process_already_running.connect(self.process_already_running)
+                b.process_ended.connect(self.process_ended)
+                b.process_killed.connect(self.process_killed)
                 b.remove_from_list.connect(self.remove_from_install_list)
                 b.uninstall.connect(self.add_to_uninstall_list)
                 b.update_app.connect(self.add_to_update_list)
@@ -973,8 +1022,8 @@ class Application(QBaseApplication):
             else:
                 b = self.app_buttons[app]
 
-            if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
-            if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
+            if b.compact_mode != compact_mode: b._set_compact_mode(compact_mode)
+            if b.has_update != has_update: b._set_update(has_update, self.updates[name] if has_update else None)
 
             w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index('all'))
             w.scroll_layout.addWidget(b.get_button('all'), w.scroll_layout.count(), 0)

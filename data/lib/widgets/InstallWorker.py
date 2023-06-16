@@ -13,20 +13,18 @@ from data.lib.qtUtils import QGridFrame, QGridWidget
 #----------------------------------------------------------------------
 
     # Class
-class __WorkerSignals__(QObject):
-    download_progress_changed = Signal(float)
-    install_progress_changed = Signal(float)
-    download_speed_changed = Signal(float)
-    install_speed_changed = Signal(float)
-    download_eta_changed = Signal(timedelta)
-    install_eta_changed = Signal(timedelta)
-    download_done = Signal()
-    install_done = Signal()
-    install_failed = Signal(str, int)
-
-
-
 class InstallWorker(QThread):
+    class _WorkerSignals(QObject):
+        download_progress_changed = Signal(float)
+        install_progress_changed = Signal(float)
+        download_speed_changed = Signal(float)
+        install_speed_changed = Signal(float)
+        download_eta_changed = Signal(timedelta)
+        install_eta_changed = Signal(timedelta)
+        download_done = Signal()
+        install_done = Signal()
+        install_failed = Signal(str, int)
+
     FILE_CONFIG = [
         ('exe', None, None),
         ('bat', 'cmd /c', None),
@@ -43,7 +41,7 @@ class InstallWorker(QThread):
 
     def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
         super(InstallWorker, self).__init__(parent)
-        self.signals = __WorkerSignals__()
+        self.signals = InstallWorker._WorkerSignals()
         self.data = data
         self.which_data = which_data
         self.dest_path = f'{download_folder}/{data.name}'

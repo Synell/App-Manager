@@ -55,6 +55,9 @@ class SaveData(QSaveData):
         self.app_uninstall_failed_notif = True
         self.app_exec_failed_notif = True
         self.request_worker_failed_notif = True
+        self.process_already_running_notif = True
+        self.process_ended_notif = True
+        self.process_killed_notif = True
 
         super().__init__(save_path)
 
@@ -453,6 +456,54 @@ class SaveData(QSaveData):
         root_frame.grid_layout.setAlignment(widget.request_worker_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 1)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['processAlreadyRunning']['title'], lang['QLabel']['processAlreadyRunning']['description'])
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
+        widget.process_already_running_notif_checkbox = QNamedToggleButton()
+        widget.process_already_running_notif_checkbox.setText(lang['QToggleButton']['processAlreadyRunning'])
+        widget.process_already_running_notif_checkbox.setChecked(self.process_already_running_notif)
+        root_frame.grid_layout.addWidget(widget.process_already_running_notif_checkbox, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(widget.process_already_running_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['processEnded']['title'], lang['QLabel']['processEnded']['description'])
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
+        widget.process_ended_notif_checkbox = QNamedToggleButton()
+        widget.process_ended_notif_checkbox.setText(lang['QToggleButton']['processEnded'])
+        widget.process_ended_notif_checkbox.setChecked(self.process_ended_notif)
+        root_frame.grid_layout.addWidget(widget.process_ended_notif_checkbox, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(widget.process_ended_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['processKilled']['title'], lang['QLabel']['processKilled']['description'])
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
+        widget.process_killed_notif_checkbox = QNamedToggleButton()
+        widget.process_killed_notif_checkbox.setText(lang['QToggleButton']['processKilled'])
+        widget.process_killed_notif_checkbox.setChecked(self.process_killed_notif)
+        root_frame.grid_layout.addWidget(widget.process_killed_notif_checkbox, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(widget.process_killed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
         return widget
 
 
@@ -591,6 +642,9 @@ class SaveData(QSaveData):
         self.app_uninstall_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_failed_notif_checkbox.isChecked()
         self.app_exec_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_exec_failed_notif_checkbox.isChecked()
         self.request_worker_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].request_worker_failed_notif_checkbox.isChecked()
+        self.process_already_running_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_already_running_notif_checkbox.isChecked()
+        self.process_ended_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_ended_notif_checkbox.isChecked()
+        self.process_killed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_killed_notif_checkbox.isChecked()
 
 
 
@@ -640,7 +694,10 @@ class SaveData(QSaveData):
             'appUninstallDoneNotif': self.app_uninstall_done_notif,
             'appUninstallFailedNotif': self.app_uninstall_failed_notif,
             'appExecFailedNotif': self.app_exec_failed_notif,
-            'requestWorkerFailedNotif': self.request_worker_failed_notif
+            'requestWorkerFailedNotif': self.request_worker_failed_notif,
+            'processAlreadyRunningNotif': self.process_already_running_notif,
+            'processEndedNotif': self.process_ended_notif,
+            'processKilledNotif': self.process_killed_notif
         }
 
     def load_extra_data(self, extra_data: dict = ..., reload: list = []) -> bool:
@@ -701,6 +758,9 @@ class SaveData(QSaveData):
         with exc: self.app_uninstall_failed_notif = extra_data['appUninstallFailedNotif']
         with exc: self.app_exec_failed_notif = extra_data['appExecFailedNotif']
         with exc: self.request_worker_failed_notif = extra_data['requestWorkerFailedNotif']
+        with exc: self.process_already_running_notif = extra_data['processAlreadyRunningNotif']
+        with exc: self.process_ended_notif = extra_data['processEndedNotif']
+        with exc: self.process_killed_notif = extra_data['processKilledNotif']
 
         return res
 

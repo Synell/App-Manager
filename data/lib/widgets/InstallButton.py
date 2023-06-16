@@ -125,13 +125,11 @@ class InstallButton(QGridFrame):
             f = [i for i in files if is_portable(i.link)] # Portable version
 
             result = get_platform_file(f)
-            print(f, result)
             if result: return [result]
 
             f = [i for i in files if not is_portable(i.link)] # Normal version
 
             result = get_platform_file(f)
-            print(f, result)
             if result: return [result]
 
             print('Unable to find a suitable file')
@@ -170,8 +168,6 @@ class InstallButton(QGridFrame):
         ]
 
         if files:
-            a = better_file(files)
-            print(a)
             return InstallButton.download_data(
                 data['name'],
                 data['tag_name'],

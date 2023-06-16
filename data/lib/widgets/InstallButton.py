@@ -78,11 +78,6 @@ class InstallButton(QGridFrame):
 
     @staticmethod
     def get_release(data: dict, token: str = None) -> download_data | None:
-        # def in_platform(s: str) -> bool:
-        #     for i in InstallButton.platform.value:
-        #         if i in s: return True
-        #     return False
-
         def is_compressed_content_type(s: str) -> bool:
             types = []
             match InstallButton.platform:
@@ -135,27 +130,6 @@ class InstallButton(QGridFrame):
             print('Unable to find a suitable file')
             return files
 
-
-        # files = [
-        #     InstallButton.file_data(
-        #         asset['browser_download_url'],
-        #         is_compressed_content_type(asset['content_type'])
-        #     )
-        #     for asset in data['assets']
-        #         if in_platform(asset['name'].lower()) and
-        #         (
-        #             is_binary_content_type(asset['content_type']) or
-        #             is_compressed_content_type(asset['content_type'])
-        #         )
-        # ]
-        # if files:
-        #     return InstallButton.download_data(
-        #         data['name'],
-        #         data['tag_name'],
-        #         better_file(files),
-        #         data['prerelease'], data['created_at'],
-        #         token
-        #     )
 
         files = [
             InstallButton.file_data(

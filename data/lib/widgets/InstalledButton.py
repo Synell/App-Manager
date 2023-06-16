@@ -225,7 +225,7 @@ class InstalledButton(QGridFrame):
         action_remove.triggered.connect(lambda: self.remove_from_list_clicked.emit())
         menu.addAction(action_remove)
 
-        if self._release in ['official', 'prerelease']:
+        if self._release in ['official', 'prerelease'] and not self._is_running:
             action_uninstall = QAction(self._lang['QAction']['uninstall'])
             action_uninstall.setIcon(self.uninstall_icon)
             action_uninstall.triggered.connect(lambda: self.uninstall_clicked.emit())

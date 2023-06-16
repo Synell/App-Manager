@@ -161,17 +161,19 @@ class InstalledButtonGroup(QObject):
         return self._thread.isRunning()
 
     def _kill_process(self) -> None:
-        if self._thread.isRunning():
+        is_running = self._thread.isRunning()
+
+        if is_running:
             self._thread.terminate()
 
-        if not self._thread.isRunning():
+        if not self._thread.isRunning() and is_running:
             self._set_is_running(False)
+            self.process_killed.emit(self.name)
 
-        self.process_killed.emit(self.name)
 
     def _uninstall(self) -> None:
-        self._kill_process()
-        self.uninstall.emit(self.name)
+        if not self._thread.isRunning():
+            self.uninstall.emit(self.path)
 
     def _mouse_pressed(self) -> None:
         try:

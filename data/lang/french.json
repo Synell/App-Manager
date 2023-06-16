@@ -404,6 +404,11 @@
                         "processAlreadyRunning": "Processus Déjà en Cours",
                         "processEnded": "Processus Arrêté",
                         "processKilled": "Processus Tué"
+                    },
+                    "QPushButton": {
+                        "checkAll": "Tout Cocher",
+                        "uncheckAll": "Tout Décocher",
+                        "invertAll": "Inverser la Sélection"
                     }
                 },
                 "token": {

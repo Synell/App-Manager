@@ -302,23 +302,69 @@ class SaveData(QSaveData):
         widget.scroll_layout.addWidget(root_frame, 0, 0)
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
+
+        all_checkboxes: list[QNamedToggleButton] = []
+
+        def check_all(checked: bool):
+            for checkbox in all_checkboxes:
+                checkbox.setChecked(checked)
+
+        def invert_all():
+            for checkbox in all_checkboxes:
+                checkbox.setChecked(not checkbox.isChecked())
+
+        buttonframe = QGridFrame()
+        buttonframe.grid_layout.setSpacing(16)
+        buttonframe.grid_layout.setContentsMargins(0, 0, 0, 0)
+        root_frame.grid_layout.addWidget(buttonframe, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(buttonframe, Qt.AlignmentFlag.AlignTop)
+
+        button = QPushButton(lang['QPushButton']['checkAll'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: check_all(True))
+        buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
+
+        button = QPushButton(lang['QPushButton']['uncheckAll'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: check_all(False))
+        buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
+
+        button = QPushButton(lang['QPushButton']['invertAll'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: invert_all())
+        buttonframe.grid_layout.addWidget(button, 1, 0, 1, 2)
+
+
+        subframe = QGridFrame()
+        subframe.grid_layout.setSpacing(16)
+        subframe.grid_layout.setContentsMargins(0, 0, 0, 0)
+        root_frame.grid_layout.addWidget(subframe, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(subframe, Qt.AlignmentFlag.AlignTop)
+
+
         def generate_notif(key: str, checked: bool) -> QNamedToggleButton:
-            if root_frame.grid_layout.count():
-                frame = QFrame()
-                frame.setProperty('border-top', True)
-                frame.setFixedHeight(1)
-                root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+            # if subframe.grid_layout.count():
+            frame = QFrame()
+            frame.setProperty('border-top', True)
+            frame.setFixedHeight(1)
+            subframe.grid_layout.addWidget(frame, subframe.grid_layout.count(), 0)
 
             label = QSettingsDialog.textGroup(lang['QLabel'][key]['title'], lang['QLabel'][key]['description'])
-            root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+            subframe.grid_layout.addWidget(label, subframe.grid_layout.count(), 0)
 
             w = QNamedToggleButton()
             w.setText(lang['QToggleButton'][key])
             w.setChecked(checked)
-            root_frame.grid_layout.addWidget(w, root_frame.grid_layout.count(), 0)
-            root_frame.grid_layout.setAlignment(w, Qt.AlignmentFlag.AlignLeft)
+            subframe.grid_layout.addWidget(w, subframe.grid_layout.count(), 0)
+            subframe.grid_layout.setAlignment(w, Qt.AlignmentFlag.AlignLeft)
+
+            all_checkboxes.append(w)
 
             return w
+
 
         widget.goes_to_tray_notif_checkbox = generate_notif('goesToTray', self.goes_to_tray_notif)
         widget.exit_during_work_notif_checkbox = generate_notif('exitDuringWork', self.exit_during_work_notif)

@@ -44,6 +44,7 @@ class Application(QBaseApplication):
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
+        self.must_exit_after_app_closed = False
 
         InstallButton.platform = PlatformType.Windows if self.platform == QPlatform.Windows else PlatformType.Linux if self.platform == QPlatform.Linux else PlatformType.MacOS
         InstallButton.token = self.save_data.token
@@ -729,6 +730,10 @@ class Application(QBaseApplication):
             color = 'main'
         )
 
+        if self.must_exit_after_app_closed:
+            if self.window.isVisible(): self.must_exit_after_app_closed = False
+            else: self.exit()
+
     def process_killed(self, name: str) -> None:
         if self.save_data.process_killed_notif: self.sys_tray.showMessage(
             self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['title'],
@@ -743,6 +748,10 @@ class Application(QBaseApplication):
             fade_duration = self.ALERT_FADE_DURATION,
             color = 'main'
         )
+
+        if self.must_exit_after_app_closed:
+            if self.window.isVisible(): self.must_exit_after_app_closed = False
+            else: self.exit()
 
     def remove_from_install_list(self, path: str) -> None:
         for i in self.APP_RELEASES[1:]:
@@ -1158,6 +1167,16 @@ class Application(QBaseApplication):
                 self.MESSAGE_DURATION
             )
             self.must_exit_after_download = True
+            return
+
+        if any([b.is_process_running() for b in self.app_buttons.values()]):
+            if self.save_data.exit_during_work_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringAppRun']['title'],
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringAppRun']['message'],
+                QSystemTrayIcon.MessageIcon.Information,
+                self.MESSAGE_DURATION
+            )
+            self.must_exit_after_app_closed = True
             return
 
         if self.update_request:

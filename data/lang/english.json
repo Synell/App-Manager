@@ -340,6 +340,10 @@
                             "title": "Exit During Work Notification",
                             "description": "Determines if a notification will be sent when the app is exited during work."
                         },
+                        "exitDuringAppRun": {
+                            "title": "Exit During App Run Notification",
+                            "description": "Determines if a notification will be sent when the app is exited during an app run."
+                        },
                         "updateDone": {
                             "title": "Update Done Notification",
                             "description": "Determines if a notification will be sent when an update is done."
@@ -388,6 +392,7 @@
                     "QToggleButton": {
                         "goesToTray": "Goes to Tray",
                         "exitDuringWork": "Exit During Work",
+                        "exitDuringAppRun": "Exit During App Run",
                         "updateDone": "Update Done",
                         "updateFailed": "Update Failed",
                         "appInstallDone": "App Install Done",
@@ -549,6 +554,10 @@
                 "exitDuringWork": {
                     "title": "Exit During Work",
                     "message": "App Manager is still running in the background because it is working. It will be closed when the work is done."
+                },
+                "exitDuringAppRun": {
+                    "title": "Exit During App Run",
+                    "message": "App Manager is still running in the background because an app is running. It will be closed when the app is closed."
                 },
                 "updateDone": {
                     "title": "Update Done",

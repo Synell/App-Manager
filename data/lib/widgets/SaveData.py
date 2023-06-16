@@ -47,6 +47,7 @@ class SaveData(QSaveData):
 
         self.goes_to_tray_notif = True
         self.exit_during_work_notif = True
+        self.exit_during_app_run_notif = True
         self.update_done_notif = True # TODO: Implement this functionallity
         self.update_failed_notif = True # TODO: Implement this functionallity
         self.app_install_done_notif = True
@@ -326,6 +327,22 @@ class SaveData(QSaveData):
         widget.exit_during_work_notif_checkbox.setChecked(self.exit_during_work_notif)
         root_frame.grid_layout.addWidget(widget.exit_during_work_notif_checkbox, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(widget.exit_during_work_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+
+
+        frame = QFrame()
+        frame.setProperty('border-top', True)
+        frame.setFixedHeight(1)
+        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 1)
+
+
+        label = QSettingsDialog.textGroup(lang['QLabel']['exitDuringAppRun']['title'], lang['QLabel']['exitDuringAppRun']['description'])
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
+        widget.exit_during_app_run_notif_checkbox = QNamedToggleButton()
+        widget.exit_during_app_run_notif_checkbox.setText(lang['QToggleButton']['exitDuringAppRun'])
+        widget.exit_during_app_run_notif_checkbox.setChecked(self.exit_during_app_run_notif)
+        root_frame.grid_layout.addWidget(widget.exit_during_app_run_notif_checkbox, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(widget.exit_during_app_run_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
@@ -634,6 +651,7 @@ class SaveData(QSaveData):
 
         self.goes_to_tray_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].goes_to_tray_notif_checkbox.isChecked()
         self.exit_during_work_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].exit_during_work_notif_checkbox.isChecked()
+        self.exit_during_app_run_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].exit_during_app_run_notif_checkbox.isChecked()
         self.update_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_done_notif_checkbox.isChecked()
         self.update_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_failed_notif_checkbox.isChecked()
         self.app_install_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_done_notif_checkbox.isChecked()
@@ -687,6 +705,7 @@ class SaveData(QSaveData):
 
             'goesToTrayNotif': self.goes_to_tray_notif,
             'exitDuringWorkNotif': self.exit_during_work_notif,
+            'exitDuringAppRunNotif': self.exit_during_app_run_notif,
             'updateDoneNotif': self.update_done_notif,
             'updateFailedNotif': self.update_failed_notif,
             'appInstallDoneNotif': self.app_install_done_notif,
@@ -750,6 +769,7 @@ class SaveData(QSaveData):
 
         with exc: self.goes_to_tray_notif = extra_data['goesToTrayNotif']
         with exc: self.exit_during_work_notif = extra_data['exitDuringWorkNotif']
+        with exc: self.exit_during_app_run_notif = extra_data['exitDuringAppRunNotif']
         with exc: self.update_done_notif = extra_data['updateDoneNotif']
         with exc: self.update_failed_notif = extra_data['updateFailedNotif']
         with exc: self.app_install_done_notif = extra_data['appInstallDoneNotif']

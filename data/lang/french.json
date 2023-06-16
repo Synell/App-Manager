@@ -340,6 +340,10 @@
                             "title": "Notification de Fermeture pendant un Travail",
                             "description": "Détermine si App Manager affiche une notification lorsqu'il est fermé pendant un travail."
                         },
+                        "exitDuringAppRun": {
+                            "title": "Notification de Fermeture pendant l'Exécution d'une Application",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'il est fermé pendant l'exécution d'une application."
+                        },
                         "updateDone": {
                             "title": "Notification de Mise à Jour Terminée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une mise à jour est terminée."
@@ -388,6 +392,7 @@
                     "QToggleButton": {
                         "goesToTray": "Minimiser dans la Barre des Tâches",
                         "exitDuringWork": "Fermer pendant un Travail",
+                        "exitDuringAppRun": "Fermer pendant l'Exécution d'une Application",
                         "updateDone": "Mise à Jour Terminée",
                         "updateFailed": "Mise à Jour Échouée",
                         "appInstallDone": "Installation d'Application Terminée",
@@ -549,6 +554,10 @@
                 "exitDuringWork": {
                     "title": "Fermeture pendant un Travail",
                     "message": "App Manager tourne toujours en arrière-plan parce qu'il est en train de travailler. L'application sera fermée lorsque le travail sera terminé."
+                },
+                "exitDuringAppRun": {
+                    "title": "Fermeture pendant l'Exécution d'une Application",
+                    "message": "App Manager tourne toujours en arrière-plan parce qu'une application est en train de s'exécuter. L'application sera fermée lorsque l'application sera fermée."
                 },
                 "updateDone": {
                     "title": "Mise à Jour Terminée",

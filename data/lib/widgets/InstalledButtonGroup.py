@@ -157,6 +157,9 @@ class InstalledButtonGroup(QObject):
         self.process_ended.emit(self.name)
         self._set_is_running(False)
 
+    def is_process_running(self) -> bool:
+        return self._thread.isRunning()
+
     def _kill_process(self) -> None:
         if self._thread.isRunning():
             self._thread.terminate()
@@ -190,18 +193,18 @@ class InstalledButtonGroup(QObject):
         if not self.download_data: return print('missing dl data')
         self._set_disabled(True)
         self.install_worker = InstallWorker(self, self.download_data, self.download_data.files_data[0], download_path, os.path.dirname(self.path))
-        self.install_worker.signals.download_progress_changed.connect(lambda val: self.progress_changed(val / 2))
-        self.install_worker.signals.install_progress_changed.connect(lambda val: self.progress_changed(0.5 + (val / 2)))
-        self.install_worker.signals.install_done.connect(lambda: self.progress_done(True))
-        self.install_worker.signals.install_failed.connect(lambda: self.progress_done(False))
+        self.install_worker.signals.download_progress_changed.connect(lambda val: self._progress_changed(val / 2))
+        self.install_worker.signals.install_progress_changed.connect(lambda val: self._progress_changed(0.5 + (val / 2)))
+        self.install_worker.signals.install_done.connect(lambda: self._progress_done(True))
+        self.install_worker.signals.install_failed.connect(lambda: self._progress_done(False))
         self.install_worker.start()
 
-    def progress_changed(self, value: float) -> None:
+    def _progress_changed(self, value: float) -> None:
         v = int(value * 100)
         for button in self.buttons.values():
             button.progress_changed(v)
 
-    def progress_done(self, success: bool) -> None:
+    def _progress_done(self, success: bool) -> None:
         self._set_disabled(False)
 
         if success:

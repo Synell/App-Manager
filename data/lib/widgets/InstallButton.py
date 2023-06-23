@@ -104,7 +104,7 @@ class InstallButton(QGridFrame):
             return False
         
         def is_binary_content_type(s: str) -> bool:
-            return s in ['binary/octet-stream', 'application/octet-stream']
+            return s in ['binary/octet-stream', 'application/octet-stream', 'application/x-msdownload']
         
         def is_portable(s: str) -> bool:
             return 'portable' in s.lower()

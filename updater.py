@@ -18,7 +18,7 @@ from data.lib.widgets.updater import data as updater_data
 
     # Class
 class QUpdater(QBaseApplication):
-    BUILD = '07e77f83'
+    BUILD = '07e77fbd'
     VERSION = 'Experimental'
 
     UPDATE_LINK = ''

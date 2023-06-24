@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Français",
-        "version": "07e77fbd",
+        "version": "07e77fc5",
         "description": "Langage français pour l'application App Manager."
     },
     "data": {
@@ -543,6 +543,9 @@
                 "PySide": "A Propos de PySide...",
                 "AppManager": "A Propos de App Manager..."
             },
+            "whatsNew": "Nouveautés...",
+            "changelog": "Journal des Modifications...",
+            "reportBug": "Signaler un Bug...",
             "donate": {
                 "title": "Faire un Don"
             }

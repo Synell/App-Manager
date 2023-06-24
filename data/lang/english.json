@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "English",
-        "version": "07e77fbd",
+        "version": "07e77fc5",
         "description": "English language for App Manager."
     },
     "data": {
@@ -543,6 +543,9 @@
                 "PySide": "About PySide...",
                 "AppManager": "About App Manager..."
             },
+            "whatsNew": "What's New...",
+            "changelog": "Changelog...",
+            "reportBug": "Report a Bug...",
             "donate": {
                 "title": "Donate"
             }

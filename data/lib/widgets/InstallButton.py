@@ -2,43 +2,48 @@
 
     # Libraries
 from collections import namedtuple
-from PySide6.QtWidgets import QPushButton, QLabel
+from PySide6.QtWidgets import QLabel, QMenu, QMainWindow
 from PySide6.QtCore import Qt, Signal, QSize
+from PySide6.QtGui import QCursor, QIcon
 from .PlatformType import PlatformType
 
-from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
+from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget, QMoreButton
 #----------------------------------------------------------------------
 
     # Class
 class InstallButton(QGridFrame):
-    lang = {}
+    customize_installation_icon = None
+
     download_data = namedtuple('download_data', ['name', 'tag_name', 'files_data', 'prerelease', 'created_at', 'token'])
     file_data = namedtuple('file_data', ['link', 'compressed'])
+    download_custom_data = namedtuple('download_custom_data', ['download_data', 'install_folder', 'category', 'check_for_updates', 'auto_update'])
     platform = PlatformType.Windows
     token: str = None
 
     download = Signal(download_data)
+    download_custom = Signal(download_custom_data)
 
-    def __init__(self, data: dict = {}, button_text: str = 'Install', name: str = '', tag_name: str = '', icon: str = None, disabled: bool = False) -> None:
+    def __init__(self, main_window: QMainWindow, data: dict = {}, lang: str = 'Install', name: str = '', tag_name: str = '', icon: str = None, disabled: bool = False) -> None:
         super().__init__()
 
-        self.data = data
+        self._main_window = main_window
+        self._data = data
+        self._lang = lang
         self.name = name
-        self.tag_name = tag_name
+        self._tag_name = tag_name
 
         self.setFixedHeight(60)
         self.setProperty('side', 'all')
+
+        self._create_popup_menu()
 
         widget = self.widget_couple(icon, self.generate_text(f'{name} ({tag_name})'))
         self.grid_layout.addWidget(widget, 0, 0)
         self.grid_layout.setAlignment(widget, Qt.AlignmentFlag.AlignLeft)
 
-        self.push_button = QPushButton(button_text)
-        self.push_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        # self.push_button.setDisabled(disabled)
-        # if disabled: self.setCursor(Qt.CursorShape.ForbiddenCursor)
-        self.push_button.setProperty('color', 'main')
+        self.push_button = QMoreButton(lang['QPushButton']['install'],)
         self.push_button.clicked.connect(self.install_click)
+        self.push_button.more_clicked.connect(self._popup_menu_clicked)
         self.grid_layout.addWidget(self.push_button, 0, 1)
         self.grid_layout.setAlignment(self.push_button, Qt.AlignmentFlag.AlignRight)
         self.set_disabled(disabled)
@@ -53,7 +58,7 @@ class InstallButton(QGridFrame):
         label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 0, 1)
 
-        label = QLabel(f'by {self.data["author"]["login"]}')
+        label = QLabel(f'by {self._data["author"]["login"]}')
         label.setProperty('smallbrightnormal', True)
         label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 1, 1)
@@ -152,7 +157,7 @@ class InstallButton(QGridFrame):
 
 
     def install_click(self) -> None:
-        rel = InstallButton.get_release(self.data, self.token)
+        rel = InstallButton.get_release(self._data, self.token)
 
         if rel:
             self.push_button.setDisabled(True)
@@ -162,10 +167,16 @@ class InstallButton(QGridFrame):
 
     def set_disabled(self, b: bool) -> None:
         self.push_button.setDisabled(b)
-        if b:
-            self.setCursor(Qt.CursorShape.ForbiddenCursor)
-            self.push_button.setCursor(Qt.CursorShape.ForbiddenCursor)
-        else:
-            self.setCursor(Qt.CursorShape.ArrowCursor)
-            self.push_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.ForbiddenCursor if b else Qt.CursorShape.ArrowCursor)
+
+
+    def _create_popup_menu(self) -> None:
+        self._popup_menu = QMenu(self._main_window)
+        self._popup_menu.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        act = self._popup_menu.addAction(self.customize_installation_icon, self._lang['QMenu']['QAction']['customizeInstall'])
+        # act.triggered.connect(self.aboutQt)
+
+    def _popup_menu_clicked(self) -> None:
+        self._popup_menu.popup(QCursor.pos())
 #----------------------------------------------------------------------

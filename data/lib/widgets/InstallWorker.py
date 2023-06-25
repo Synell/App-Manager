@@ -39,7 +39,7 @@ class InstallWorker(QThread):
         ('rpm', 'rpm -i', None),
     ]
 
-    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
+    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True, category: str = None) -> None:
         super(InstallWorker, self).__init__(parent)
         self.signals = InstallWorker._WorkerSignals()
         self.data = data
@@ -48,6 +48,7 @@ class InstallWorker(QThread):
         self.out_path = f'{install_folder}/{data.name}'
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
+        self.category = category
         self.timer = TimeWorker(self, timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0
@@ -141,7 +142,7 @@ class InstallWorker(QThread):
             if (not ('cwd' in d)): d['cwd'] = self.out_path
             if (not ('checkForUpdates' in d)): d['checkForUpdates'] = self.check_for_updates
             if (not ('autoUpdate' in d)): d['autoUpdate'] = self.auto_update
-            if (not ('category' in d)): d['category'] = None
+            if (not ('category' in d)): d['category'] = self.category
 
             self.state = 4
 
@@ -233,7 +234,7 @@ class Installer(QGridFrame):
     done = Signal(str)
     failed = Signal(str, str)
 
-    def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 0, auto_update: bool = False) -> None:
+    def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 0, auto_update: bool = False, category: str = None) -> None:
         super(Installer, self).__init__(parent)
 
         self.lang = lang
@@ -242,6 +243,7 @@ class Installer(QGridFrame):
         self.install_folder = install_folder
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
+        self.category = category
 
 
         label = QLabel(self.data.name)
@@ -301,7 +303,8 @@ class Installer(QGridFrame):
             self.download_folder,
             self.install_folder,
             self.check_for_updates,
-            self.auto_update
+            self.auto_update,
+            self.category
         )
         self.iw.signals.download_progress_changed.connect(self.download_progress_changed)
         self.iw.signals.install_progress_changed.connect(self.install_progress_changed)

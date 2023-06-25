@@ -190,8 +190,17 @@
                 },
                 "QPushButton": {
                     "back": "Back",
-                    "install": "Install",
                     "goToDownloadPage": "Go to Download Page"
+                },
+                "InstallButton": {
+                    "QPushButton": {
+                        "install": "Install"
+                    },
+                    "QMenu": {
+                        "QAction": {
+                            "customizeInstall": "Customize Installation..."
+                        }
+                    }
                 },
                 "QLineEdit": {
                     "search": "Search"

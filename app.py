@@ -48,6 +48,7 @@ class Application(QBaseApplication):
 
         InstallButton.platform = PlatformType.Windows if self.platform == QPlatform.Windows else PlatformType.Linux if self.platform == QPlatform.Linux else PlatformType.MacOS
         InstallButton.token = self.save_data.token
+        InstallButton.customize_installation_icon = self.save_data.get_icon('popup/customizeInstallation.png')
         RequestWorker.token = self.save_data.token
 
         InstalledButton.settings_icon = self.save_data.get_icon('pushbutton/settings.png')
@@ -581,8 +582,9 @@ class Application(QBaseApplication):
         installed_releases = self.get_installed_releases()
 
         button = InstallButton(
+            self.window,
             rel,
-            self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['install'],
+            self.save_data.language_data['QMainWindow']['installAppPage']['InstallButton'],
             rel['name'],
             rel['tag_name'],
             get_icon_path(app),
@@ -593,6 +595,7 @@ class Application(QBaseApplication):
         )
 
         button.download.connect(self.add_to_download_list)
+        button.download_custom.connect(self.add_to_download_list)
 
         if rel['prerelease']:
             self.install_app_page.tab_widget.pre.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.pre.inside.scroll_layout.count(), 0)
@@ -638,12 +641,37 @@ class Application(QBaseApplication):
         if self.install_page_worker.isRunning(): self.install_page_worker.terminate()
 
 
-    def add_to_download_list(self, data: InstallButton.download_data) -> None:
+    def add_to_download_list(self, data: InstallButton.download_data | InstallButton.download_custom_data) -> None:
         if len(list(self.downloads.keys())) == 0:
             self.main_page.downloads_widget.no_download.setVisible(False)
             self.main_page.downloads_widget.list.setVisible(True)
 
-        iw = Installer(None, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'], data, self.save_data.downloads_folder, self.save_data.apps_folder, self.save_data.new_apps_check_for_updates, self.save_data.new_apps_auto_update)
+        if isinstance(data, InstallButton.download_data):
+            d = data
+            install_folder = self.save_data.apps_folder
+            check_for_updates = self.save_data.new_apps_check_for_updates
+            auto_update = self.save_data.new_apps_auto_update
+            category = None
+
+        elif isinstance(data, InstallButton.download_custom_data):
+            d = data.download_data
+            install_folder = data.install_folder
+            check_for_updates = data.check_for_updates
+            auto_update = data.auto_update
+            category = data.category
+
+        else: return
+
+        iw = Installer(
+            None,
+            self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'],
+            d,
+            self.save_data.downloads_folder,
+            install_folder,
+            check_for_updates,
+            auto_update,
+            category
+        )
         self.main_page.downloads_widget.list.scroll_layout.addWidget(iw, len(list(self.downloads.keys())), 0)
         self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)

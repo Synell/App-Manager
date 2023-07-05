@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Français",
-        "version": "07e77fc5",
+        "version": "07e79429",
         "description": "Langage français pour l'application App Manager."
     },
     "data": {
@@ -199,6 +199,62 @@
                     "QMenu": {
                         "QAction": {
                             "customizeInstall": "Installation personnalisée..."
+                        }
+                    },
+                    "CustomizeInstallationDialog": {
+                        "title": "App Manager > Installation Personnalisée > %s",
+                        "QPushButton": {
+                            "cancel": "Annuler",
+                            "install": "Installer",
+                            "back": "Retour",
+                            "next": "Suivant"
+                        },
+                        "QSlidingStackedWidget": {
+                            "QLabel": {
+                                "installLocation": {
+                                    "title": "Emplacement de l'Installation",
+                                    "description": "Sélectionnez un emplacement pour l'installation de %s."
+                                },
+                                "category": {
+                                    "title": "Catégorie",
+                                    "description": "Sélectionnez une catégorie pour %s."
+                                },
+                                "checkForUpdates": {
+                                    "title": "Vérifier les Mises à Jour",
+                                    "description": "Détermine la fréquence de vérification des mises à jour de %s."
+                                },
+                                "autoUpdate": {
+                                    "title": "Mise à Jour Automatique",
+                                    "description": "Détermine si %s est mis à jour automatiquement lorsqu'une mise à jour est disponible."
+                                }
+                            },
+                            "QFileButton": {
+                                "installLocation": {
+                                    "title": "Emplacement de l'Installation",
+                                    "dialog": "App Manager > Installation Personnalisée > %s > Emplacement de l'Installation"
+                                }
+                            },
+                            "QNamedComboBox": {
+                                "category": {
+                                    "title": "Catégorie",
+                                    "values": {
+                                        "none": "Aucune"
+                                    }
+                                },
+                                "checkForUpdates": {
+                                    "title": "Vérifier les Mises à Jour",
+                                    "values": {
+                                        "never": "Jamais",
+                                        "daily": "Quotidienne",
+                                        "weekly": "Hebdomadaire",
+                                        "monthly": "Mensuelle",
+                                        "atLaunch": "Au Lancement"
+                                    }
+                                }
+                            },
+                            "QToggleButton": {
+                                "autoUpdate": "Mise à Jour Automatique"
+                            }
                         }
                     }
                 },

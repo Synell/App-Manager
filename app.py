@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e77fc5'
+    BUILD = '07e79429'
     VERSION = 'Experimental'
 
     SERVER_NAME = 'AppManager'
@@ -72,6 +72,8 @@ class Application(QBaseApplication):
         SettingsListNamedItem.remove_icon = self.save_data.get_icon('pushbutton/delete.png')
         CategoryListNamedItem.remove_icon = self.save_data.get_icon('pushbutton/delete.png')
 
+        CustomizeInstallationDialog.init(self)
+
         self.downloads: dict[str, Installer] = {}
         self.uninstalls: dict[str, UninstallWorker] = {}
         self.updates = {}
@@ -83,6 +85,11 @@ class Application(QBaseApplication):
 
         self.save_data.set_stylesheet(self)
         self.window.setProperty('color', 'cyan')
+
+        CustomizeInstallationDialog.categories = self.save_data.categories.copy()
+        CustomizeInstallationDialog.default_install_folder = self.save_data.apps_folder
+        CustomizeInstallationDialog.default_check_for_updates = self.save_data.check_for_apps_updates
+        CustomizeInstallationDialog.default_auto_update = self.save_data.new_apps_auto_update
 
         self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
 
@@ -147,6 +154,10 @@ class Application(QBaseApplication):
             InstallButton.token = self.save_data.token
             RequestWorker.token = self.save_data.token
             EditAppDialog.categories = self.save_data.categories.copy()
+            CustomizeInstallationDialog.categories = self.save_data.categories.copy()
+            CustomizeInstallationDialog.default_install_folder = self.save_data.apps_folder
+            CustomizeInstallationDialog.default_check_for_updates = self.save_data.check_for_apps_updates
+            CustomizeInstallationDialog.default_auto_update = self.save_data.new_apps_auto_update
 
 
 
@@ -641,19 +652,21 @@ class Application(QBaseApplication):
         if self.install_page_worker.isRunning(): self.install_page_worker.terminate()
 
 
-    def add_to_download_list(self, data: InstallButton.download_data | InstallButton.download_custom_data) -> None:
+    def add_to_download_list(self, data: InstallButton.download_data | CustomizeInstallationDialog.download_custom_data) -> None:
         if len(list(self.downloads.keys())) == 0:
             self.main_page.downloads_widget.no_download.setVisible(False)
             self.main_page.downloads_widget.list.setVisible(True)
 
         if isinstance(data, InstallButton.download_data):
+            name = data.name
             d = data
             install_folder = self.save_data.apps_folder
             check_for_updates = self.save_data.new_apps_check_for_updates
             auto_update = self.save_data.new_apps_auto_update
             category = None
 
-        elif isinstance(data, InstallButton.download_custom_data):
+        elif isinstance(data, CustomizeInstallationDialog.download_custom_data):
+            name = data.download_data.name
             d = data.download_data
             install_folder = data.install_folder
             check_for_updates = data.check_for_updates
@@ -676,13 +689,13 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)
         iw.failed.connect(self.remove_from_download_list)
-        self.downloads[data.name] = iw
+        self.downloads[name] = iw
 
         iw.start()
 
-    def remove_from_download_list(self, name: str, error: str = None) -> None:
+    def remove_from_download_list(self, name: str, path: str = None, error: str = None) -> None:
         self.main_page.downloads_widget.list.scroll_layout.removeWidget(self.downloads[name])
-        self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{self.save_data.apps_folder}/{name}')
+        self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{path}/{name}')
         del self.downloads[name]
 
         self.refresh_apps()

@@ -231,8 +231,8 @@ class TimeWorker(QThread):
 
 
 class Installer(QGridFrame):
-    done = Signal(str)
-    failed = Signal(str, str)
+    done = Signal(str, str)
+    failed = Signal(str, str, str)
 
     def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 0, auto_update: bool = False, category: str = None) -> None:
         super(Installer, self).__init__(parent)
@@ -350,9 +350,9 @@ class Installer(QGridFrame):
         self.iw.exit()
         self.install_progress.setValue(100)
         self.update_main()
-        self.done.emit(f'{self.data.name}')
+        self.done.emit(self.data.name, self.install_folder)
 
     def install_failed(self, message: str, exit_code: int) -> None:
         self.iw.exit()
-        self.failed.emit(f'{self.data.name}', message)
+        self.failed.emit(self.data.name, self.install_folder, message)
 #----------------------------------------------------------------------

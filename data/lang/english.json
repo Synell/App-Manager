@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "English",
-        "version": "07e77fc5",
+        "version": "07e79429",
         "description": "English language for App Manager."
     },
     "data": {
@@ -199,6 +199,62 @@
                     "QMenu": {
                         "QAction": {
                             "customizeInstall": "Customize Installation..."
+                        }
+                    },
+                    "CustomizeInstallationDialog": {
+                        "title": "App Manager > Customize Installation > %s",
+                        "QPushButton": {
+                            "cancel": "Cancel",
+                            "install": "Install",
+                            "back": "Back",
+                            "next": "Next"
+                        },
+                        "QSlidingStackedWidget": {
+                            "QLabel": {
+                                "installLocation": {
+                                    "title": "Install Location",
+                                    "description": "Select a location for %s."
+                                },
+                                "category": {
+                                    "title": "Category",
+                                    "description": "Select a category for %s."
+                                },
+                                "checkForUpdates": {
+                                    "title": "Check for Updates",
+                                    "description": "How often to check for updates for %s."
+                                },
+                                "autoUpdate": {
+                                    "title": "Auto Update",
+                                    "description": "Whether to automatically update %s when an update is available."
+                                }
+                            },
+                            "QFileButton": {
+                                "installLocation": {
+                                    "title": "Install Location",
+                                    "dialog": "App Manager > Customize Installation > %s > Install Location"
+                                }
+                            },
+                            "QNamedComboBox": {
+                                "category": {
+                                    "title": "Category",
+                                    "values": {
+                                        "none": "None"
+                                    }
+                                },
+                                "checkForUpdates": {
+                                    "title": "Check for Updates",
+                                    "values": {
+                                        "never": "Never",
+                                        "daily": "Daily",
+                                        "weekly": "Weekly",
+                                        "monthly": "Monthly",
+                                        "atLaunch": "At Launch"
+                                    }
+                                }
+                            },
+                            "QToggleButton": {
+                                "autoUpdate": "Auto Update"
+                            }
                         }
                     }
                 },

@@ -8,6 +8,8 @@ from PySide6.QtGui import QCursor, QIcon
 from .PlatformType import PlatformType
 
 from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget, QMoreButton
+
+from .dialog import CustomizeInstallationDialog
 #----------------------------------------------------------------------
 
     # Class
@@ -16,12 +18,11 @@ class InstallButton(QGridFrame):
 
     download_data = namedtuple('download_data', ['name', 'tag_name', 'files_data', 'prerelease', 'created_at', 'token'])
     file_data = namedtuple('file_data', ['link', 'compressed'])
-    download_custom_data = namedtuple('download_custom_data', ['download_data', 'install_folder', 'category', 'check_for_updates', 'auto_update'])
     platform = PlatformType.Windows
     token: str = None
 
     download = Signal(download_data)
-    download_custom = Signal(download_custom_data)
+    download_custom = Signal(CustomizeInstallationDialog.download_custom_data)
 
     def __init__(self, main_window: QMainWindow, data: dict = {}, lang: str = 'Install', name: str = '', tag_name: str = '', icon: str = None, disabled: bool = False) -> None:
         super().__init__()
@@ -175,8 +176,20 @@ class InstallButton(QGridFrame):
         self._popup_menu.setCursor(Qt.CursorShape.PointingHandCursor)
 
         act = self._popup_menu.addAction(self.customize_installation_icon, self._lang['QMenu']['QAction']['customizeInstall'])
-        # act.triggered.connect(self.aboutQt)
+        act.triggered.connect(self._customize_installation_clicked)
 
     def _popup_menu_clicked(self) -> None:
         self._popup_menu.popup(QCursor.pos())
+
+    def _customize_installation_clicked(self) -> None:
+        rel = InstallButton.get_release(self._data, self.token)
+        if not rel: return print('Unable to download')
+
+        rel = CustomizeInstallationDialog(self._main_window, self._lang['CustomizeInstallationDialog'], rel).exec()
+        if not rel: return print('Download cancelled')
+
+        self.push_button.setDisabled(True)
+        self.setCursor(Qt.CursorShape.ForbiddenCursor)
+
+        self.download_custom.emit(rel)
 #----------------------------------------------------------------------

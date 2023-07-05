@@ -72,6 +72,10 @@ class QSlidingStackedWidget(QStackedWidget):
     def active(self) -> bool:
         return self._active
 
+    @property
+    def current_index(self) -> int:
+        return self._next_index[0] if (self._next_index is not None) else self._next
+
     def slide_loop_next(self, direction: Direction = Direction.Automatic) -> None:
         result = self.slide_in_next()
         if (not result): self.slide_in_index(0, direction)

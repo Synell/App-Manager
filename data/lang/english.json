@@ -226,6 +226,10 @@
                                 "autoUpdate": {
                                     "title": "Auto Update",
                                     "description": "Whether to automatically update %s when an update is available."
+                                },
+                                "whichData": {
+                                    "title": "Data to Download",
+                                    "description": "Multiple promessing results have been found!\nSelect which data to download for %s."
                                 }
                             },
                             "QFileButton": {

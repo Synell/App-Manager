@@ -226,6 +226,10 @@
                                 "autoUpdate": {
                                     "title": "Mise à Jour Automatique",
                                     "description": "Détermine si %s est mis à jour automatiquement lorsqu'une mise à jour est disponible."
+                                },
+                                "whichData": {
+                                    "title": "Données à Installer",
+                                    "description": "Plusieurs résultats prometteurs ont été trouvés!\nSélectionnez les données à installer pour %s."
                                 }
                             },
                             "QFileButton": {

@@ -70,6 +70,10 @@ class CustomizeInstallationDialog(QDialog):
         self._pages['updates'] = self.settings_menu_updates()
         self._root.addWidget(self._pages['updates'])
 
+        if len(self.download_data.files_data) > 1:
+            self._pages['which_data'] = self._menu_which_data()
+            self._root.addWidget(self._pages['which_data'])
+
         self._frame = QGridFrame()
         self._frame.grid_layout.addWidget(right_buttons, 0, 0)
         self._frame.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
@@ -193,6 +197,32 @@ class CustomizeInstallationDialog(QDialog):
 
 
         return widget
+
+
+
+    def _menu_which_data(self) -> QWidget:
+        lang = self._lang['QSlidingStackedWidget']
+        widget = QScrollableGridWidget()
+        widget.scroll_layout.setSpacing(0)
+        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        root_frame = QGridFrame()
+        root_frame.grid_layout.setSpacing(16)
+        root_frame.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.scroll_layout.addWidget(root_frame, 0, 0)
+        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+
+
+        label = CustomizeInstallationDialog._text_group(lang['QLabel']['whichData']['title'], lang['QLabel']['whichData']['description'].replace('%s', self.download_data.name))
+        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+
+        for fd in self.download_data.files_data:
+            # TODO: add the ability to select which files to download
+            print(fd.link.split('/')[-1], fd.portable)
+
+
+        return widget
+
 
 
     def _text_group(title: str = '', description: str = '') -> QGridWidget:

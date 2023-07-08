@@ -25,7 +25,7 @@ class InstallWorker(QThread):
         install_done = Signal()
         install_failed = Signal(str, int)
 
-    FILE_CONFIG = [
+    _FILE_CONFIG = [
         ('exe', None, None),
         ('bat', 'cmd /c', None),
         ('cmd', 'cmd /c', None),
@@ -39,7 +39,7 @@ class InstallWorker(QThread):
         ('rpm', 'rpm -i', None),
     ]
 
-    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True, category: str = None, is_portable: bool = False) -> None:
+    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True, category: str = None) -> None:
         super(InstallWorker, self).__init__(parent)
         self.signals = InstallWorker._WorkerSignals()
         self.data = data
@@ -49,7 +49,6 @@ class InstallWorker(QThread):
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
         self.category = category
-        self.is_portable = is_portable
         self.timer = TimeWorker(self, timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0
@@ -144,7 +143,7 @@ class InstallWorker(QThread):
             if (not ('checkForUpdates' in d)): d['checkForUpdates'] = self.check_for_updates
             if (not ('autoUpdate' in d)): d['autoUpdate'] = self.auto_update
             if (not ('category' in d)): d['category'] = self.category
-            if (not ('portable' in d)): d['portable'] = self.is_portable
+            if (not ('portable' in d)): d['portable'] = self.which_data.portable
 
             self.state = 4
 
@@ -195,7 +194,7 @@ class InstallWorker(QThread):
 
     @staticmethod
     def get_file(path: str) -> tuple[str | None, str]:
-        for format, prefix, suffix in InstallWorker.FILE_CONFIG:
+        for format, prefix, suffix in InstallWorker._FILE_CONFIG:
             for file in os.listdir(path):
                 if file.endswith(f'.{format}'):
                     l = []

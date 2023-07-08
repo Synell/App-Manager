@@ -17,7 +17,7 @@ class InstallButton(QGridFrame):
     customize_installation_icon = None
 
     download_data = namedtuple('download_data', ['name', 'tag_name', 'files_data', 'prerelease', 'created_at', 'token'])
-    file_data = namedtuple('file_data', ['link', 'compressed'])
+    file_data = namedtuple('file_data', ['link', 'compressed', 'portable'])
     platform = PlatformType.Windows
     token: str = None
 
@@ -123,12 +123,12 @@ class InstallButton(QGridFrame):
 
                 return None
 
-            f = [i for i in files if is_portable(i.link)] # Portable version
+            f = [i for i in files if i.portable] # Portable version
 
             result = get_platform_file(f)
             if result: return [result]
 
-            f = [i for i in files if not is_portable(i.link)] # Normal version
+            f = [i for i in files if not i.portable] # Normal version
 
             result = get_platform_file(f)
             if result: return [result]
@@ -140,19 +140,26 @@ class InstallButton(QGridFrame):
         files = [
             InstallButton.file_data(
                 asset['browser_download_url'],
-                is_compressed_content_type(asset['content_type'])
+                is_compressed_content_type(asset['content_type']),
+                is_portable(asset['browser_download_url'])
             )
             for asset in data['assets']
                 if is_binary_content_type(asset['content_type']) or
                     is_compressed_content_type(asset['content_type'])
         ]
 
+        portable = data.get('portable', None)
+
+        if (portable is not None):
+            files = [i for i in files if i.portable == portable]
+
         if files:
             return InstallButton.download_data(
                 data['name'],
                 data['tag_name'],
                 better_file(files),
-                data['prerelease'], data['created_at'],
+                data['prerelease'],
+                data['created_at'],
                 token
             )
 

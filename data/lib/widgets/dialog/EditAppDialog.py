@@ -155,7 +155,7 @@ class EditAppDialog(QDialog):
         label = self.textGroup(lang['QLabel']['version']['title'], lang['QLabel']['version']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        app_version = QLabel(self.tag_name)
+        app_version = QLabel(self.tag_name if self.tag_name else '???')
         app_version.setProperty('title', True)
         app_version.setWordWrap(True)
         app_version.setFixedHeight(app_version.sizeHint().height())

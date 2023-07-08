@@ -153,7 +153,7 @@ class InstalledButton(QGridFrame):
         widget.grid_layout.setSpacing(4)
         widget.grid_layout.setContentsMargins(0, 0, 0, 0)
 
-        widget.title = QLabel(f'{name} ({tag_name})')
+        widget.title = QLabel(f'{name} ({tag_name if tag_name else "Custom"})')
         widget.title.setProperty('brighttitle', True)
         widget.title.setFixedSize(widget.title.sizeHint())
         widget.grid_layout.addWidget(widget.title, 0, 1)

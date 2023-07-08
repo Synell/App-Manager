@@ -39,7 +39,7 @@ class InstallWorker(QThread):
         ('rpm', 'rpm -i', None),
     ]
 
-    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True, category: str = None) -> None:
+    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True, category: str = None, is_portable: bool = False) -> None:
         super(InstallWorker, self).__init__(parent)
         self.signals = InstallWorker._WorkerSignals()
         self.data = data
@@ -49,6 +49,7 @@ class InstallWorker(QThread):
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
         self.category = category
+        self.is_portable = is_portable
         self.timer = TimeWorker(self, timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0
@@ -143,6 +144,7 @@ class InstallWorker(QThread):
             if (not ('checkForUpdates' in d)): d['checkForUpdates'] = self.check_for_updates
             if (not ('autoUpdate' in d)): d['autoUpdate'] = self.auto_update
             if (not ('category' in d)): d['category'] = self.category
+            if (not ('portable' in d)): d['portable'] = self.is_portable
 
             self.state = 4
 

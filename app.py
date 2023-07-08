@@ -917,7 +917,8 @@ class Application(QBaseApplication):
                 'command': cmd,
                 'created_at': None,
                 'icon': f'{path}/{filename}',
-                'cwd': f'{path}/'
+                'cwd': f'{path}/',
+                'portable': False,
             }, fp = f, ensure_ascii = False)
 
         self.save_data.apps['custom'].append(path)

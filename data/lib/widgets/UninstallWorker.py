@@ -6,14 +6,14 @@ import traceback, shutil, os
 #----------------------------------------------------------------------
 
     # Class
-class __WorkerSignals__(QObject):
+class UninstallWorker(QThread):
+    class _WorkerSignals(QObject):
         done = Signal(str)
         failed = Signal(str, str)
 
-class UninstallWorker(QThread):
     def __init__(self, parent: QObject = None, path: str = None):
         super(UninstallWorker, self).__init__(parent)
-        self.signals = __WorkerSignals__()
+        self.signals = UninstallWorker._WorkerSignals()
         self.path = path
 
     def run(self):

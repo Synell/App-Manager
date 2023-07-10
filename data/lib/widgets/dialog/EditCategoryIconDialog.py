@@ -3,7 +3,7 @@
     # Libraries
 from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton
 from PySide6.QtCore import Qt, QSize
-from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QFlowWidget, QIconWidget
+from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QFlowScrollableWidget, QIconWidget
 import os
 #----------------------------------------------------------------------
 
@@ -120,7 +120,7 @@ class EditCategoryIconDialog(QDialog):
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
 
-        widget.bottom = QFlowWidget()
+        widget.bottom = QFlowScrollableWidget()
         widget.bottom.scroll_layout.setSpacing(16)
         widget.bottom.scroll_layout.setContentsMargins(0, 0, 0, 0)
         root_frame.grid_layout.addWidget(widget.bottom, root_frame.grid_layout.count(), 0)

@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "Français",
-        "version": "07e715d5",
+        "version": "07e79429",
         "description": "Langage français pour l'application App Manager."
     },
     "data": {
@@ -29,6 +29,7 @@
                             "QAction": {
                                 "showInExplorer": "Ouvrir dans l'Explorateur de Fichiers",
                                 "edit": "Éditer",
+                                "killProcess": "Arrêter le Processus",
                                 "removeFromList": "Supprimer de la Liste",
                                 "uninstall": "Désinstaller"
                             },
@@ -189,8 +190,77 @@
                 },
                 "QPushButton": {
                     "back": "Retour",
-                    "install": "Installer",
                     "goToDownloadPage": "Aller à la page de téléchargement"
+                },
+                "InstallButton": {
+                    "QPushButton": {
+                        "install": "Installer"
+                    },
+                    "QMenu": {
+                        "QAction": {
+                            "customizeInstall": "Installation personnalisée..."
+                        }
+                    },
+                    "CustomizeInstallationDialog": {
+                        "title": "App Manager > Installation Personnalisée > %s",
+                        "QPushButton": {
+                            "cancel": "Annuler",
+                            "install": "Installer",
+                            "back": "Retour",
+                            "next": "Suivant"
+                        },
+                        "QSlidingStackedWidget": {
+                            "QLabel": {
+                                "installLocation": {
+                                    "title": "Emplacement de l'Installation",
+                                    "description": "Sélectionnez un emplacement pour l'installation de %s."
+                                },
+                                "category": {
+                                    "title": "Catégorie",
+                                    "description": "Sélectionnez une catégorie pour %s."
+                                },
+                                "checkForUpdates": {
+                                    "title": "Vérifier les Mises à Jour",
+                                    "description": "Détermine la fréquence de vérification des mises à jour de %s."
+                                },
+                                "autoUpdate": {
+                                    "title": "Mise à Jour Automatique",
+                                    "description": "Détermine si %s est mis à jour automatiquement lorsqu'une mise à jour est disponible."
+                                },
+                                "whichData": {
+                                    "title": "Données à Installer",
+                                    "description": "Plusieurs résultats prometteurs ont été trouvés!\nSélectionnez les données à installer pour %s."
+                                }
+                            },
+                            "QFileButton": {
+                                "installLocation": {
+                                    "title": "Emplacement de l'Installation",
+                                    "dialog": "App Manager > Installation Personnalisée > %s > Emplacement de l'Installation"
+                                }
+                            },
+                            "QNamedComboBox": {
+                                "category": {
+                                    "title": "Catégorie",
+                                    "values": {
+                                        "none": "Aucune"
+                                    }
+                                },
+                                "checkForUpdates": {
+                                    "title": "Vérifier les Mises à Jour",
+                                    "values": {
+                                        "never": "Jamais",
+                                        "daily": "Quotidienne",
+                                        "weekly": "Hebdomadaire",
+                                        "monthly": "Mensuelle",
+                                        "atLaunch": "Au Lancement"
+                                    }
+                                }
+                            },
+                            "QToggleButton": {
+                                "autoUpdate": "Mise à Jour Automatique"
+                            }
+                        }
+                    }
                 },
                 "QLineEdit": {
                     "search": "Rechercher"
@@ -339,6 +409,10 @@
                             "title": "Notification de Fermeture pendant un Travail",
                             "description": "Détermine si App Manager affiche une notification lorsqu'il est fermé pendant un travail."
                         },
+                        "exitDuringAppRun": {
+                            "title": "Notification de Fermeture pendant l'Exécution d'une Application",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'il est fermé pendant l'exécution d'une application."
+                        },
                         "updateDone": {
                             "title": "Notification de Mise à Jour Terminée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une mise à jour est terminée."
@@ -370,11 +444,24 @@
                         "requestWorkerFailed": {
                             "title": "Notification de Requête Échouée",
                             "description": "Détermine si App Manager affiche une notification lorsqu'une requête pour chercher des mises à jour ou des applications échoue."
+                        },
+                        "processAlreadyRunning": {
+                            "title": "Notification de Processus Déjà en Cours",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'un processus est déjà en cours."
+                        },
+                        "processEnded": {
+                            "title": "Notification de Processus Arrêté",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'un processus est arrêté."
+                        },
+                        "processKilled": {
+                            "title": "Notification de Processus Tué",
+                            "description": "Détermine si App Manager affiche une notification lorsqu'un processus est tué."
                         }
                     },
                     "QToggleButton": {
                         "goesToTray": "Minimiser dans la Barre des Tâches",
                         "exitDuringWork": "Fermer pendant un Travail",
+                        "exitDuringAppRun": "Fermer pendant l'Exécution d'une Application",
                         "updateDone": "Mise à Jour Terminée",
                         "updateFailed": "Mise à Jour Échouée",
                         "appInstallDone": "Installation d'Application Terminée",
@@ -382,7 +469,15 @@
                         "appUninstallDone": "Désinstallation d'Application Terminée",
                         "appUninstallFailed": "Désinstallation d'Application Échouée",
                         "appExecFailed": "Exécution d'Application Échouée",
-                        "requestWorkerFailed": "Requête Échouée"
+                        "requestWorkerFailed": "Requête Échouée",
+                        "processAlreadyRunning": "Processus Déjà en Cours",
+                        "processEnded": "Processus Arrêté",
+                        "processKilled": "Processus Tué"
+                    },
+                    "QPushButton": {
+                        "checkAll": "Tout Cocher",
+                        "uncheckAll": "Tout Décocher",
+                        "invertAll": "Inverser la Sélection"
                     }
                 },
                 "token": {
@@ -517,6 +612,9 @@
                 "PySide": "A Propos de PySide...",
                 "AppManager": "A Propos de App Manager..."
             },
+            "whatsNew": "Nouveautés...",
+            "changelog": "Journal des Modifications...",
+            "reportBug": "Signaler un Bug...",
             "donate": {
                 "title": "Faire un Don"
             }
@@ -533,6 +631,10 @@
                 "exitDuringWork": {
                     "title": "Fermeture pendant un Travail",
                     "message": "App Manager tourne toujours en arrière-plan parce qu'il est en train de travailler. L'application sera fermée lorsque le travail sera terminé."
+                },
+                "exitDuringAppRun": {
+                    "title": "Fermeture pendant l'Exécution d'une Application",
+                    "message": "App Manager tourne toujours en arrière-plan parce qu'une application est en train de s'exécuter. L'application sera fermée lorsque l'application sera fermée."
                 },
                 "updateDone": {
                     "title": "Mise à Jour Terminée",
@@ -565,6 +667,18 @@
                 "requestWorkerFailed": {
                     "title": "Erreur de Requête",
                     "message": "Une erreur est survenue lors de la requête.\n%s"
+                },
+                "processAlreadyRunning": {
+                    "title": "Processus Déjà en Cours",
+                    "message": "Le processus %s est déjà en cours."
+                },
+                "processEnded": {
+                    "title": "Processus Arrêté",
+                    "message": "Le processus %s a été arrêté."
+                },
+                "processKilled": {
+                    "title": "Processus Tué",
+                    "message": "Le processus %s a été tué."
                 }
             }
         },

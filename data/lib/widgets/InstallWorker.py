@@ -13,21 +13,19 @@ from data.lib.qtUtils import QGridFrame, QGridWidget
 #----------------------------------------------------------------------
 
     # Class
-class __WorkerSignals__(QObject):
-    download_progress_changed = Signal(float)
-    install_progress_changed = Signal(float)
-    download_speed_changed = Signal(float)
-    install_speed_changed = Signal(float)
-    download_eta_changed = Signal(timedelta)
-    install_eta_changed = Signal(timedelta)
-    download_done = Signal()
-    install_done = Signal()
-    install_failed = Signal(str, int)
-
-
-
 class InstallWorker(QThread):
-    FILE_CONFIG = [
+    class _WorkerSignals(QObject):
+        download_progress_changed = Signal(float)
+        install_progress_changed = Signal(float)
+        download_speed_changed = Signal(float)
+        install_speed_changed = Signal(float)
+        download_eta_changed = Signal(timedelta)
+        install_eta_changed = Signal(timedelta)
+        download_done = Signal()
+        install_done = Signal()
+        install_failed = Signal(str, int)
+
+    _FILE_CONFIG = [
         ('exe', None, None),
         ('bat', 'cmd /c', None),
         ('cmd', 'cmd /c', None),
@@ -41,15 +39,16 @@ class InstallWorker(QThread):
         ('rpm', 'rpm -i', None),
     ]
 
-    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True) -> None:
+    def __init__(self, parent: QObject, data: InstallButton.download_data, which_data: InstallButton.file_data, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 4, auto_update: bool = True, category: str = None) -> None:
         super(InstallWorker, self).__init__(parent)
-        self.signals = __WorkerSignals__()
+        self.signals = InstallWorker._WorkerSignals()
         self.data = data
         self.which_data = which_data
         self.dest_path = f'{download_folder}/{data.name}'
         self.out_path = f'{install_folder}/{data.name}'
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
+        self.category = category
         self.timer = TimeWorker(self, timedelta(milliseconds = 500))
         self.timer.time_triggered.connect(self.time_triggered)
         self.speed = 0
@@ -143,7 +142,8 @@ class InstallWorker(QThread):
             if (not ('cwd' in d)): d['cwd'] = self.out_path
             if (not ('checkForUpdates' in d)): d['checkForUpdates'] = self.check_for_updates
             if (not ('autoUpdate' in d)): d['autoUpdate'] = self.auto_update
-            if (not ('category' in d)): d['category'] = None
+            if (not ('category' in d)): d['category'] = self.category
+            if (not ('portable' in d)): d['portable'] = self.which_data.portable
 
             self.state = 4
 
@@ -194,7 +194,7 @@ class InstallWorker(QThread):
 
     @staticmethod
     def get_file(path: str) -> tuple[str | None, str]:
-        for format, prefix, suffix in InstallWorker.FILE_CONFIG:
+        for format, prefix, suffix in InstallWorker._FILE_CONFIG:
             for file in os.listdir(path):
                 if file.endswith(f'.{format}'):
                     l = []
@@ -232,10 +232,10 @@ class TimeWorker(QThread):
 
 
 class Installer(QGridFrame):
-    done = Signal(str)
-    failed = Signal(str, str)
+    done = Signal(str, str)
+    failed = Signal(str, str, str)
 
-    def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 0, auto_update: bool = False) -> None:
+    def __init__(self, parent = None, lang: dict = {}, data: InstallButton.download_data = None, download_folder: str = './data/#tmp#', install_folder: str = './data/apps', check_for_updates: int = 0, auto_update: bool = False, category: str = None) -> None:
         super(Installer, self).__init__(parent)
 
         self.lang = lang
@@ -244,6 +244,7 @@ class Installer(QGridFrame):
         self.install_folder = install_folder
         self.check_for_updates = check_for_updates
         self.auto_update = auto_update
+        self.category = category
 
 
         label = QLabel(self.data.name)
@@ -303,7 +304,8 @@ class Installer(QGridFrame):
             self.download_folder,
             self.install_folder,
             self.check_for_updates,
-            self.auto_update
+            self.auto_update,
+            self.category
         )
         self.iw.signals.download_progress_changed.connect(self.download_progress_changed)
         self.iw.signals.install_progress_changed.connect(self.install_progress_changed)
@@ -349,9 +351,9 @@ class Installer(QGridFrame):
         self.iw.exit()
         self.install_progress.setValue(100)
         self.update_main()
-        self.done.emit(f'{self.data.name}')
+        self.done.emit(self.data.name, self.install_folder)
 
     def install_failed(self, message: str, exit_code: int) -> None:
         self.iw.exit()
-        self.failed.emit(f'{self.data.name}', message)
+        self.failed.emit(self.data.name, self.install_folder, message)
 #----------------------------------------------------------------------

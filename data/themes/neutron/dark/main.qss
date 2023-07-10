@@ -1,0 +1,8 @@
+
+QWidget[running=true] {
+    background-color: #06451D;
+}
+
+QWidget[running=true]:hover {
+    background-color: #0A4920;
+}

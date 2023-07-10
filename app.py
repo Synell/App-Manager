@@ -14,7 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e76a29'
+    BUILD = '07e79429'
     VERSION = 'Experimental'
 
     SERVER_NAME = 'AppManager'
@@ -44,12 +44,15 @@ class Application(QBaseApplication):
 
         self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
         self.must_exit_after_download = False
+        self.must_exit_after_app_closed = False
 
         InstallButton.platform = PlatformType.Windows if self.platform == QPlatform.Windows else PlatformType.Linux if self.platform == QPlatform.Linux else PlatformType.MacOS
         InstallButton.token = self.save_data.token
+        InstallButton.customize_installation_icon = self.save_data.get_icon('popup/customizeInstallation.png')
         RequestWorker.token = self.save_data.token
 
         InstalledButton.settings_icon = self.save_data.get_icon('pushbutton/settings.png')
+        InstalledButton.kill_process_icon = self.save_data.get_icon('popup/killProcess.png')
         InstalledButton.remove_from_list_icon = self.save_data.get_icon('popup/removeFromList.png')
         InstalledButton.edit_icon = self.save_data.get_icon('popup/edit.png')
         InstalledButton.show_in_explorer_icon = self.save_data.get_icon('popup/showInExplorer.png')
@@ -69,6 +72,8 @@ class Application(QBaseApplication):
         SettingsListNamedItem.remove_icon = self.save_data.get_icon('pushbutton/delete.png')
         CategoryListNamedItem.remove_icon = self.save_data.get_icon('pushbutton/delete.png')
 
+        CustomizeInstallationDialog.init(self)
+
         self.downloads: dict[str, Installer] = {}
         self.uninstalls: dict[str, UninstallWorker] = {}
         self.updates = {}
@@ -80,6 +85,11 @@ class Application(QBaseApplication):
 
         self.save_data.set_stylesheet(self)
         self.window.setProperty('color', 'cyan')
+
+        CustomizeInstallationDialog.categories = self.save_data.categories.copy()
+        CustomizeInstallationDialog.default_install_folder = self.save_data.apps_folder
+        CustomizeInstallationDialog.default_check_for_updates = self.save_data.check_for_apps_updates
+        CustomizeInstallationDialog.default_auto_update = self.save_data.new_apps_auto_update
 
         self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
 
@@ -144,6 +154,10 @@ class Application(QBaseApplication):
             InstallButton.token = self.save_data.token
             RequestWorker.token = self.save_data.token
             EditAppDialog.categories = self.save_data.categories.copy()
+            CustomizeInstallationDialog.categories = self.save_data.categories.copy()
+            CustomizeInstallationDialog.default_install_folder = self.save_data.apps_folder
+            CustomizeInstallationDialog.default_check_for_updates = self.save_data.check_for_apps_updates
+            CustomizeInstallationDialog.default_auto_update = self.save_data.new_apps_auto_update
 
 
 
@@ -579,8 +593,9 @@ class Application(QBaseApplication):
         installed_releases = self.get_installed_releases()
 
         button = InstallButton(
+            self.window,
             rel,
-            self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['install'],
+            self.save_data.language_data['QMainWindow']['installAppPage']['InstallButton'],
             rel['name'],
             rel['tag_name'],
             get_icon_path(app),
@@ -591,6 +606,7 @@ class Application(QBaseApplication):
         )
 
         button.download.connect(self.add_to_download_list)
+        button.download_custom.connect(self.add_to_download_list)
 
         if rel['prerelease']:
             self.install_app_page.tab_widget.pre.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.pre.inside.scroll_layout.count(), 0)
@@ -636,23 +652,50 @@ class Application(QBaseApplication):
         if self.install_page_worker.isRunning(): self.install_page_worker.terminate()
 
 
-    def add_to_download_list(self, data: InstallButton.download_data) -> None:
+    def add_to_download_list(self, data: InstallButton.download_data | CustomizeInstallationDialog.download_custom_data) -> None:
         if len(list(self.downloads.keys())) == 0:
             self.main_page.downloads_widget.no_download.setVisible(False)
             self.main_page.downloads_widget.list.setVisible(True)
 
-        iw = Installer(None, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'], data, self.save_data.downloads_folder, self.save_data.apps_folder, self.save_data.new_apps_check_for_updates, self.save_data.new_apps_auto_update)
+        if isinstance(data, InstallButton.download_data):
+            name = data.name
+            d = data
+            install_folder = self.save_data.apps_folder
+            check_for_updates = self.save_data.new_apps_check_for_updates
+            auto_update = self.save_data.new_apps_auto_update
+            category = None
+
+        elif isinstance(data, CustomizeInstallationDialog.download_custom_data):
+            name = data.download_data.name
+            d = data.download_data
+            install_folder = data.install_folder
+            check_for_updates = data.check_for_updates
+            auto_update = data.auto_update
+            category = data.category
+
+        else: return
+
+        iw = Installer(
+            None,
+            self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'],
+            d,
+            self.save_data.downloads_folder,
+            install_folder,
+            check_for_updates,
+            auto_update,
+            category
+        )
         self.main_page.downloads_widget.list.scroll_layout.addWidget(iw, len(list(self.downloads.keys())), 0)
         self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)
         iw.failed.connect(self.remove_from_download_list)
-        self.downloads[data.name] = iw
+        self.downloads[name] = iw
 
         iw.start()
 
-    def remove_from_download_list(self, name: str, error: str = None) -> None:
+    def remove_from_download_list(self, name: str, path: str = None, error: str = None) -> None:
         self.main_page.downloads_widget.list.scroll_layout.removeWidget(self.downloads[name])
-        self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{self.save_data.apps_folder}/{name}')
+        self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{path}/{name}')
         del self.downloads[name]
 
         self.refresh_apps()
@@ -697,6 +740,59 @@ class Application(QBaseApplication):
             if self.must_exit_after_download:
                 if self.window.isVisible(): self.must_exit_after_download = False
                 else: self.exit()
+
+    def process_already_running(self, name: str) -> None:
+        if self.save_data.process_already_running_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['message'].replace('%s', name),
+            QSystemTrayIcon.MessageIcon.Critical,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['message'].replace('%s', name),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
+
+    def process_ended(self, name: str) -> None:
+        if self.save_data.process_ended_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['message'].replace('%s', name),
+            QSystemTrayIcon.MessageIcon.Information,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['message'].replace('%s', name),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
+
+        if self.must_exit_after_app_closed:
+            if self.window.isVisible(): self.must_exit_after_app_closed = False
+            else: self.exit()
+
+    def process_killed(self, name: str) -> None:
+        if self.save_data.process_killed_notif: self.sys_tray.showMessage(
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['title'],
+            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['message'].replace('%s', name),
+            QSystemTrayIcon.MessageIcon.Critical,
+            self.MESSAGE_DURATION
+        )
+        self.show_alert(
+            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['message'].replace('%s', name),
+            raise_duration = self.ALERT_RAISE_DURATION,
+            pause_duration = self.ALERT_PAUSE_DURATION,
+            fade_duration = self.ALERT_FADE_DURATION,
+            color = 'main'
+        )
+
+        if self.must_exit_after_app_closed:
+            if self.window.isVisible(): self.must_exit_after_app_closed = False
+            else: self.exit()
 
     def remove_from_install_list(self, path: str) -> None:
         for i in self.APP_RELEASES[1:]:
@@ -821,7 +917,8 @@ class Application(QBaseApplication):
                 'command': cmd,
                 'created_at': None,
                 'icon': f'{path}/{filename}',
-                'cwd': f'{path}/'
+                'cwd': f'{path}/',
+                'portable': False,
             }, fp = f, ensure_ascii = False)
 
         self.save_data.apps['custom'].append(path)
@@ -958,6 +1055,9 @@ class Application(QBaseApplication):
                     compact_mode
                 )
 
+                b.process_already_running.connect(self.process_already_running)
+                b.process_ended.connect(self.process_ended)
+                b.process_killed.connect(self.process_killed)
                 b.remove_from_list.connect(self.remove_from_install_list)
                 b.uninstall.connect(self.add_to_uninstall_list)
                 b.update_app.connect(self.add_to_update_list)
@@ -973,8 +1073,8 @@ class Application(QBaseApplication):
             else:
                 b = self.app_buttons[app]
 
-            if b.compact_mode != compact_mode: b.set_compact_mode(compact_mode)
-            if b.has_update != has_update: b.set_update(has_update, self.updates[name] if has_update else None)
+            if b.compact_mode != compact_mode: b._set_compact_mode(compact_mode)
+            if b.has_update != has_update: b._set_update(has_update, self.updates[name] if has_update else None)
 
             w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index('all'))
             w.scroll_layout.addWidget(b.get_button('all'), w.scroll_layout.count(), 0)
@@ -1019,6 +1119,11 @@ class Application(QBaseApplication):
 
         self.about_menu.addSeparator()
 
+        act = self.about_menu.addAction(self.save_data.get_icon('menubar/bug.png', mode = QSaveData.IconMode.Local), self.save_data.language_data['QMenu']['reportBug'])
+        act.triggered.connect(lambda: QDesktopServices.openUrl(QUrl('https://github.com/Synell/App-Manager/issues')))
+
+        self.about_menu.addSeparator()
+
         def create_donate_menu():
             donate_menu = QMenu(self.save_data.language_data['QMenu']['donate']['title'], self.window)
             donate_menu.setIcon(self.save_data.get_icon('menubar/donate.png'))
@@ -1026,7 +1131,11 @@ class Application(QBaseApplication):
             buymeacoffee_action = QAction(self.save_data.get_icon('menubar/buyMeACoffee.png'), 'Buy Me a Coffee', self.window)
             buymeacoffee_action.triggered.connect(lambda: QDesktopServices.openUrl(QUrl('https://www.buymeacoffee.com/Synell')))
 
+            patreon_action = QAction(self.save_data.get_icon('menubar/patreon.png'), 'Patreon', self.window)
+            patreon_action.triggered.connect(lambda: QDesktopServices.openUrl(QUrl('https://www.patreon.com/synel')))
+
             donate_menu.addAction(buymeacoffee_action)
+            donate_menu.addAction(patreon_action)
 
             return donate_menu
 
@@ -1109,6 +1218,16 @@ class Application(QBaseApplication):
                 self.MESSAGE_DURATION
             )
             self.must_exit_after_download = True
+            return
+
+        if any([b.is_process_running() for b in self.app_buttons.values()]):
+            if self.save_data.exit_during_work_notif: self.sys_tray.showMessage(
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringAppRun']['title'],
+                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringAppRun']['message'],
+                QSystemTrayIcon.MessageIcon.Information,
+                self.MESSAGE_DURATION
+            )
+            self.must_exit_after_app_closed = True
             return
 
         if self.update_request:

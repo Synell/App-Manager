@@ -47,6 +47,7 @@ class SaveData(QSaveData):
 
         self.goes_to_tray_notif = True
         self.exit_during_work_notif = True
+        self.exit_during_app_run_notif = True
         self.update_done_notif = True # TODO: Implement this functionallity
         self.update_failed_notif = True # TODO: Implement this functionallity
         self.app_install_done_notif = True
@@ -55,6 +56,9 @@ class SaveData(QSaveData):
         self.app_uninstall_failed_notif = True
         self.app_exec_failed_notif = True
         self.request_worker_failed_notif = True
+        self.process_already_running_notif = True
+        self.process_ended_notif = True
+        self.process_killed_notif = True
 
         super().__init__(save_path)
 
@@ -89,7 +93,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['installsLocation']['title'], lang['QLabel']['installsLocation']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['installsLocation']['title'], lang['QLabel']['installsLocation']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.installs_folder_button = QFileButton(
@@ -110,7 +114,7 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['downloadsLocation']['title'], lang['QLabel']['downloadsLocation']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['downloadsLocation']['title'], lang['QLabel']['downloadsLocation']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.downloads_folder_button = QFileButton(
@@ -143,7 +147,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForUpdates']['title'])
@@ -165,7 +169,7 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.check_for_apps_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForAppsUpdates']['title'])
@@ -187,7 +191,7 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['newAppsCheckForUpdates']['title'], lang['QLabel']['newAppsCheckForUpdates']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['newAppsCheckForUpdates']['title'], lang['QLabel']['newAppsCheckForUpdates']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.new_apps_check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['newAppsCheckForUpdates']['title'])
@@ -209,7 +213,7 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['newAppsAutoUpdate']['title'], lang['QLabel']['newAppsAutoUpdate']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['newAppsAutoUpdate']['title'], lang['QLabel']['newAppsAutoUpdate']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.new_apps_auto_update_checkbox = QNamedToggleButton()
@@ -252,7 +256,7 @@ class SaveData(QSaveData):
         # root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['minimizeToTray']['title'], lang['QLabel']['minimizeToTray']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['minimizeToTray']['title'], lang['QLabel']['minimizeToTray']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.minimize_to_tray_checkbox = QNamedToggleButton()
@@ -268,7 +272,7 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['compactPaths']['title'], lang['QLabel']['compactPaths']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['compactPaths']['title'], lang['QLabel']['compactPaths']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.compact_paths_combobox = QNamedComboBox(None, lang['QNamedComboBox']['compactPaths']['title'])
@@ -299,159 +303,82 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['goesToTray']['title'], lang['QLabel']['goesToTray']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        all_checkboxes: list[QNamedToggleButton] = []
 
-        widget.goes_to_tray_notif_checkbox = QNamedToggleButton()
-        widget.goes_to_tray_notif_checkbox.setText(lang['QToggleButton']['goesToTray'])
-        widget.goes_to_tray_notif_checkbox.setChecked(self.goes_to_tray_notif)
-        root_frame.grid_layout.addWidget(widget.goes_to_tray_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.goes_to_tray_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+        def check_all(checked: bool):
+            for checkbox in all_checkboxes:
+                checkbox.setChecked(checked)
 
+        def invert_all():
+            for checkbox in all_checkboxes:
+                checkbox.setChecked(not checkbox.isChecked())
 
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        buttonframe = QGridFrame()
+        buttonframe.grid_layout.setSpacing(16)
+        buttonframe.grid_layout.setContentsMargins(0, 0, 0, 0)
+        root_frame.grid_layout.addWidget(buttonframe, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(buttonframe, Qt.AlignmentFlag.AlignTop)
 
+        button = QPushButton(lang['QPushButton']['checkAll'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: check_all(True))
+        buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['exitDuringWork']['title'], lang['QLabel']['exitDuringWork']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        button = QPushButton(lang['QPushButton']['uncheckAll'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: check_all(False))
+        buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
 
-        widget.exit_during_work_notif_checkbox = QNamedToggleButton()
-        widget.exit_during_work_notif_checkbox.setText(lang['QToggleButton']['exitDuringWork'])
-        widget.exit_during_work_notif_checkbox.setChecked(self.exit_during_work_notif)
-        root_frame.grid_layout.addWidget(widget.exit_during_work_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.exit_during_work_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
-
-
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
-
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['updateDone']['title'], lang['QLabel']['updateDone']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.update_done_notif_checkbox = QNamedToggleButton()
-        widget.update_done_notif_checkbox.setText(lang['QToggleButton']['updateDone'])
-        widget.update_done_notif_checkbox.setChecked(self.update_done_notif)
-        root_frame.grid_layout.addWidget(widget.update_done_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.update_done_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+        button = QPushButton(lang['QPushButton']['invertAll'])
+        button.setCursor(Qt.CursorShape.PointingHandCursor)
+        button.setProperty('color', 'main')
+        button.clicked.connect(lambda: invert_all())
+        buttonframe.grid_layout.addWidget(button, 1, 0, 1, 2)
 
 
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        subframe = QGridFrame()
+        subframe.grid_layout.setSpacing(16)
+        subframe.grid_layout.setContentsMargins(0, 0, 0, 0)
+        root_frame.grid_layout.addWidget(subframe, root_frame.grid_layout.count(), 0)
+        root_frame.grid_layout.setAlignment(subframe, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['updateFailed']['title'], lang['QLabel']['updateFailed']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        def generate_notif(key: str, checked: bool) -> QNamedToggleButton:
+            frame = QFrame()
+            frame.setProperty('border-top', True)
+            frame.setFixedHeight(1)
+            subframe.grid_layout.addWidget(frame, subframe.grid_layout.count(), 0)
 
-        widget.update_failed_notif_checkbox = QNamedToggleButton()
-        widget.update_failed_notif_checkbox.setText(lang['QToggleButton']['updateFailed'])
-        widget.update_failed_notif_checkbox.setChecked(self.update_failed_notif)
-        root_frame.grid_layout.addWidget(widget.update_failed_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.update_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+            label = QSettingsDialog._text_group(lang['QLabel'][key]['title'], lang['QLabel'][key]['description'])
+            subframe.grid_layout.addWidget(label, subframe.grid_layout.count(), 0)
 
+            w = QNamedToggleButton()
+            w.setText(lang['QToggleButton'][key])
+            w.setChecked(checked)
+            subframe.grid_layout.addWidget(w, subframe.grid_layout.count(), 0)
+            subframe.grid_layout.setAlignment(w, Qt.AlignmentFlag.AlignLeft)
 
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+            all_checkboxes.append(w)
 
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['appInstallDone']['title'], lang['QLabel']['appInstallDone']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.app_install_done_notif_checkbox = QNamedToggleButton()
-        widget.app_install_done_notif_checkbox.setText(lang['QToggleButton']['appInstallDone'])
-        widget.app_install_done_notif_checkbox.setChecked(self.app_install_done_notif)
-        root_frame.grid_layout.addWidget(widget.app_install_done_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.app_install_done_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
+            return w
 
 
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
-
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['appInstallFailed']['title'], lang['QLabel']['appInstallFailed']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.app_install_failed_notif_checkbox = QNamedToggleButton()
-        widget.app_install_failed_notif_checkbox.setText(lang['QToggleButton']['appInstallFailed'])
-        widget.app_install_failed_notif_checkbox.setChecked(self.app_install_failed_notif)
-        root_frame.grid_layout.addWidget(widget.app_install_failed_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.app_install_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
-
-
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
-
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['appUninstallDone']['title'], lang['QLabel']['appUninstallDone']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.app_uninstall_done_notif_checkbox = QNamedToggleButton()
-        widget.app_uninstall_done_notif_checkbox.setText(lang['QToggleButton']['appUninstallDone'])
-        widget.app_uninstall_done_notif_checkbox.setChecked(self.app_uninstall_done_notif)
-        root_frame.grid_layout.addWidget(widget.app_uninstall_done_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.app_uninstall_done_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
-
-
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
-
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['appUninstallFailed']['title'], lang['QLabel']['appUninstallFailed']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.app_uninstall_failed_notif_checkbox = QNamedToggleButton()
-        widget.app_uninstall_failed_notif_checkbox.setText(lang['QToggleButton']['appUninstallFailed'])
-        widget.app_uninstall_failed_notif_checkbox.setChecked(self.app_uninstall_failed_notif)
-        root_frame.grid_layout.addWidget(widget.app_uninstall_failed_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.app_uninstall_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
-
-
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
-
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['appExecFailed']['title'], lang['QLabel']['appExecFailed']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.app_exec_failed_notif_checkbox = QNamedToggleButton()
-        widget.app_exec_failed_notif_checkbox.setText(lang['QToggleButton']['appExecFailed'])
-        widget.app_exec_failed_notif_checkbox.setChecked(self.app_exec_failed_notif)
-        root_frame.grid_layout.addWidget(widget.app_exec_failed_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.app_exec_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
-
-
-        frame = QFrame()
-        frame.setProperty('border-top', True)
-        frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
-
-
-        label = QSettingsDialog.textGroup(lang['QLabel']['requestWorkerFailed']['title'], lang['QLabel']['requestWorkerFailed']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
-
-        widget.request_worker_failed_notif_checkbox = QNamedToggleButton()
-        widget.request_worker_failed_notif_checkbox.setText(lang['QToggleButton']['requestWorkerFailed'])
-        widget.request_worker_failed_notif_checkbox.setChecked(self.request_worker_failed_notif)
-        root_frame.grid_layout.addWidget(widget.request_worker_failed_notif_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.request_worker_failed_notif_checkbox, Qt.AlignmentFlag.AlignLeft)
-
+        widget.goes_to_tray_notif_checkbox = generate_notif('goesToTray', self.goes_to_tray_notif)
+        widget.exit_during_work_notif_checkbox = generate_notif('exitDuringWork', self.exit_during_work_notif)
+        widget.exit_during_app_run_notif_checkbox = generate_notif('exitDuringAppRun', self.exit_during_app_run_notif)
+        widget.update_done_notif_checkbox = generate_notif('updateDone', self.update_done_notif)
+        widget.update_failed_notif_checkbox = generate_notif('updateFailed', self.update_failed_notif)
+        widget.app_install_done_notif_checkbox = generate_notif('appInstallDone', self.app_install_done_notif)
+        widget.app_install_failed_notif_checkbox = generate_notif('appInstallFailed', self.app_install_failed_notif)
+        widget.app_uninstall_done_notif_checkbox = generate_notif('appUninstallDone', self.app_uninstall_done_notif)
+        widget.app_uninstall_failed_notif_checkbox = generate_notif('appUninstallFailed', self.app_uninstall_failed_notif)
+        widget.app_exec_failed_notif_checkbox = generate_notif('appExecFailed', self.app_exec_failed_notif)
+        widget.request_worker_failed_notif_checkbox = generate_notif('requestWorkerFailed', self.request_worker_failed_notif)
+        widget.process_already_running_notif_checkbox = generate_notif('processAlreadyRunning', self.process_already_running_notif)
+        widget.process_ended_notif_checkbox = generate_notif('processEnded', self.process_ended_notif)
+        widget.process_killed_notif_checkbox = generate_notif('processKilled', self.process_killed_notif)
 
         return widget
 
@@ -470,7 +397,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['github']['title'], lang['QLabel']['github']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['github']['title'], lang['QLabel']['github']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{lang["QLabel"]["github"]["createToken"]}</a>')
@@ -506,7 +433,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['followedApps']['title'], lang['QLabel']['followedApps']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['followedApps']['title'], lang['QLabel']['followedApps']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.followed_apps_list = QDragList()
@@ -541,7 +468,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog.textGroup(lang['QLabel']['categories']['title'], lang['QLabel']['categories']['description'])
+        label = QSettingsDialog._text_group(lang['QLabel']['categories']['title'], lang['QLabel']['categories']['description'])
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.categories_list = QDragList()
@@ -583,6 +510,7 @@ class SaveData(QSaveData):
 
         self.goes_to_tray_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].goes_to_tray_notif_checkbox.isChecked()
         self.exit_during_work_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].exit_during_work_notif_checkbox.isChecked()
+        self.exit_during_app_run_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].exit_during_app_run_notif_checkbox.isChecked()
         self.update_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_done_notif_checkbox.isChecked()
         self.update_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_failed_notif_checkbox.isChecked()
         self.app_install_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_done_notif_checkbox.isChecked()
@@ -591,6 +519,9 @@ class SaveData(QSaveData):
         self.app_uninstall_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_failed_notif_checkbox.isChecked()
         self.app_exec_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_exec_failed_notif_checkbox.isChecked()
         self.request_worker_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].request_worker_failed_notif_checkbox.isChecked()
+        self.process_already_running_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_already_running_notif_checkbox.isChecked()
+        self.process_ended_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_ended_notif_checkbox.isChecked()
+        self.process_killed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_killed_notif_checkbox.isChecked()
 
 
 
@@ -633,6 +564,7 @@ class SaveData(QSaveData):
 
             'goesToTrayNotif': self.goes_to_tray_notif,
             'exitDuringWorkNotif': self.exit_during_work_notif,
+            'exitDuringAppRunNotif': self.exit_during_app_run_notif,
             'updateDoneNotif': self.update_done_notif,
             'updateFailedNotif': self.update_failed_notif,
             'appInstallDoneNotif': self.app_install_done_notif,
@@ -640,7 +572,10 @@ class SaveData(QSaveData):
             'appUninstallDoneNotif': self.app_uninstall_done_notif,
             'appUninstallFailedNotif': self.app_uninstall_failed_notif,
             'appExecFailedNotif': self.app_exec_failed_notif,
-            'requestWorkerFailedNotif': self.request_worker_failed_notif
+            'requestWorkerFailedNotif': self.request_worker_failed_notif,
+            'processAlreadyRunningNotif': self.process_already_running_notif,
+            'processEndedNotif': self.process_ended_notif,
+            'processKilledNotif': self.process_killed_notif
         }
 
     def load_extra_data(self, extra_data: dict = ..., reload: list = []) -> bool:
@@ -693,6 +628,7 @@ class SaveData(QSaveData):
 
         with exc: self.goes_to_tray_notif = extra_data['goesToTrayNotif']
         with exc: self.exit_during_work_notif = extra_data['exitDuringWorkNotif']
+        with exc: self.exit_during_app_run_notif = extra_data['exitDuringAppRunNotif']
         with exc: self.update_done_notif = extra_data['updateDoneNotif']
         with exc: self.update_failed_notif = extra_data['updateFailedNotif']
         with exc: self.app_install_done_notif = extra_data['appInstallDoneNotif']
@@ -701,6 +637,9 @@ class SaveData(QSaveData):
         with exc: self.app_uninstall_failed_notif = extra_data['appUninstallFailedNotif']
         with exc: self.app_exec_failed_notif = extra_data['appExecFailedNotif']
         with exc: self.request_worker_failed_notif = extra_data['requestWorkerFailedNotif']
+        with exc: self.process_already_running_notif = extra_data['processAlreadyRunningNotif']
+        with exc: self.process_ended_notif = extra_data['processEndedNotif']
+        with exc: self.process_killed_notif = extra_data['processKilledNotif']
 
         return res
 

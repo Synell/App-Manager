@@ -2,43 +2,49 @@
 
     # Libraries
 from collections import namedtuple
-from PySide6.QtWidgets import QPushButton, QLabel
+from PySide6.QtWidgets import QLabel, QMenu, QMainWindow
 from PySide6.QtCore import Qt, Signal, QSize
+from PySide6.QtGui import QCursor, QIcon
 from .PlatformType import PlatformType
 
-from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
+from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget, QMoreButton
+
+from .dialog import CustomizeInstallationDialog
 #----------------------------------------------------------------------
 
     # Class
 class InstallButton(QGridFrame):
-    lang = {}
+    customize_installation_icon = None
+
     download_data = namedtuple('download_data', ['name', 'tag_name', 'files_data', 'prerelease', 'created_at', 'token'])
-    file_data = namedtuple('file_data', ['link', 'compressed'])
+    file_data = namedtuple('file_data', ['link', 'compressed', 'portable'])
     platform = PlatformType.Windows
     token: str = None
 
     download = Signal(download_data)
+    download_custom = Signal(CustomizeInstallationDialog.download_custom_data)
 
-    def __init__(self, data: dict = {}, button_text: str = 'Install', name: str = '', tag_name: str = '', icon: str = None, disabled: bool = False) -> None:
+    def __init__(self, main_window: QMainWindow, data: dict = {}, lang: str = 'Install', name: str = '', tag_name: str = '', icon: str = None, disabled: bool = False) -> None:
         super().__init__()
 
-        self.data = data
+        self._main_window = main_window
+        self._data = data
+        self._lang = lang
         self.name = name
-        self.tag_name = tag_name
+        self._tag_name = tag_name
 
         self.setFixedHeight(60)
         self.setProperty('side', 'all')
+
+        self._create_popup_menu()
 
         widget = self.widget_couple(icon, self.generate_text(f'{name} ({tag_name})'))
         self.grid_layout.addWidget(widget, 0, 0)
         self.grid_layout.setAlignment(widget, Qt.AlignmentFlag.AlignLeft)
 
-        self.push_button = QPushButton(button_text)
-        self.push_button.setCursor(Qt.CursorShape.PointingHandCursor)
-        # self.push_button.setDisabled(disabled)
-        # if disabled: self.setCursor(Qt.CursorShape.ForbiddenCursor)
-        self.push_button.setProperty('color', 'main')
+        self.push_button = QMoreButton(lang['QPushButton']['install'],)
         self.push_button.clicked.connect(self.install_click)
+        self.push_button.more_clicked.connect(self._popup_menu_clicked)
         self.grid_layout.addWidget(self.push_button, 0, 1)
         self.grid_layout.setAlignment(self.push_button, Qt.AlignmentFlag.AlignRight)
         self.set_disabled(disabled)
@@ -53,7 +59,7 @@ class InstallButton(QGridFrame):
         label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 0, 1)
 
-        label = QLabel(f'by {self.data["author"]["login"]}')
+        label = QLabel(f'by {self._data["author"]["login"]}')
         label.setProperty('smallbrightnormal', True)
         label.setFixedSize(label.sizeHint())
         widget.grid_layout.addWidget(label, 1, 1)
@@ -78,11 +84,6 @@ class InstallButton(QGridFrame):
 
     @staticmethod
     def get_release(data: dict, token: str = None) -> download_data | None:
-        # def in_platform(s: str) -> bool:
-        #     for i in InstallButton.platform.value:
-        #         if i in s: return True
-        #     return False
-
         def is_compressed_content_type(s: str) -> bool:
             types = []
             match InstallButton.platform:
@@ -109,59 +110,62 @@ class InstallButton(QGridFrame):
             return False
         
         def is_binary_content_type(s: str) -> bool:
-            return s == 'binary/octet-stream'
+            return s in ['binary/octet-stream', 'application/octet-stream', 'application/x-msdownload']
+        
+        def is_portable(s: str) -> bool:
+            return 'portable' in s.lower()
 
         def better_file(files: list[InstallButton.file_data]) -> list[InstallButton.file_data]:
-            f = [i.link for i in files]
-            for i in InstallButton.platform.value:
-                for j in f:
-                    if i.lower() in j.lower(): return [files[f.index(j)]]
+            def get_platform_file(lst: list[InstallButton.file_data]) -> InstallButton.file_data | None:
+                for i in InstallButton.platform.value:
+                    for j in lst:
+                        if i.lower() in j.link.lower(): return lst[lst.index(j)]
 
+                return None
+
+            f = [i for i in files if i.portable] # Portable version
+
+            result = get_platform_file(f)
+            if result: return [result]
+
+            f = [i for i in files if not i.portable] # Normal version
+
+            result = get_platform_file(f)
+            if result: return [result]
+
+            print('Unable to find a suitable file')
             return files
 
-
-        # files = [
-        #     InstallButton.file_data(
-        #         asset['browser_download_url'],
-        #         is_compressed_content_type(asset['content_type'])
-        #     )
-        #     for asset in data['assets']
-        #         if in_platform(asset['name'].lower()) and
-        #         (
-        #             is_binary_content_type(asset['content_type']) or
-        #             is_compressed_content_type(asset['content_type'])
-        #         )
-        # ]
-        # if files:
-        #     return InstallButton.download_data(
-        #         data['name'],
-        #         data['tag_name'],
-        #         better_file(files),
-        #         data['prerelease'], data['created_at'],
-        #         token
-        #     )
 
         files = [
             InstallButton.file_data(
                 asset['browser_download_url'],
-                is_compressed_content_type(asset['content_type'])
+                is_compressed_content_type(asset['content_type']),
+                is_portable(asset['browser_download_url'])
             )
             for asset in data['assets']
                 if is_binary_content_type(asset['content_type']) or
                     is_compressed_content_type(asset['content_type'])
         ]
+
+        portable = data.get('portable', None)
+
+        if (portable is not None):
+            files = [i for i in files if i.portable == portable]
+
         if files:
             return InstallButton.download_data(
                 data['name'],
                 data['tag_name'],
                 better_file(files),
-                data['prerelease'], data['created_at'],
+                data['prerelease'],
+                data['created_at'],
                 token
             )
 
 
     def install_click(self) -> None:
-        rel = InstallButton.get_release(self.data, self.token)
+        rel = InstallButton.get_release(self._data, self.token)
 
         if rel:
             self.push_button.setDisabled(True)
@@ -171,10 +175,28 @@ class InstallButton(QGridFrame):
 
     def set_disabled(self, b: bool) -> None:
         self.push_button.setDisabled(b)
-        if b:
-            self.setCursor(Qt.CursorShape.ForbiddenCursor)
-            self.push_button.setCursor(Qt.CursorShape.ForbiddenCursor)
-        else:
-            self.setCursor(Qt.CursorShape.ArrowCursor)
-            self.push_button.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.ForbiddenCursor if b else Qt.CursorShape.ArrowCursor)
+
+
+    def _create_popup_menu(self) -> None:
+        self._popup_menu = QMenu(self._main_window)
+        self._popup_menu.setCursor(Qt.CursorShape.PointingHandCursor)
+
+        act = self._popup_menu.addAction(self.customize_installation_icon, self._lang['QMenu']['QAction']['customizeInstall'])
+        act.triggered.connect(self._customize_installation_clicked)
+
+    def _popup_menu_clicked(self) -> None:
+        self._popup_menu.popup(QCursor.pos())
+
+    def _customize_installation_clicked(self) -> None:
+        rel = InstallButton.get_release(self._data, self.token)
+        if not rel: return print('Unable to download')
+
+        rel = CustomizeInstallationDialog(self._main_window, self._lang['CustomizeInstallationDialog'], rel).exec()
+        if not rel: return print('Download cancelled')
+
+        self.push_button.setDisabled(True)
+        self.setCursor(Qt.CursorShape.ForbiddenCursor)
+
+        self.download_custom.emit(rel)
 #----------------------------------------------------------------------

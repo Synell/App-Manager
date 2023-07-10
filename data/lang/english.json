@@ -1,7 +1,7 @@
 {
     "info": {
         "name": "English",
-        "version": "07e715d5",
+        "version": "07e79429",
         "description": "English language for App Manager."
     },
     "data": {
@@ -29,6 +29,7 @@
                             "QAction": {
                                 "showInExplorer": "Show in Explorer",
                                 "edit": "Edit",
+                                "killProcess": "Kill Process",
                                 "removeFromList": "Remove from List",
                                 "uninstall": "Uninstall"
                             },
@@ -189,8 +190,77 @@
                 },
                 "QPushButton": {
                     "back": "Back",
-                    "install": "Install",
                     "goToDownloadPage": "Go to Download Page"
+                },
+                "InstallButton": {
+                    "QPushButton": {
+                        "install": "Install"
+                    },
+                    "QMenu": {
+                        "QAction": {
+                            "customizeInstall": "Customize Installation..."
+                        }
+                    },
+                    "CustomizeInstallationDialog": {
+                        "title": "App Manager > Customize Installation > %s",
+                        "QPushButton": {
+                            "cancel": "Cancel",
+                            "install": "Install",
+                            "back": "Back",
+                            "next": "Next"
+                        },
+                        "QSlidingStackedWidget": {
+                            "QLabel": {
+                                "installLocation": {
+                                    "title": "Install Location",
+                                    "description": "Select a location for %s."
+                                },
+                                "category": {
+                                    "title": "Category",
+                                    "description": "Select a category for %s."
+                                },
+                                "checkForUpdates": {
+                                    "title": "Check for Updates",
+                                    "description": "How often to check for updates for %s."
+                                },
+                                "autoUpdate": {
+                                    "title": "Auto Update",
+                                    "description": "Whether to automatically update %s when an update is available."
+                                },
+                                "whichData": {
+                                    "title": "Data to Download",
+                                    "description": "Multiple promessing results have been found!\nSelect which data to download for %s."
+                                }
+                            },
+                            "QFileButton": {
+                                "installLocation": {
+                                    "title": "Install Location",
+                                    "dialog": "App Manager > Customize Installation > %s > Install Location"
+                                }
+                            },
+                            "QNamedComboBox": {
+                                "category": {
+                                    "title": "Category",
+                                    "values": {
+                                        "none": "None"
+                                    }
+                                },
+                                "checkForUpdates": {
+                                    "title": "Check for Updates",
+                                    "values": {
+                                        "never": "Never",
+                                        "daily": "Daily",
+                                        "weekly": "Weekly",
+                                        "monthly": "Monthly",
+                                        "atLaunch": "At Launch"
+                                    }
+                                }
+                            },
+                            "QToggleButton": {
+                                "autoUpdate": "Auto Update"
+                            }
+                        }
+                    }
                 },
                 "QLineEdit": {
                     "search": "Search"
@@ -339,6 +409,10 @@
                             "title": "Exit During Work Notification",
                             "description": "Determines if a notification will be sent when the app is exited during work."
                         },
+                        "exitDuringAppRun": {
+                            "title": "Exit During App Run Notification",
+                            "description": "Determines if a notification will be sent when the app is exited during an app run."
+                        },
                         "updateDone": {
                             "title": "Update Done Notification",
                             "description": "Determines if a notification will be sent when an update is done."
@@ -370,11 +444,24 @@
                         "requestWorkerFailed": {
                             "title": "Request Failed Notification",
                             "description": "Determines if a notification will be sent when a request for getting updates or apps fails."
+                        },
+                        "processAlreadyRunning": {
+                            "title": "Process Already Running Notification",
+                            "description": "Determines if a notification will be sent when a process is already running."
+                        },
+                        "processEnded": {
+                            "title": "Process Ended Notification",
+                            "description": "Determines if a notification will be sent when a process ends."
+                        },
+                        "processKilled": {
+                            "title": "Process Killed Notification",
+                            "description": "Determines if a notification will be sent when a process is killed."
                         }
                     },
                     "QToggleButton": {
                         "goesToTray": "Goes to Tray",
                         "exitDuringWork": "Exit During Work",
+                        "exitDuringAppRun": "Exit During App Run",
                         "updateDone": "Update Done",
                         "updateFailed": "Update Failed",
                         "appInstallDone": "App Install Done",
@@ -382,7 +469,15 @@
                         "appUninstallDone": "App Uninstall Done",
                         "appUninstallFailed": "App Uninstall Failed",
                         "appExecFailed": "App Launch Failed",
-                        "requestWorkerFailed": "Request Failed"
+                        "requestWorkerFailed": "Request Failed",
+                        "processAlreadyRunning": "Process Already Running",
+                        "processEnded": "Process Ended",
+                        "processKilled": "Process Killed"
+                    },
+                    "QPushButton": {
+                        "checkAll": "Check All",
+                        "uncheckAll": "Uncheck All",
+                        "invertAll": "Invert All"
                     }
                 },
                 "token": {
@@ -517,6 +612,9 @@
                 "PySide": "About PySide...",
                 "AppManager": "About App Manager..."
             },
+            "whatsNew": "What's New...",
+            "changelog": "Changelog...",
+            "reportBug": "Report a Bug...",
             "donate": {
                 "title": "Donate"
             }
@@ -533,6 +631,10 @@
                 "exitDuringWork": {
                     "title": "Exit During Work",
                     "message": "App Manager is still running in the background because it is working. It will be closed when the work is done."
+                },
+                "exitDuringAppRun": {
+                    "title": "Exit During App Run",
+                    "message": "App Manager is still running in the background because an app is running. It will be closed when the app is closed."
                 },
                 "updateDone": {
                     "title": "Update Done",
@@ -565,6 +667,18 @@
                 "requestWorkerFailed": {
                     "title": "Request Failed",
                     "message": "An error occurred while requesting.\n%s"
+                },
+                "processAlreadyRunning": {
+                    "title": "Process Already Running",
+                    "message": "The process %s is already running."
+                },
+                "processEnded": {
+                    "title": "Process Ended",
+                    "message": "The process %s has ended."
+                },
+                "processKilled": {
+                    "title": "Process Killed",
+                    "message": "The process %s has been killed."
                 }
             }
         },

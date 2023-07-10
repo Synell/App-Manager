@@ -126,13 +126,15 @@ class QDragList(QWidget):
 
     def set_orientation(self, orientation: Qt.Orientation) -> None:
         self._orientation = orientation
-        children = self.findChildren(QDragListItem)
+        children = list(self.items)
+
+        for child in children: self.remove_item(child)
 
         if self._orientation == Qt.Orientation.Vertical: self._layout = QVBoxLayout()
         else: self._layout = QHBoxLayout()
         self.setLayout(self._layout)
 
-        for child in children: self._layout.addWidget(child)
+        for child in children: self.add_item(child)
 
     def add_item(self, item: QDragListItem):
         self._layout.addWidget(item)
@@ -146,7 +148,6 @@ class QDragList(QWidget):
 
     @property
     def items(self) -> Generator[QDragListItem, None, None]:
-        # return self.findChildren(QDragListItem) # This is not giving the right order
         for i in range(self._layout.count()):
             if (not self._layout.itemAt(i)): continue
 

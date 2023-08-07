@@ -68,20 +68,20 @@ class SaveData(QSaveData):
         return [category.keyword for category in self.categories]
 
 
-    def settings_menu_extra(self):
+    def _settings_menu_extra(self):
         return {
-            self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']: (self.settings_menu_installs(), f'{self.get_icon_dir()}/sidepanel/installs.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']: (self.settings_menu_updates(), f'{self.get_icon_dir()}/sidepanel/updates.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']: (self.settings_menu_interface(), f'{self.get_icon_dir()}/sidepanel/interface.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']: (self.settings_menu_notification(), f'{self.get_icon_dir()}/sidepanel/notification.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['token']['title']: (self.settings_menu_github(), f'{self.get_icon_dir()}/sidepanel/token.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']: (self.settings_menu_categories(), f'{self.get_icon_dir()}/sidepanel/categories.png'),
-            self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']: (self.settings_menu_followed_apps(), f'{self.get_icon_dir()}/sidepanel/followedApps.png')
+            self.get_lang_data('QSettingsDialog.QSidePanel.installs.title'): (self.settings_menu_installs(), f'{self.get_icon_dir()}/sidepanel/installs.png'),
+            self.get_lang_data('QSettingsDialog.QSidePanel.updates.title'): (self.settings_menu_updates(), f'{self.get_icon_dir()}/sidepanel/updates.png'),
+            self.get_lang_data('QSettingsDialog.QSidePanel.interface.title'): (self.settings_menu_interface(), f'{self.get_icon_dir()}/sidepanel/interface.png'),
+            self.get_lang_data('QSettingsDialog.QSidePanel.notification.title'): (self.settings_menu_notification(), f'{self.get_icon_dir()}/sidepanel/notification.png'),
+            self.get_lang_data('QSettingsDialog.QSidePanel.token.title'): (self.settings_menu_github(), f'{self.get_icon_dir()}/sidepanel/token.png'),
+            self.get_lang_data('QSettingsDialog.QSidePanel.categories.title'): (self.settings_menu_categories(), f'{self.get_icon_dir()}/sidepanel/categories.png'),
+            self.get_lang_data('QSettingsDialog.QSidePanel.followedApps.title'): (self.settings_menu_followed_apps(), f'{self.get_icon_dir()}/sidepanel/followedApps.png')
         }, self.get_extra
 
 
     def settings_menu_installs(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['installs']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.installs')
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -93,12 +93,12 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['installsLocation']['title'], lang['QLabel']['installsLocation']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.installsLocation.title'), lang.get_data('QLabel.installsLocation.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.installs_folder_button = QFileButton(
             None,
-            lang['QFileButton']['installsLocation'],
+            lang.get_data('QFileButton.installsLocation'),
             self.apps_folder,
             f'{self.get_icon_dir()}filebutton/folder.png',
             QFiles.Dialog.ExistingDirectory
@@ -114,12 +114,12 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['downloadsLocation']['title'], lang['QLabel']['downloadsLocation']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.downloadsLocation.title'), lang.get_data('QLabel.downloadsLocation.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.downloads_folder_button = QFileButton(
             None,
-            lang['QFileButton']['downloadsLocation'],
+            lang.get_data('QFileButton.downloadsLocation'),
             self.downloads_folder,
             f'{self.get_icon_dir()}filebutton/folder.png',
             QFiles.Dialog.ExistingDirectory
@@ -134,7 +134,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_updates(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['updates']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.updates')
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -147,16 +147,16 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.checkForUpdates.title'), lang.get_data('QLabel.checkForUpdates.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        widget.check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForUpdates']['title'])
+        widget.check_for_updates_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.checkForUpdates.title'))
         widget.check_for_updates_combobox.combo_box.addItems([
-            lang['QNamedComboBox']['checkForUpdates']['values']['never'],
-            lang['QNamedComboBox']['checkForUpdates']['values']['daily'],
-            lang['QNamedComboBox']['checkForUpdates']['values']['weekly'],
-            lang['QNamedComboBox']['checkForUpdates']['values']['monthly'],
-            lang['QNamedComboBox']['checkForUpdates']['values']['atLaunch']
+            lang.get_data('QNamedComboBox.checkForUpdates.values.never'),
+            lang.get_data('QNamedComboBox.checkForUpdates.values.daily'),
+            lang.get_data('QNamedComboBox.checkForUpdates.values.weekly'),
+            lang.get_data('QNamedComboBox.checkForUpdates.values.monthly'),
+            lang.get_data('QNamedComboBox.checkForUpdates.values.atLaunch')
         ])
         widget.check_for_updates_combobox.combo_box.setCurrentIndex(self.check_for_updates)
         root_frame.grid_layout.addWidget(widget.check_for_updates_combobox, root_frame.grid_layout.count(), 0)
@@ -169,16 +169,16 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['checkForAppsUpdates']['title'], lang['QLabel']['checkForAppsUpdates']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.checkForAppsUpdates.title'), lang.get_data('QLabel.checkForAppsUpdates.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        widget.check_for_apps_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForAppsUpdates']['title'])
+        widget.check_for_apps_updates_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.checkForAppsUpdates.title'))
         widget.check_for_apps_updates_combobox.combo_box.addItems([
-            lang['QNamedComboBox']['checkForAppsUpdates']['values']['never'],
-            lang['QNamedComboBox']['checkForAppsUpdates']['values']['daily'],
-            lang['QNamedComboBox']['checkForAppsUpdates']['values']['weekly'],
-            lang['QNamedComboBox']['checkForAppsUpdates']['values']['monthly'],
-            lang['QNamedComboBox']['checkForAppsUpdates']['values']['atLaunch']
+            lang.get_data('QNamedComboBox.checkForAppsUpdates.values.never'),
+            lang.get_data('QNamedComboBox.checkForAppsUpdates.values.daily'),
+            lang.get_data('QNamedComboBox.checkForAppsUpdates.values.weekly'),
+            lang.get_data('QNamedComboBox.checkForAppsUpdates.values.monthly'),
+            lang.get_data('QNamedComboBox.checkForAppsUpdates.values.atLaunch')
         ])
         widget.check_for_apps_updates_combobox.combo_box.setCurrentIndex(self.check_for_apps_updates)
         root_frame.grid_layout.addWidget(widget.check_for_apps_updates_combobox, root_frame.grid_layout.count(), 0)
@@ -191,16 +191,16 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['newAppsCheckForUpdates']['title'], lang['QLabel']['newAppsCheckForUpdates']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.newAppsCheckForUpdates.title'), lang.get_data('QLabel.newAppsCheckForUpdates.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        widget.new_apps_check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['newAppsCheckForUpdates']['title'])
+        widget.new_apps_check_for_updates_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.newAppsCheckForUpdates.title'))
         widget.new_apps_check_for_updates_combobox.combo_box.addItems([
-            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['never'],
-            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['daily'],
-            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['weekly'],
-            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['monthly'],
-            lang['QNamedComboBox']['newAppsCheckForUpdates']['values']['atLaunch']
+            lang.get_data('QNamedComboBox.newAppsCheckForUpdates.values.never'),
+            lang.get_data('QNamedComboBox.newAppsCheckForUpdates.values.daily'),
+            lang.get_data('QNamedComboBox.newAppsCheckForUpdates.values.weekly'),
+            lang.get_data('QNamedComboBox.newAppsCheckForUpdates.values.monthly'),
+            lang.get_data('QNamedComboBox.newAppsCheckForUpdates.values.atLaunch')
         ])
         widget.new_apps_check_for_updates_combobox.combo_box.setCurrentIndex(self.new_apps_check_for_updates)
         root_frame.grid_layout.addWidget(widget.new_apps_check_for_updates_combobox, root_frame.grid_layout.count(), 0)
@@ -213,11 +213,11 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['newAppsAutoUpdate']['title'], lang['QLabel']['newAppsAutoUpdate']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.newAppsAutoUpdate.title'), lang.get_data('QLabel.newAppsAutoUpdate.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.new_apps_auto_update_checkbox = QNamedToggleButton()
-        widget.new_apps_auto_update_checkbox.setText(lang['QToggleButton']['newAppsAutoUpdate'])
+        widget.new_apps_auto_update_checkbox.setText(lang.get_data('QToggleButton.newAppsAutoUpdate'))
         widget.new_apps_auto_update_checkbox.setChecked(self.new_apps_auto_update)
         root_frame.grid_layout.addWidget(widget.new_apps_auto_update_checkbox, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(widget.new_apps_auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
@@ -228,7 +228,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_interface(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['interface']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.interface')
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -240,11 +240,11 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        # label = QSettingsDialog.textGroup(lang['QLabel']['startAtLaunch']['title'], lang['QLabel']['startAtLaunch']['description'])
+        # label = QSettingsDialog.textGroup(lang.get_data('QLabel.startAtLaunch.title'), lang.get_data('QLabel.startAtLaunch.description'))
         # root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.start_at_launch_checkbox = QNamedToggleButton()
-        widget.start_at_launch_checkbox.setText(lang['QToggleButton']['startAtLaunch'])
+        widget.start_at_launch_checkbox.setText(lang.get_data('QToggleButton.startAtLaunch'))
         widget.start_at_launch_checkbox.setChecked(self.start_at_launch)
         # root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, root_frame.grid_layout.count(), 0)
         # root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
@@ -256,11 +256,11 @@ class SaveData(QSaveData):
         # root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['minimizeToTray']['title'], lang['QLabel']['minimizeToTray']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.minimizeToTray.title'), lang.get_data('QLabel.minimizeToTray.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.minimize_to_tray_checkbox = QNamedToggleButton()
-        widget.minimize_to_tray_checkbox.setText(lang['QToggleButton']['minimizeToTray'])
+        widget.minimize_to_tray_checkbox.setText(lang.get_data('QToggleButton.minimizeToTray'))
         widget.minimize_to_tray_checkbox.setChecked(self.minimize_to_tray)
         root_frame.grid_layout.addWidget(widget.minimize_to_tray_checkbox, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(widget.minimize_to_tray_checkbox, Qt.AlignmentFlag.AlignLeft)
@@ -272,14 +272,14 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['compactPaths']['title'], lang['QLabel']['compactPaths']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.compactPaths.title'), lang.get_data('QLabel.compactPaths.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        widget.compact_paths_combobox = QNamedComboBox(None, lang['QNamedComboBox']['compactPaths']['title'])
+        widget.compact_paths_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.compactPaths.title'))
         widget.compact_paths_combobox.combo_box.addItems([
-            lang['QNamedComboBox']['compactPaths']['values']['auto'],
-            lang['QNamedComboBox']['compactPaths']['values']['enabled'],
-            lang['QNamedComboBox']['compactPaths']['values']['disabled']
+            lang.get_data('QNamedComboBox.compactPaths.values.auto'),
+            lang.get_data('QNamedComboBox.compactPaths.values.enabled'),
+            lang.get_data('QNamedComboBox.compactPaths.values.disabled')
         ])
         widget.compact_paths_combobox.combo_box.setCurrentIndex(self.compact_paths)
         root_frame.grid_layout.addWidget(widget.compact_paths_combobox, root_frame.grid_layout.count(), 0)
@@ -291,7 +291,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_notification(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['notification']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.notification')
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -319,19 +319,19 @@ class SaveData(QSaveData):
         root_frame.grid_layout.addWidget(buttonframe, root_frame.grid_layout.count(), 0)
         root_frame.grid_layout.setAlignment(buttonframe, Qt.AlignmentFlag.AlignTop)
 
-        button = QPushButton(lang['QPushButton']['checkAll'])
+        button = QPushButton(lang.get_data('QPushButton.checkAll'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: check_all(True))
         buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
 
-        button = QPushButton(lang['QPushButton']['uncheckAll'])
+        button = QPushButton(lang.get_data('QPushButton.uncheckAll'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: check_all(False))
         buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
 
-        button = QPushButton(lang['QPushButton']['invertAll'])
+        button = QPushButton(lang.get_data('QPushButton.invertAll'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: invert_all())
@@ -351,11 +351,11 @@ class SaveData(QSaveData):
             frame.setFixedHeight(1)
             subframe.grid_layout.addWidget(frame, subframe.grid_layout.count(), 0)
 
-            label = QSettingsDialog._text_group(lang['QLabel'][key]['title'], lang['QLabel'][key]['description'])
+            label = QSettingsDialog._text_group(lang.get_data(f'QLabel.{key}.title'), lang.get_data(f'QLabel.{key}.description'))
             subframe.grid_layout.addWidget(label, subframe.grid_layout.count(), 0)
 
             w = QNamedToggleButton()
-            w.setText(lang['QToggleButton'][key])
+            w.setText(lang.get_data('QToggleButton')[key])
             w.setChecked(checked)
             subframe.grid_layout.addWidget(w, subframe.grid_layout.count(), 0)
             subframe.grid_layout.setAlignment(w, Qt.AlignmentFlag.AlignLeft)
@@ -385,7 +385,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_github(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['token']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.token')
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
         widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
@@ -397,7 +397,7 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['github']['title'], lang['QLabel']['github']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.github.title'), lang.get_data('QLabel.github.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{lang["QLabel"]["github"]["createToken"]}</a>')
@@ -407,7 +407,7 @@ class SaveData(QSaveData):
         label.setWordWrap(True)
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
-        widget.github_token_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit']['github'])
+        widget.github_token_lineedit = QNamedLineEdit(None, 'null', lang.get_data('QNamedLineEdit.github'))
         widget.github_token_lineedit.line_edit.setEchoMode(QLineEdit.EchoMode.Password)
         widget.github_token_lineedit.setText(self.token['github'])
         widget.github_token_lineedit.setFixedWidth(350)
@@ -420,7 +420,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_followed_apps(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['followedApps']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.followedApps')
         key = 'url'
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
@@ -433,20 +433,20 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['followedApps']['title'], lang['QLabel']['followedApps']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.followedApps.title'), lang.get_data('QLabel.followedApps.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.followed_apps_list = QDragList()
         root_frame.grid_layout.addWidget(widget.followed_apps_list, root_frame.grid_layout.count(), 0)
 
         for app in self.followed_apps:
-            widget.followed_apps_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], key, app))
+            widget.followed_apps_list.add_item(SettingsListNamedItem(lang.get_data('SettingsListNamedItem'), key, app))
 
         button = QPushButton()
         button.setIcon(self.get_icon('pushbutton/plus.png'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
-        button.clicked.connect(lambda: widget.followed_apps_list.add_item(SettingsListNamedItem(lang['SettingsListNamedItem'], key, '')))
+        button.clicked.connect(lambda: widget.followed_apps_list.add_item(SettingsListNamedItem(lang.get_data('SettingsListNamedItem'), key, '')))
         root_frame.grid_layout.addWidget(button, root_frame.grid_layout.count(), 0)
 
 
@@ -455,7 +455,7 @@ class SaveData(QSaveData):
 
 
     def settings_menu_categories(self):
-        lang = self.language_data['QSettingsDialog']['QSidePanel']['categories']
+        lang = self.get_lang_data('QSettingsDialog.QSidePanel.categories')
         key = 'category'
         widget = QScrollableGridWidget()
         widget.scroll_layout.setSpacing(0)
@@ -468,20 +468,20 @@ class SaveData(QSaveData):
         widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
-        label = QSettingsDialog._text_group(lang['QLabel']['categories']['title'], lang['QLabel']['categories']['description'])
+        label = QSettingsDialog._text_group(lang.get_data('QLabel.categories.title'), lang.get_data('QLabel.categories.description'))
         root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
 
         widget.categories_list = QDragList()
         root_frame.grid_layout.addWidget(widget.categories_list, root_frame.grid_layout.count(), 0)
 
         for cat in self.categories:
-            widget.categories_list.add_item(CategoryListNamedItem(lang['CategoryListNamedItem'], key, cat))
+            widget.categories_list.add_item(CategoryListNamedItem(lang.get_data('CategoryListNamedItem'), key, cat))
 
         button = QPushButton()
         button.setIcon(self.get_icon('pushbutton/plus.png'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
-        button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang['CategoryListNamedItem'], key, Category('', './data/icons/questionMark.svg'))))
+        button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang.get_data('CategoryListNamedItem'), key, Category('', './data/icons/questionMark.svg'))))
         root_frame.grid_layout.addWidget(button, root_frame.grid_layout.count(), 0)
 
 
@@ -490,38 +490,38 @@ class SaveData(QSaveData):
 
 
     def get_extra(self, extra_tabs: dict = {}):
-        self.apps_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].installs_folder_button.path()
-        self.downloads_folder = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['installs']['title']].downloads_folder_button.path()
-        self.check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].check_for_updates_combobox.combo_box.currentIndex()
-        self.check_for_apps_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].check_for_apps_updates_combobox.combo_box.currentIndex()
-        self.new_apps_check_for_updates = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].new_apps_check_for_updates_combobox.combo_box.currentIndex()
-        self.new_apps_auto_update = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['updates']['title']].new_apps_auto_update_checkbox.isChecked()
+        self.apps_folder = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.installs.title')].installs_folder_button.path()
+        self.downloads_folder = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.installs.title')].downloads_folder_button.path()
+        self.check_for_updates = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.updates.title')].check_for_updates_combobox.combo_box.currentIndex()
+        self.check_for_apps_updates = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.updates.title')].check_for_apps_updates_combobox.combo_box.currentIndex()
+        self.new_apps_check_for_updates = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.updates.title')].new_apps_check_for_updates_combobox.combo_box.currentIndex()
+        self.new_apps_auto_update = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.updates.title')].new_apps_auto_update_checkbox.isChecked()
 
-        self.start_at_launch = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].start_at_launch_checkbox.isChecked()
-        self.minimize_to_tray = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].minimize_to_tray_checkbox.isChecked()
+        self.start_at_launch = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.interface.title')].start_at_launch_checkbox.isChecked()
+        self.minimize_to_tray = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.interface.title')].minimize_to_tray_checkbox.isChecked()
 
-        self.compact_paths = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['interface']['title']].compact_paths_combobox.combo_box.currentIndex()
+        self.compact_paths = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.interface.title')].compact_paths_combobox.combo_box.currentIndex()
 
-        self.token['github'] = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['token']['title']].github_token_lineedit.text()
+        self.token['github'] = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.token.title')].github_token_lineedit.text()
 
-        self.categories = self.without_duplicates([Category(item.keyword, item.icon) for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['categories']['title']].categories_list.items if item.keyword != ''])
+        self.categories = self.without_duplicates([Category(item.keyword, item.icon) for item in extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.categories.title')].categories_list.items if item.keyword != ''])
 
-        self.followed_apps = self.without_duplicates([item.keyword for item in extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['followedApps']['title']].followed_apps_list.items if self.valid_url(item.keyword) if item.keyword != ''])
+        self.followed_apps = self.without_duplicates([item.keyword for item in extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.followedApps.title')].followed_apps_list.items if self.valid_url(item.keyword) if item.keyword != ''])
 
-        self.goes_to_tray_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].goes_to_tray_notif_checkbox.isChecked()
-        self.exit_during_work_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].exit_during_work_notif_checkbox.isChecked()
-        self.exit_during_app_run_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].exit_during_app_run_notif_checkbox.isChecked()
-        self.update_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_done_notif_checkbox.isChecked()
-        self.update_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].update_failed_notif_checkbox.isChecked()
-        self.app_install_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_done_notif_checkbox.isChecked()
-        self.app_install_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_install_failed_notif_checkbox.isChecked()
-        self.app_uninstall_done_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_done_notif_checkbox.isChecked()
-        self.app_uninstall_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_uninstall_failed_notif_checkbox.isChecked()
-        self.app_exec_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].app_exec_failed_notif_checkbox.isChecked()
-        self.request_worker_failed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].request_worker_failed_notif_checkbox.isChecked()
-        self.process_already_running_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_already_running_notif_checkbox.isChecked()
-        self.process_ended_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_ended_notif_checkbox.isChecked()
-        self.process_killed_notif = extra_tabs[self.language_data['QSettingsDialog']['QSidePanel']['notification']['title']].process_killed_notif_checkbox.isChecked()
+        self.goes_to_tray_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].goes_to_tray_notif_checkbox.isChecked()
+        self.exit_during_work_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].exit_during_work_notif_checkbox.isChecked()
+        self.exit_during_app_run_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].exit_during_app_run_notif_checkbox.isChecked()
+        self.update_done_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].update_done_notif_checkbox.isChecked()
+        self.update_failed_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].update_failed_notif_checkbox.isChecked()
+        self.app_install_done_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].app_install_done_notif_checkbox.isChecked()
+        self.app_install_failed_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].app_install_failed_notif_checkbox.isChecked()
+        self.app_uninstall_done_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].app_uninstall_done_notif_checkbox.isChecked()
+        self.app_uninstall_failed_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].app_uninstall_failed_notif_checkbox.isChecked()
+        self.app_exec_failed_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].app_exec_failed_notif_checkbox.isChecked()
+        self.request_worker_failed_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].request_worker_failed_notif_checkbox.isChecked()
+        self.process_already_running_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].process_already_running_notif_checkbox.isChecked()
+        self.process_ended_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].process_ended_notif_checkbox.isChecked()
+        self.process_killed_notif = extra_tabs[self.get_lang_data('QSettingsDialog.QSidePanel.notification.title')].process_killed_notif_checkbox.isChecked()
 
 
 
@@ -537,7 +537,7 @@ class SaveData(QSaveData):
         return list(dict.fromkeys(l))
 
 
-    def save_extra_data(self) -> dict:
+    def _save_extra_data(self) -> dict:
         return {
             'apps': self.apps,
             'folders': {
@@ -578,16 +578,16 @@ class SaveData(QSaveData):
             'processKilledNotif': self.process_killed_notif
         }
 
-    def load_extra_data(self, extra_data: dict = ..., reload: list = []) -> bool:
+    def _load_extra_data(self, extra_data: dict = ..., reload: list = []) -> bool:
         exc = suppress(Exception)
         res = False
 
-        with exc: self.apps['official'] = extra_data['apps']['official']
-        with exc: self.apps['pre'] = extra_data['apps']['pre']
-        with exc: self.apps['custom'] = extra_data['apps']['custom']
+        with exc: self.apps['official'] = extra_data['apps.official']
+        with exc: self.apps['pre'] = extra_data['apps.pre']
+        with exc: self.apps['custom'] = extra_data['apps.custom']
 
-        with exc: self.apps_folder = extra_data['folders']['apps']
-        with exc: self.downloads_folder = extra_data['folders']['downloads']
+        with exc: self.apps_folder = extra_data['folders.apps']
+        with exc: self.downloads_folder = extra_data['folders.downloads']
 
         cat_list = []
         with exc: cat_list = extra_data['categories']
@@ -644,7 +644,7 @@ class SaveData(QSaveData):
         return res
 
     def export_extra_data(self) -> dict:
-        dct = self.save_extra_data()
+        dct = self._save_extra_data()
         del dct['apps']
         return dct
 #----------------------------------------------------------------------

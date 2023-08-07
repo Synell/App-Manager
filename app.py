@@ -137,7 +137,7 @@ class Application(QBaseApplication):
 
 
     def update_title(self) -> None:
-        self.window.setWindowTitle(self.save_data.language_data['QMainWindow']['title'] + f' | Version: {self.VERSION} | Build: {self.BUILD}')
+        self.window.setWindowTitle(self.get_lang_data('QMainWindow.title') + f' | Version: {self.VERSION} | Build: {self.BUILD}')
 
     def load_colors(self) -> None:
         qss = super().load_colors()
@@ -162,16 +162,16 @@ class Application(QBaseApplication):
 
 
     def not_implemented(self, text = '') -> None:
-        if text:
-            w = QDropDownWidget(text = lang['details'], widget = QLabel(text))
-        else: w = None
+        lang = self.get_lang_data('QMessageBox.critical.notImplemented')
 
-        lang = self.save_data.language_data['QMessageBox']['critical']['notImplemented']
+        if text:
+            w = QDropDownWidget(text = lang.get_data('details'), widget = QLabel(text))
+        else: w = None
 
         QMessageBoxWithWidget(
             app = self,
-            title = lang['title'],
-            text = lang['text'],
+            title = lang.get_data('title'),
+            text = lang.get_data('text'),
             icon = QMessageBoxWithWidget.Icon.Critical,
             widget = w
         ).exec()
@@ -233,8 +233,8 @@ class Application(QBaseApplication):
         self.main_page.side_panel.setProperty('border-right', True)
         self.main_page.left.grid_layout.addWidget(self.main_page.side_panel, 1, 0)
         self.main_page.side_panel.add_items([
-            QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['title'], f'{self.save_data.get_icon_dir()}/sidepanel/apps.png', self.panel_select_apps),
-            QSidePanelItem(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['title'], f'{self.save_data.get_icon_dir()}/sidepanel/downloads.png', self.panel_select_downloads),
+            QSidePanelItem(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.title'), f'{self.save_data.get_icon_dir()}/sidepanel/apps.png', self.panel_select_apps),
+            QSidePanelItem(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.title'), f'{self.save_data.get_icon_dir()}/sidepanel/downloads.png', self.panel_select_downloads),
         ])
         self.build_categories_widget()
         self.panel_select_apps()
@@ -247,7 +247,7 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.top, 0, 0)
         self.main_page.apps_widget.grid_layout.setAlignment(self.main_page.apps_widget.top, Qt.AlignmentFlag.AlignTop)
 
-        label = QLabel(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['title'])
+        label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.title'))
         label.setProperty('h', '1')
         self.main_page.apps_widget.top.grid_layout.addWidget(label, 0, 0)
         self.main_page.apps_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
@@ -256,7 +256,7 @@ class Application(QBaseApplication):
         self.main_page.apps_widget.top.grid_layout.addWidget(right_buttons, 0, 1, 2, 1)
         self.main_page.apps_widget.top.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
 
-        self.update_button = QPushButton(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QPushButton']['update'])
+        self.update_button = QPushButton(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QPushButton.update'))
         self.update_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.update_button.clicked.connect(self.update_click)
         self.update_button.setProperty('color', 'main')
@@ -264,13 +264,13 @@ class Application(QBaseApplication):
         right_buttons.grid_layout.addWidget(self.update_button, 0, 0)
         self.update_button.setVisible(False)
 
-        button = QPushButton(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QPushButton']['locate'])
+        button = QPushButton(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QPushButton.locate'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.locate_app_click)
         button.setProperty('color', 'gray')
         right_buttons.grid_layout.addWidget(button, 0, 1)
 
-        button = QPushButton(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QPushButton']['installApp'])
+        button = QPushButton(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QPushButton.installApp'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.install_app_click)
         button.setProperty('color', 'main')
@@ -280,7 +280,7 @@ class Application(QBaseApplication):
         right_buttons.grid_layout.setColumnStretch(2, 1)
 
         self.main_page.apps_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
-        self.main_page.apps_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
+        self.main_page.apps_widget.searchbar.setPlaceholderText(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QLineEdit.search'))
         self.main_page.apps_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
         right_buttons.grid_layout.addWidget(self.main_page.apps_widget.searchbar, 1, 1, 1, 2)
         right_buttons.grid_layout.setAlignment(self.main_page.apps_widget.searchbar, Qt.AlignmentFlag.AlignTop)
@@ -298,7 +298,7 @@ class Application(QBaseApplication):
         for rel in self.APP_RELEASES:
             widget = QWidget()
             widget.setFixedHeight(1)
-            i = self.main_page.apps_widget.notebook.addTab(widget, self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QTabWidget'][rel])
+            i = self.main_page.apps_widget.notebook.addTab(widget, self.get_lang_data(f'QMainWindow.mainPage.QSidePanel.apps.QTabWidget.{rel}'))
 
             sw = QScrollableGridWidget()
             self.main_page.apps_widget.notebook_tabs.addWidget(sw)
@@ -317,7 +317,7 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.grid_layout.addWidget(self.main_page.downloads_widget.top, 0, 0)
         self.main_page.downloads_widget.grid_layout.setAlignment(self.main_page.downloads_widget.top, Qt.AlignmentFlag.AlignTop)
 
-        label = QLabel(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['title'])
+        label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.title'))
         label.setProperty('h', '1')
         self.main_page.downloads_widget.top.grid_layout.addWidget(label, 0, 0)
         self.main_page.downloads_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
@@ -337,13 +337,13 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 0, 0)
         self.main_page.downloads_widget.no_download.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
-        label = QLabel(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['QLabel']['noDownload']['title'])
+        label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.QLabel.noDownload.title'))
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setProperty('title', True)
         self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 1, 0)
         self.main_page.downloads_widget.no_download.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
-        label = QLabel(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads']['QLabel']['noDownload']['text'])
+        label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.QLabel.noDownload.text'))
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setProperty('normal', True)
         self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 2, 0)
@@ -397,7 +397,7 @@ class Application(QBaseApplication):
             root_widget.top.grid_layout.setAlignment(right_panel, Qt.AlignmentFlag.AlignRight)
 
             root_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
-            root_widget.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['QLineEdit']['search'])
+            root_widget.searchbar.setPlaceholderText(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QLineEdit.search'))
             root_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
             right_panel.grid_layout.addWidget(root_widget.searchbar, 1, 1, 1, 2)
             right_panel.grid_layout.setAlignment(root_widget.searchbar, Qt.AlignmentFlag.AlignTop)
@@ -427,7 +427,7 @@ class Application(QBaseApplication):
         self.install_app_page.top.grid_layout.setSpacing(0)
         self.install_app_page.top.grid_layout.setContentsMargins(16, 16, 16, 0)
 
-        label = QLabel(self.save_data.language_data['QMainWindow']['installAppPage']['QLabel']['installApp'])
+        label = QLabel(self.get_lang_data('QMainWindow.installAppPage.QLabel.installApp'))
         label.setProperty('h', '4')
         label.setProperty('bigbrighttitle', True)
         self.install_app_page.top.grid_layout.addWidget(label, 0, 0)
@@ -447,7 +447,7 @@ class Application(QBaseApplication):
         frame.grid_layout.addWidget(button, 0, 0)
 
         self.install_app_page.top.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
-        self.install_app_page.top.searchbar.setPlaceholderText(self.save_data.language_data['QMainWindow']['installAppPage']['QLineEdit']['search'])
+        self.install_app_page.top.searchbar.setPlaceholderText(self.get_lang_data('QMainWindow.installAppPage.QLineEdit.search'))
         self.install_app_page.top.searchbar.textChanged.connect(self.refresh_install_apps_list)
         frame.grid_layout.addWidget(self.install_app_page.top.searchbar, 0, 1)
 
@@ -484,8 +484,8 @@ class Application(QBaseApplication):
         self.install_app_page.tab_widget.pre.inside.scroll_layout.setSpacing(1)
         self.install_app_page.tab_widget.pre.inside.scroll_layout.setContentsMargins(16, 16, 16, 16)
 
-        self.install_app_page.tab_widget.addTab(self.install_app_page.tab_widget.official, self.save_data.language_data['QMainWindow']['installAppPage']['QTabWidget']['officialReleases']['title'])
-        self.install_app_page.tab_widget.addTab(self.install_app_page.tab_widget.pre, self.save_data.language_data['QMainWindow']['installAppPage']['QTabWidget']['preReleases']['title'])
+        self.install_app_page.tab_widget.addTab(self.install_app_page.tab_widget.official, self.get_lang_data('QMainWindow.installAppPage.QTabWidget.officialReleases.title'))
+        self.install_app_page.tab_widget.addTab(self.install_app_page.tab_widget.pre, self.get_lang_data('QMainWindow.installAppPage.QTabWidget.preReleases.title'))
 
 
 
@@ -501,7 +501,7 @@ class Application(QBaseApplication):
         right_buttons = QGridWidget()
         self.install_app_page.bottom.grid_layout.addWidget(right_buttons, 0, 0)
 
-        button = QPushButton(self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['goToDownloadPage'])
+        button = QPushButton(self.get_lang_data('QMainWindow.installAppPage.QPushButton.goToDownloadPage'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.panel_select_downloads)
         button.setProperty('color', 'main')
@@ -509,7 +509,7 @@ class Application(QBaseApplication):
         right_buttons.grid_layout.addWidget(button, 0, 0)
         right_buttons.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
 
-        button = QPushButton(self.save_data.language_data['QMainWindow']['installAppPage']['QPushButton']['back'])
+        button = QPushButton(self.get_lang_data('QMainWindow.installAppPage.QPushButton.back'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.main_page_click)
         button.setProperty('color', 'white')
@@ -595,7 +595,7 @@ class Application(QBaseApplication):
         button = InstallButton(
             self.window,
             rel,
-            self.save_data.language_data['QMainWindow']['installAppPage']['InstallButton'],
+            self.get_lang_data('QMainWindow.installAppPage.InstallButton'),
             rel['name'],
             rel['tag_name'],
             get_icon_path(app),
@@ -634,13 +634,13 @@ class Application(QBaseApplication):
 
     def release_failed(self, error: str, app: str = None) -> None:
         if self.save_data.request_worker_failed_notif: self.sys_tray.showMessage(
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['title'],
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['message'].replace('%s', error),
+            self.get_lang_data('QSystemTrayIcon.showMessage.requestWorkerFailed.title'),
+            self.get_lang_data('QSystemTrayIcon.showMessage.requestWorkerFailed.message').replace('%s', error),
             QSystemTrayIcon.MessageIcon.Critical,
             self.MESSAGE_DURATION
         )
         self.show_alert(
-            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['requestWorkerFailed']['message'].replace('%s', error),
+            message = self.get_lang_data('QSystemTrayIcon.showMessage.requestWorkerFailed.message').replace('%s', error),
             raise_duration = self.ALERT_RAISE_DURATION,
             pause_duration = self.ALERT_PAUSE_DURATION,
             fade_duration = self.ALERT_FADE_DURATION,
@@ -677,7 +677,7 @@ class Application(QBaseApplication):
 
         iw = Installer(
             None,
-            self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['downloads'],
+            self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads'),
             d,
             self.save_data.downloads_folder,
             install_folder,
@@ -703,13 +703,13 @@ class Application(QBaseApplication):
 
         if error:
             if self.save_data.app_install_failed_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['message'].replace('%s', name, 1).replace('%s', error),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appInstallFailed.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appInstallFailed.message').replace('%s', name, 1).replace('%s', error),
                 QSystemTrayIcon.MessageIcon.Critical,
                 self.MESSAGE_DURATION
             )
             self.show_alert(
-                message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallFailed']['message'].replace('%s', name, 1).replace('%s', error),
+                message = self.get_lang_data('QSystemTrayIcon.showMessage.appInstallFailed.message').replace('%s', name, 1).replace('%s', error),
                 raise_duration = self.ALERT_RAISE_DURATION,
                 pause_duration = self.ALERT_PAUSE_DURATION,
                 fade_duration = self.ALERT_FADE_DURATION,
@@ -717,13 +717,13 @@ class Application(QBaseApplication):
             )
         else:
             if self.save_data.app_install_done_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appInstallDone.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appInstallDone.message').replace('%s', name),
                 QSystemTrayIcon.MessageIcon.Information,
                 self.MESSAGE_DURATION
             )
             self.show_alert(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appInstallDone']['message'].replace('%s', name),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appInstallDone.message').replace('%s', name),
                 raise_duration = self.ALERT_RAISE_DURATION,
                 pause_duration = self.ALERT_PAUSE_DURATION,
                 fade_duration = self.ALERT_FADE_DURATION,
@@ -743,13 +743,13 @@ class Application(QBaseApplication):
 
     def process_already_running(self, name: str) -> None:
         if self.save_data.process_already_running_notif: self.sys_tray.showMessage(
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['title'],
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['message'].replace('%s', name),
+            self.get_lang_data('QSystemTrayIcon.showMessage.processAlreadyRunning.title'),
+            self.get_lang_data('QSystemTrayIcon.showMessage.processAlreadyRunning.message').replace('%s', name),
             QSystemTrayIcon.MessageIcon.Critical,
             self.MESSAGE_DURATION
         )
         self.show_alert(
-            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processAlreadyRunning']['message'].replace('%s', name),
+            message = self.get_lang_data('QSystemTrayIcon.showMessage.processAlreadyRunning.message').replace('%s', name),
             raise_duration = self.ALERT_RAISE_DURATION,
             pause_duration = self.ALERT_PAUSE_DURATION,
             fade_duration = self.ALERT_FADE_DURATION,
@@ -758,13 +758,13 @@ class Application(QBaseApplication):
 
     def process_ended(self, name: str) -> None:
         if self.save_data.process_ended_notif: self.sys_tray.showMessage(
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['title'],
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['message'].replace('%s', name),
+            self.get_lang_data('QSystemTrayIcon.showMessage.processEnded.title'),
+            self.get_lang_data('QSystemTrayIcon.showMessage.processEnded.message').replace('%s', name),
             QSystemTrayIcon.MessageIcon.Information,
             self.MESSAGE_DURATION
         )
         self.show_alert(
-            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processEnded']['message'].replace('%s', name),
+            message = self.get_lang_data('QSystemTrayIcon.showMessage.processEnded.message').replace('%s', name),
             raise_duration = self.ALERT_RAISE_DURATION,
             pause_duration = self.ALERT_PAUSE_DURATION,
             fade_duration = self.ALERT_FADE_DURATION,
@@ -777,13 +777,13 @@ class Application(QBaseApplication):
 
     def process_killed(self, name: str) -> None:
         if self.save_data.process_killed_notif: self.sys_tray.showMessage(
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['title'],
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['message'].replace('%s', name),
+            self.get_lang_data('QSystemTrayIcon.showMessage.processKilled.title'),
+            self.get_lang_data('QSystemTrayIcon.showMessage.processKilled.message').replace('%s', name),
             QSystemTrayIcon.MessageIcon.Critical,
             self.MESSAGE_DURATION
         )
         self.show_alert(
-            message = self.save_data.language_data['QSystemTrayIcon']['showMessage']['processKilled']['message'].replace('%s', name),
+            message = self.get_lang_data('QSystemTrayIcon.showMessage.processKilled.message').replace('%s', name),
             raise_duration = self.ALERT_RAISE_DURATION,
             pause_duration = self.ALERT_PAUSE_DURATION,
             fade_duration = self.ALERT_FADE_DURATION,
@@ -818,13 +818,13 @@ class Application(QBaseApplication):
 
         if error:
             if self.save_data.app_uninstall_failed_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'].replace('%s', name, 1).replace('%s', error),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appUninstallFailed.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appUninstallFailed.message').replace('%s', name, 1).replace('%s', error),
                 QSystemTrayIcon.MessageIcon.Critical,
                 self.MESSAGE_DURATION
             )
             self.show_alert(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallFailed']['message'].replace('%s', name, 1).replace('%s', error),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appUninstallFailed.message').replace('%s', name, 1).replace('%s', error),
                 raise_duration = self.ALERT_RAISE_DURATION,
                 pause_duration = self.ALERT_PAUSE_DURATION,
                 fade_duration = self.ALERT_FADE_DURATION,
@@ -832,13 +832,13 @@ class Application(QBaseApplication):
             )
         else:
             if self.save_data.app_uninstall_done_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appUninstallDone.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appUninstallDone.message').replace('%s', name),
                 QSystemTrayIcon.MessageIcon.Information,
                 self.MESSAGE_DURATION
             )
             self.show_alert(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['appUninstallDone']['message'].replace('%s', name),
+                self.get_lang_data('QSystemTrayIcon.showMessage.appUninstallDone.message').replace('%s', name),
                 raise_duration = self.ALERT_RAISE_DURATION,
                 pause_duration = self.ALERT_PAUSE_DURATION,
                 fade_duration = self.ALERT_FADE_DURATION,
@@ -848,13 +848,13 @@ class Application(QBaseApplication):
 
     def app_exec_failed(self, name: str, error: str) -> None:
         if self.save_data.app_exec_failed_notif: self.sys_tray.showMessage(
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['title'],
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['message'].replace('%s', name, 1).replace('%s', error),
+            self.get_lang_data('QSystemTrayIcon.showMessage.appExecFailed.title'),
+            self.get_lang_data('QSystemTrayIcon.showMessage.appExecFailed.message').replace('%s', name, 1).replace('%s', error),
             QSystemTrayIcon.MessageIcon.Information,
             self.MESSAGE_DURATION * 1.5
         )
         self.show_alert(
-            self.save_data.language_data['QSystemTrayIcon']['showMessage']['appExecFailed']['message'].replace('%s', name, 1).replace('%s', error),
+            self.get_lang_data('QSystemTrayIcon.showMessage.appExecFailed.message').replace('%s', name, 1).replace('%s', error),
             raise_duration = self.ALERT_RAISE_DURATION,
             pause_duration = self.ALERT_PAUSE_DURATION * 1.5,
             fade_duration = self.ALERT_FADE_DURATION,
@@ -885,7 +885,7 @@ class Application(QBaseApplication):
         path = QFileDialog.getOpenFileName(
             parent = self.window,
             dir = self.save_data.apps_folder,
-            caption = self.save_data.language_data['QFileDialog']['locateApp'],
+            caption = self.get_lang_data('QFileDialog.locateApp'),
             filter = ';;'.join([
                 'All supported files (*.exe *.bat *.cmd *.sh *.py *.jar *.app *.dmg *.pkg *.deb *.rpm manifest.json)',
                 'Manifest (manifest.json)',
@@ -1048,7 +1048,7 @@ class Application(QBaseApplication):
                     self.window,
                     name,
                     app,
-                    self.save_data.language_data['QMainWindow']['mainPage']['QSidePanel']['apps']['InstalledButton'],
+                    self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.InstalledButton'),
                     './data/icons/questionMark.svg',
                     False,
                     InstallButton.get_release(InstallButton.platform, self.updates[name], self.save_data.token) if has_update else None,
@@ -1111,21 +1111,21 @@ class Application(QBaseApplication):
         self.about_menu = QMenu(self.window)
         self.about_menu.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        act = self.about_menu.addAction(self.save_data.get_icon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.save_data.language_data['QMenu']['about']['PySide'])
+        act = self.about_menu.addAction(self.save_data.get_icon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.get_lang_data('QMenu.about.PySide'))
         act.triggered.connect(self.aboutQt)
 
-        act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.save_data.language_data['QMenu']['about']['AppManager'])
+        act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.get_lang_data('QMenu.about.AppManager'))
         act.triggered.connect(self.about_clicked)
 
         self.about_menu.addSeparator()
 
-        act = self.about_menu.addAction(self.save_data.get_icon('menubar/bug.png', mode = QSaveData.IconMode.Local), self.save_data.language_data['QMenu']['reportBug'])
+        act = self.about_menu.addAction(self.save_data.get_icon('menubar/bug.png', mode = QSaveData.IconMode.Local), self.get_lang_data('QMenu.reportBug'))
         act.triggered.connect(lambda: QDesktopServices.openUrl(QUrl('https://github.com/Synell/App-Manager/issues')))
 
         self.about_menu.addSeparator()
 
         def create_donate_menu():
-            donate_menu = QMenu(self.save_data.language_data['QMenu']['donate']['title'], self.window)
+            donate_menu = QMenu(self.get_lang_data('QMenu.donate.title'), self.window)
             donate_menu.setIcon(self.save_data.get_icon('menubar/donate.png'))
 
             buymeacoffee_action = QAction(self.save_data.get_icon('menubar/buyMeACoffee.png'), 'Buy Me a Coffee', self.window)
@@ -1145,19 +1145,19 @@ class Application(QBaseApplication):
         self.about_menu.popup(QCursor.pos())
 
     def about_clicked(self) -> None:
-        lang = self.save_data.language_data['QAbout']['AppManager']
+        lang = self.get_lang_data('QAbout.AppManager')
         supports = '\n'.join(f'&nbsp;&nbsp;&nbsp;• <a href=\"{link}\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{name}</a>' for name, link in [
             ('GitHub', 'https://github.com')
         ])
         QAboutBox(
             app = self,
-            title = lang['title'],
+            title = lang.get_data('title'),
             logo = './data/icons/AppManager.svg',
             texts = [
-                lang['texts'][0],
-                lang['texts'][1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">Synel</a>'),
-                lang['texts'][2].replace('%s', supports),
-                lang['texts'][3].replace('%s', f'<a href=\"https://github.com/Synell/App-Manager\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">App Manager Github</a>')
+                lang.get_data('texts')[0],
+                lang.get_data('texts')[1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">Synel</a>'),
+                lang.get_data('texts')[2].replace('%s', supports),
+                lang.get_data('texts')[3].replace('%s', f'<a href=\"https://github.com/Synell/App-Manager\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">App Manager Github</a>')
             ]
         ).exec()
 
@@ -1174,7 +1174,7 @@ class Application(QBaseApplication):
         self.sys_tray_menu = QMenu(self.window)
         self.sys_tray_menu.setCursor(Qt.CursorShape.PointingHandCursor)
         self.sys_tray_menu.setProperty('QSystemTrayIcon', True)
-        act = self.sys_tray_menu.addAction(self.save_data.get_icon('popup/exit.png'), self.save_data.language_data['QSystemTrayIcon']['QMenu']['exit'])
+        act = self.sys_tray_menu.addAction(self.save_data.get_icon('popup/exit.png'), self.get_lang_data('QSystemTrayIcon.QMenu.exit'))
         act.triggered.connect(self.exit)
 
 
@@ -1194,13 +1194,13 @@ class Application(QBaseApplication):
 
         if self.save_data.minimize_to_tray:
             if self.save_data.goes_to_tray_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'],
+                self.get_lang_data('QSystemTrayIcon.showMessage.goesToTray.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.goesToTray.message'),
                 QSystemTrayIcon.MessageIcon.Information,
                 self.MESSAGE_DURATION
             )
             self.show_alert(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['goesToTray']['message'],
+                self.get_lang_data('QSystemTrayIcon.showMessage.goesToTray.message'),
                 raise_duration = self.ALERT_RAISE_DURATION,
                 pause_duration = self.ALERT_PAUSE_DURATION,
                 fade_duration = self.ALERT_FADE_DURATION,
@@ -1212,8 +1212,8 @@ class Application(QBaseApplication):
     def exit(self) -> None:
         if self.downloads or self.uninstalls or self.is_updating:
             if self.save_data.exit_during_work_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringWork']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringWork']['message'],
+                self.get_lang_data('QSystemTrayIcon.showMessage.exitDuringWork.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.exitDuringWork.message'),
                 QSystemTrayIcon.MessageIcon.Information,
                 self.MESSAGE_DURATION
             )
@@ -1222,8 +1222,8 @@ class Application(QBaseApplication):
 
         if any([b.is_process_running() for b in self.app_buttons.values()]):
             if self.save_data.exit_during_work_notif: self.sys_tray.showMessage(
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringAppRun']['title'],
-                self.save_data.language_data['QSystemTrayIcon']['showMessage']['exitDuringAppRun']['message'],
+                self.get_lang_data('QSystemTrayIcon.showMessage.exitDuringAppRun.title'),
+                self.get_lang_data('QSystemTrayIcon.showMessage.exitDuringAppRun.message'),
                 QSystemTrayIcon.MessageIcon.Information,
                 self.MESSAGE_DURATION
             )

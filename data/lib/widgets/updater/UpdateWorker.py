@@ -42,7 +42,7 @@ class UpdateWorker(QThread):
         self.speeds = []
         self.len_speeds = 4
 
-    def run(self):
+    def run(self) -> None:
         self.timer.start()
 
         try:
@@ -118,7 +118,7 @@ class UpdateWorker(QThread):
         self.done = True
 
 
-    def time_triggered(self, deltatime: timedelta):
+    def time_triggered(self, deltatime: timedelta) -> None:
         if self.done: return
 
         if not self.install:
@@ -144,11 +144,11 @@ class UpdateWorker(QThread):
 class TimeWorker(QThread):
     time_triggered = Signal(timedelta)
 
-    def __init__(self, interval: timedelta):
+    def __init__(self, interval: timedelta) -> None:
         super(TimeWorker, self).__init__()
         self.interval = interval
 
-    def run(self):
+    def run(self) -> None:
         while True:
             self.time_triggered.emit(self.interval)
             sleep(self.interval.total_seconds())

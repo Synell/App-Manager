@@ -14,10 +14,7 @@ from data.lib import *
 
     # Class
 class Application(QBaseApplication):
-    BUILD = '07e79429'
-    VERSION = 'Experimental'
-
-    SERVER_NAME = 'AppManager'
+    SERVER_NAME = Info.application_name
 
     TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
     MESSAGE_DURATION = 5000
@@ -31,18 +28,23 @@ class Application(QBaseApplication):
     APP_RELEASES = ['all', 'official', 'pre', 'custom']
 
     def __init__(self, platform: QPlatform) -> None:
-        super().__init__(platform = platform, single_instance = True)
+        super().__init__(platform = platform, app_type = QAppType.Main, single_instance = True)
 
         self.update_request = None
 
         self.setOrganizationName('Synel')
-        # self.setApplicationDisplayName('App Manager')
-        self.setApplicationName('App Manager')
-        self.setApplicationVersion(self.VERSION)
+        # self.setApplicationDisplayName(Info.application_name)
+        self.setApplicationName(Info.application_name)
+        self.setApplicationVersion(Info.version)
 
         self.another_instance_opened.connect(self.on_another_instance)
 
-        self.save_data = SaveData(save_path = os.path.abspath('./data/save.dat').replace('\\', '/'))
+        self.save_data = self.save_data = SaveData(
+            app = self,
+            save_path = Info.save_path,
+            main_color_set = Info.main_color_set,
+            neutral_color_set = Info.neutral_color_set
+        )
         self.must_exit_after_download = False
         self.must_exit_after_app_closed = False
 
@@ -84,14 +86,13 @@ class Application(QBaseApplication):
         self.app_buttons: dict[str, InstalledButtonGroup] = {}
 
         self.save_data.set_stylesheet(self)
-        self.window.setProperty('color', 'cyan')
 
         CustomizeInstallationDialog.categories = self.save_data.categories.copy()
         CustomizeInstallationDialog.default_install_folder = self.save_data.apps_folder
         CustomizeInstallationDialog.default_check_for_updates = self.save_data.check_for_apps_updates
         CustomizeInstallationDialog.default_auto_update = self.save_data.new_apps_auto_update
 
-        self.setWindowIcon(QIcon('./data/icons/AppManager.svg'))
+        self.setWindowIcon(QIcon(Info.icon_path))
 
         self.load_colors()
         self.create_widgets()
@@ -137,7 +138,7 @@ class Application(QBaseApplication):
 
 
     def update_title(self) -> None:
-        self.window.setWindowTitle(self.get_lang_data('QMainWindow.title') + f' | Version: {self.VERSION} | Build: {self.BUILD}')
+        self.window.setWindowTitle(self.get_lang_data('QMainWindow.title') + f' | Version: {Info.version} | Build: {Info.build}')
 
     def load_colors(self) -> None:
         qss = super().load_colors()
@@ -970,7 +971,7 @@ class Application(QBaseApplication):
         update_link = InstallButton.get_release(rel, None)
         if update_link:
             self.must_update_link = update_link.files_data[0].link
-            if rel['tag_name'] > self.BUILD: self.set_update(True)
+            if rel['tag_name'] > Info.build: self.set_update(True)
             else: self.save_data.last_check_for_updates = datetime.now()
 
     def check_updates_failed(self, error: str) -> None:
@@ -1114,7 +1115,7 @@ class Application(QBaseApplication):
         act = self.about_menu.addAction(self.save_data.get_icon('menubar/qt.png', mode = QSaveData.IconMode.Global), self.get_lang_data('QMenu.about.PySide'))
         act.triggered.connect(self.aboutQt)
 
-        act = self.about_menu.addAction(QIcon('./data/icons/AppManager.svg'), self.get_lang_data('QMenu.about.AppManager'))
+        act = self.about_menu.addAction(QIcon(Info.icon_path), self.get_lang_data('QMenu.about.AppManager'))
         act.triggered.connect(self.about_clicked)
 
         self.about_menu.addSeparator()
@@ -1152,7 +1153,7 @@ class Application(QBaseApplication):
         QAboutBox(
             app = self,
             title = lang.get_data('title'),
-            logo = './data/icons/AppManager.svg',
+            logo = Info.icon_path,
             texts = [
                 lang.get_data('texts')[0],
                 lang.get_data('texts')[1].replace('%s', f'<a href=\"https://github.com/Synell\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">Synel</a>'),
@@ -1166,8 +1167,8 @@ class Application(QBaseApplication):
         self.window.closeEvent = self.close_event
 
         self.sys_tray = QSystemTrayIcon(self)
-        self.sys_tray.setToolTip('App Manager')
-        self.sys_tray.setIcon(QIcon('./data/icons/AppManager.svg'))
+        self.sys_tray.setToolTip(Info.application_name)
+        self.sys_tray.setIcon(QIcon(Info.icon_path))
         self.sys_tray.setVisible(True)
         self.sys_tray.activated.connect(self.on_sys_tray_activated)
 

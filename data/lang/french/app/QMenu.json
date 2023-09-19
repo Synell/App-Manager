@@ -1,0 +1,12 @@
+{
+    "about": {
+        "PySide": "A Propos de PySide...",
+        "AppManager": "A Propos de App Manager..."
+    },
+    "whatsNew": "Nouveautés...",
+    "changelog": "Journal des Modifications...",
+    "reportBug": "Signaler un Bug...",
+    "donate": {
+        "title": "Faire un Don"
+    }
+}

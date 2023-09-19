@@ -1,0 +1,13 @@
+{
+    "QMainWindow": {
+        "title": "App Manager",
+        "mainPage": "#ref: app/mainPage",
+        "installAppPage": "#ref: app/installAppPage"
+    },
+    "QSettingsDialog": "#ref: app/QSettingsDialog",
+    "QMessageBox": "#ref: app/QMessageBox",
+    "QAbout": "#ref: app/QAbout",
+    "QFileDialog": "#ref: app/QFileDialog",
+    "QMenu": "#ref: app/QMenu",
+    "QSystemTrayIcon": "#ref: app/QSystemTrayIcon"
+}

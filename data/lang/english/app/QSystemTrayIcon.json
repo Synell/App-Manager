@@ -1,0 +1,63 @@
+{
+    "QMenu": {
+        "exit": "Exit"
+    },
+    "showMessage": {
+        "goesToTray": {
+            "title": "Goes to Tray",
+            "message": "App Manager is still running in the background."
+        },
+        "exitDuringWork": {
+            "title": "Exit During Work",
+            "message": "App Manager is still running in the background because it is working. It will be closed when the work is done."
+        },
+        "exitDuringAppRun": {
+            "title": "Exit During App Run",
+            "message": "App Manager is still running in the background because an app is running. It will be closed when the app is closed."
+        },
+        "updateDone": {
+            "title": "Update Done",
+            "message": "The update has been successfully installed."
+        },
+        "updateError": {
+            "title": "Update Error",
+            "message": "An error occurred while updating.\n%s"
+        },
+        "appInstallDone": {
+            "title": "App Install Done",
+            "message": "%s has been successfully installed."
+        },
+        "appInstallFailed": {
+            "title": "App Install Failed",
+            "message": "An error occurred while installing %s.\n%s"
+        },
+        "appUninstallDone": {
+            "title": "App Uninstall Done",
+            "message": "%s has been successfully uninstalled."
+        },
+        "appUninstallFailed": {
+            "title": "App Uninstall Failed",
+            "message": "An error occurred while uninstalling %s.\n%s"
+        },
+        "appExecFailed": {
+            "title": "App Launch Failed",
+            "message": "An error occurred while launching %s.\nTry to edit the launch command in the advanced app settings.\nError: %s"
+        },
+        "requestWorkerFailed": {
+            "title": "Request Failed",
+            "message": "An error occurred while requesting.\n%s"
+        },
+        "processAlreadyRunning": {
+            "title": "Process Already Running",
+            "message": "The process %s is already running."
+        },
+        "processEnded": {
+            "title": "Process Ended",
+            "message": "The process %s has ended."
+        },
+        "processKilled": {
+            "title": "Process Killed",
+            "message": "The process %s has been killed."
+        }
+    }
+}

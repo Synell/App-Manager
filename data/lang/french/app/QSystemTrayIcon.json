@@ -1,0 +1,63 @@
+{
+    "QMenu": {
+        "exit": "Quitter"
+    },
+    "showMessage": {
+        "goesToTray": {
+            "title": "Minimisé dans la Barre des Tâches",
+            "message": "App Manager est maintenant minimisé dans la barre des tâches."
+        },
+        "exitDuringWork": {
+            "title": "Fermeture pendant un Travail",
+            "message": "App Manager tourne toujours en arrière-plan parce qu'il est en train de travailler. L'application sera fermée lorsque le travail sera terminé."
+        },
+        "exitDuringAppRun": {
+            "title": "Fermeture pendant l'Exécution d'une Application",
+            "message": "App Manager tourne toujours en arrière-plan parce qu'une application est en train de s'exécuter. L'application sera fermée lorsque l'application sera fermée."
+        },
+        "updateDone": {
+            "title": "Mise à Jour Terminée",
+            "message": "App Manager a été mis à jour avec succès."
+        },
+        "updateError": {
+            "title": "Erreur de Mise à Jour",
+            "message": "Une erreur est survenue lors de la mise à jour de App Manager.\n%s"
+        },
+        "appInstallDone": {
+            "title": "Installation de l'Application Terminée",
+            "message": "%s a été installée avec succès."
+        },
+        "appInstallError": {
+            "title": "Erreur d'Installation de l'Application",
+            "message": "Une erreur est survenue lors de l'installation de %s.\n%s"
+        },
+        "appUninstallDone": {
+            "title": "Désinstallation de l'Application Terminée",
+            "message": "%s a été désinstallée avec succès."
+        },
+        "appUninstallError": {
+            "title": "Erreur de Désinstallation de l'Application",
+            "message": "Une erreur est survenue lors de la désinstallation de %s.\n%s"
+        },
+        "appExecFailed": {
+            "title": "Erreur d'Exécution de l'Application",
+            "message": "Une erreur est survenue lors du lancement de %s.\nEssayez d'éditer la commande de lancement dans les paramètres avancés de l'application.\nErreur: %s"
+        },
+        "requestWorkerFailed": {
+            "title": "Erreur de Requête",
+            "message": "Une erreur est survenue lors de la requête.\n%s"
+        },
+        "processAlreadyRunning": {
+            "title": "Processus Déjà en Cours",
+            "message": "Le processus %s est déjà en cours."
+        },
+        "processEnded": {
+            "title": "Processus Arrêté",
+            "message": "Le processus %s a été arrêté."
+        },
+        "processKilled": {
+            "title": "Processus Tué",
+            "message": "Le processus %s a été tué."
+        }
+    }
+}

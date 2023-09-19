@@ -1,0 +1,169 @@
+{
+    "QSidePanel": {
+        "apps": {
+            "title": "Applications",
+            "QPushButton": {
+                "locate": "Localiser",
+                "installApp": "Installer une Application",
+                "update": "Mettre à jour"
+            },
+            "QLineEdit": {
+                "search": "Rechercher"
+            },
+            "QTabWidget": {
+                "all": "Tout",
+                "official": "Sorties Officielles",
+                "pre": "Pré-Sorties",
+                "custom": "Sorties Personnalisées"
+            },
+            "InstalledButton": {
+                "QAction": {
+                    "showInExplorer": "Ouvrir dans l'Explorateur de Fichiers",
+                    "edit": "Éditer",
+                    "killProcess": "Arrêter le Processus",
+                    "removeFromList": "Supprimer de la Liste",
+                    "uninstall": "Désinstaller"
+                },
+                "QPushButton": {
+                    "update": "Mettre à jour"
+                },
+                "EditAppDialog": {
+                    "title": "App Manager > Éditer une Application (%s)",
+                    "QPushButton": {
+                        "apply": "Appliquer",
+                        "cancel": "Annuler"
+                    },
+                    "QSidePanel": {
+                        "general": {
+                            "title": "Général",
+                            "QLabel": {
+                                "name": {
+                                    "title": "Nom",
+                                    "description": "Le nom de l'application."
+                                },
+                                "version": {
+                                    "title": "Version",
+                                    "description": "La version de l'application."
+                                },
+                                "release": {
+                                    "title": "Sortie",
+                                    "description": "Le type de sortie de l'application.",
+                                    "official": "Officielle",
+                                    "pre": "Pré-Sortie",
+                                    "custom": "Personnalisée"
+                                },
+                                "releaseDate": {
+                                    "title": "Date de Sortie",
+                                    "description": "La date de sortie de l'application."
+                                },
+                                "location": {
+                                    "title": "Emplacement",
+                                    "description": "L'emplacement de l'application."
+                                },
+                                "category": {
+                                    "title": "Catégorie",
+                                    "description": "La catégorie de l'application."
+                                }
+                            },
+                            "QNamedComboBox": {
+                                "category": {
+                                    "title": "Catégorie",
+                                    "values": {
+                                        "none": "Aucune"
+                                    }
+                                }
+                            }
+                        },
+                        "advanced": {
+                            "title": "Avancé",
+                            "QLabel": {
+                                "cwd": {
+                                    "title": "Répertoire de Travail",
+                                    "description": "Le répertoire de travail de l'application."
+                                },
+                                "command": {
+                                    "title": "Commande",
+                                    "description": "La commande de lancement de l'application (relative au répertoire de travail)."
+                                }
+                            },
+                            "QNamedLineEdit": {
+                                "cwd": "Répertoire de Travail",
+                                "command": "Commande"
+                            },
+                            "QFileButton": {
+                                "cwd": {
+                                    "title": "Répertoire de Travail",
+                                    "dialog": "App Manager > Éditer une Application > Répertoire de Travail"
+                                }
+                            }
+                        },
+                        "updates": {
+                            "title": "Mises à Jour",
+                            "QLabel": {
+                                "checkForUpdates": {
+                                    "title": "Vérifier les Mises à Jour",
+                                    "description": "Fréquence de vérification des mises à jour de l'application, tout en dépendant des paramètres généraux."
+                                },
+                                "autoUpdate": {
+                                    "title": "Mise à Jour Automatique",
+                                    "description": "Mettre à jour automatiquement l'application lorsqu'une mise à jour est disponible."
+                                }
+                            },
+                            "QNamedComboBox": {
+                                "checkForUpdates": {
+                                    "title": "Vérifier les Mises à Jour",
+                                    "values": {
+                                        "never": "Jamais",
+                                        "daily": "Quotidienne",
+                                        "weekly": "Hebdomadaire",
+                                        "monthly": "Mensuelle",
+                                        "atLaunch": "Au Lancement"
+                                    }
+                                    
+                                }
+                            },
+                            "QToggleButton": {
+                                "autoUpdate": "Mise à Jour Automatique"
+                            }
+                        },
+                        "icon": {
+                            "title": "Icône",
+                            "QLabel": {
+                                "icon": {
+                                    "title": "Icône",
+                                    "description": "L'icône de l'application."
+                                },
+                                "predefinedIcons": {
+                                    "title": "Icônes Prédéfinies",
+                                    "description": "Une liste d'icônes prédéfinies disponibles pour l'application."
+                                },
+                                "currentIcon": "Icône Actuelle"
+                            },
+                            "QFileButton": {
+                                "icon": {
+                                    "title": "Icône",
+                                    "dialog":"App Manager > Éditer une Application > Icône"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "downloads": {
+            "title": "Téléchargements",
+            "QLabel": {
+                "noDownload": {
+                    "title": "Aucun téléchargement en cours",
+                    "text": "Les téléchargements récents et en\ncours apparaîtront ici"
+                },
+                "download": "Téléchargement",
+                "install": "Installation",
+                "waiting": "En attente",
+                "done": "Terminé",
+                "bytes": "%s/s",
+                "items": "%s éléments/s"
+            }
+        }
+    }
+}

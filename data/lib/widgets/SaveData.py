@@ -13,7 +13,7 @@ from datetime import datetime
 from contextlib import suppress
 import os
 
-from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor, QDragList
+from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor, QDragList, QBaseApplication
 #----------------------------------------------------------------------
 
     # Class
@@ -21,8 +21,8 @@ class SaveData(QSaveData):
     dateformat = '%Y-%m-%dT%H:%M:%SZ'
     COLOR_LINK = QUtilsColor()
 
-    def __init__(self, save_path: str = './data/save.dat') -> None:
-        self.platform = PlatformType.Windows
+    def __init__(self, app: QBaseApplication, save_path: str = './data/save.dat', main_color_set: QSaveData.ColorSet = None, neutral_color_set: QSaveData.ColorSet = None) -> None:
+        self.platform = PlatformType.from_qplatform(app.platform)
         self.apps_folder = os.path.abspath('./data/apps/').replace('\\', '/')
         self.downloads_folder = os.path.abspath('./data/downloads/').replace('\\', '/')
         self.apps = {'official': [], 'pre': [], 'custom': []}
@@ -60,7 +60,7 @@ class SaveData(QSaveData):
         self.process_ended_notif = True
         self.process_killed_notif = True
 
-        super().__init__(save_path)
+        super().__init__(app, save_path, main_color_set = main_color_set, neutral_color_set = neutral_color_set)
 
 
     @property
@@ -578,7 +578,7 @@ class SaveData(QSaveData):
             'processKilledNotif': self.process_killed_notif
         }
 
-    def _load_extra_data(self, extra_data: dict = ..., reload: list = []) -> bool:
+    def _load_extra_data(self, extra_data: dict = ..., reload: list = [], reload_all: bool = False) -> bool:
         exc = suppress(Exception)
         res = False
 

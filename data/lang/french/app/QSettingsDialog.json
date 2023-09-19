@@ -1,0 +1,310 @@
+{
+    "title": "App Manager > Paramètres",
+    "QSidePanel": {
+        "appearance": {
+            "title": "Apparence",
+            "QLabel": {
+                "language": {
+                    "title": "Langage",
+                    "description": "Sélectionnez un langage à afficher pour App Manager."
+                },
+                "theme": {
+                    "title": "Thème",
+                    "description": "Sélectionnez un thème à afficher pour App Manager."
+                }
+            },
+            "QNamedComboBox": {
+                "language": "Langage",
+                "theme": "Thème",
+                "themeVariant": "Variante du Thème"
+            }
+        },
+        "installs": {
+            "title": "Installations",
+            "QLabel": {
+                "installsLocation": {
+                    "title": "Emplacement des Installations",
+                    "description": "Sélectionnez un emplacement pour les installations. Les installations existantes ne seront pas affectées."
+                },
+                "downloadsLocation": {
+                    "title": "Emplacement des Téléchargements",
+                    "description": "Sélectionnez un emplacement pour les téléchargements."
+                }
+            },
+            "QFileButton": {
+                "installsLocation": {
+                    "title": "Emplacement des Installations",
+                    "dialog": "App Manager > Paramètres > Installations > Emplacement des Installations"
+                },
+                "downloadsLocation": {
+                    "title": "Emplacement des Téléchargements",
+                    "dialog": "App Manager > Paramètres > Installations > Emplacement des Téléchargements"
+                }
+            }
+        },
+        "updates": {
+            "title": "Mises à Jour",
+            "QLabel": {
+                "checkForUpdates": {
+                    "title": "Vérifier les Mises à Jour",
+                    "description": "Détermine la fréquence de vérification des mises à jour de App Manager."
+                },
+                "checkForAppsUpdates": {
+                    "title": "Vérifier les Mises à Jour des Applications",
+                    "description": "Détermine la fréquence de vérification des mises à jour des applications."
+                },
+                "newAppsCheckForUpdates": {
+                    "title": "Paramètre de fréquence des Mises à Jour pour les Nouvelles Applications",
+                    "description": "Détermine le paramètre de fréquence des mises à jour pour les nouvelles applications."
+                },
+                "newAppsAutoUpdate": {
+                    "title": "Paramètre de Mise à Jour Automatique pour les Nouvelles Applications",
+                    "description": "Détermine le paramètre de mise à jour automatique pour les nouvelles applications."
+                }
+            },
+            "QNamedComboBox": {
+                "checkForUpdates": {
+                    "title": "Vérifier les Mises à Jour",
+                    "values": {
+                        "never": "Jamais",
+                        "daily": "Quotidienne",
+                        "weekly": "Hebdomadaire",
+                        "monthly": "Mensuelle",
+                        "atLaunch": "Au lancement"
+                    }
+                },
+                "checkForAppsUpdates": {
+                    "title": "Vérifier les Mises à Jour des Applications",
+                    "values": {
+                        "never": "Jamais",
+                        "daily": "Quotidienne",
+                        "weekly": "Hebdomadaire",
+                        "monthly": "Mensuelle",
+                        "atLaunch": "Au lancement"
+                    }
+                },
+                "newAppsCheckForUpdates": {
+                    "title": "Vérifier les Mises à Jour",
+                    "values": {
+                        "never": "Jamais",
+                        "daily": "Quotidienne",
+                        "weekly": "Hebdomadaire",
+                        "monthly": "Mensuelle",
+                        "atLaunch": "Au lancement"
+                    }
+                }
+            },
+            "QToggleButton": {
+                "newAppsAutoUpdate": "Mise à Jour Automatique"
+            }
+        },
+        "interface": {
+            "title": "Interface",
+            "QLabel": {
+                "startAtLaunch": {
+                    "title": "Démarrer au Lancement",
+                    "description": "Détermine si App Manager démarre automatiquement au lancement de l'ordinateur."
+                },
+                "minimizeToTray": {
+                    "title": "Minimiser dans la Barre des Tâches",
+                    "description": "Détermine si App Manager est minimisé dans la barre des tâches au lieu d'être fermé."
+                },
+                "compactPaths": {
+                    "title": "Chemins Compacts",
+                    "description": "Détermine si App Manager compacte les chemins des applications dans la liste des installations."
+                }
+            },
+            "QNamedComboBox": {
+                "compactPaths": {
+                    "title": "Chemins Compacts",
+                    "values": {
+                        "auto": "Automatique",
+                        "disabled": "Désactivé",
+                        "enabled": "Activé"
+                    }
+                }
+            },
+            "QToggleButton": {
+                "startAtLaunch": "Démarrer au Lancement",
+                "minimizeToTray": "Minimiser dans la Barre des Tâches"
+            }
+        },
+        "notification": {
+            "title": "Notification",
+            "QLabel": {
+                "goesToTray": {
+                    "title": "Notification de Minimisation dans la Barre des Tâches",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'il est minimisé dans la barre des tâches."
+                },
+                "exitDuringWork": {
+                    "title": "Notification de Fermeture pendant un Travail",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'il est fermé pendant un travail."
+                },
+                "exitDuringAppRun": {
+                    "title": "Notification de Fermeture pendant l'Exécution d'une Application",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'il est fermé pendant l'exécution d'une application."
+                },
+                "updateDone": {
+                    "title": "Notification de Mise à Jour Terminée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une mise à jour est terminée."
+                },
+                "updateFailed": {
+                    "title": "Notification de Mise à Jour Échouée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une mise à jour échoue."
+                },
+                "appInstallDone": {
+                    "title": "Notification d'Installation d'Application Terminée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une installation d'application est terminée."
+                },
+                "appInstallFailed": {
+                    "title": "Notification d'Installation d'Application Échouée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une installation d'application échoue."
+                },
+                "appUninstallDone": {
+                    "title": "Notification de Désinstallation d'Application Terminée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une désinstallation d'application est terminée."
+                },
+                "appUninstallFailed": {
+                    "title": "Notification de Désinstallation d'Application Échouée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une désinstallation d'application échoue."
+                },
+                "appExecFailed": {
+                    "title": "Notification d'Exécution d'Application Échouée",
+                    "description": "Détermine si App Manager affiche une notification lorsque le lancement d'une application échoue."
+                },
+                "requestWorkerFailed": {
+                    "title": "Notification de Requête Échouée",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'une requête pour chercher des mises à jour ou des applications échoue."
+                },
+                "processAlreadyRunning": {
+                    "title": "Notification de Processus Déjà en Cours",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'un processus est déjà en cours."
+                },
+                "processEnded": {
+                    "title": "Notification de Processus Arrêté",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'un processus est arrêté."
+                },
+                "processKilled": {
+                    "title": "Notification de Processus Tué",
+                    "description": "Détermine si App Manager affiche une notification lorsqu'un processus est tué."
+                }
+            },
+            "QToggleButton": {
+                "goesToTray": "Minimiser dans la Barre des Tâches",
+                "exitDuringWork": "Fermer pendant un Travail",
+                "exitDuringAppRun": "Fermer pendant l'Exécution d'une Application",
+                "updateDone": "Mise à Jour Terminée",
+                "updateFailed": "Mise à Jour Échouée",
+                "appInstallDone": "Installation d'Application Terminée",
+                "appInstallFailed": "Installation d'Application Échouée",
+                "appUninstallDone": "Désinstallation d'Application Terminée",
+                "appUninstallFailed": "Désinstallation d'Application Échouée",
+                "appExecFailed": "Exécution d'Application Échouée",
+                "requestWorkerFailed": "Requête Échouée",
+                "processAlreadyRunning": "Processus Déjà en Cours",
+                "processEnded": "Processus Arrêté",
+                "processKilled": "Processus Tué"
+            },
+            "QPushButton": {
+                "checkAll": "Tout Cocher",
+                "uncheckAll": "Tout Décocher",
+                "invertAll": "Inverser la Sélection"
+            }
+        },
+        "token": {
+            "title": "Jeton d'Authentification",
+            "QLabel": {
+                "github": {
+                    "title": "Jeton d'Authentification GitHub",
+                    "description": "Utilise un jeton d'authentification qui d'augmenter le nombre de requêtes autorisées.",
+                    "createToken": "Consulter la documentation pour créer un jeton d'authentification."
+                }
+            },
+            "QNamedLineEdit": {
+                "github": "Jeton d'Authentification GitHub"
+            }
+        },
+        "followedApps": {
+            "title": "Applications Suivies",
+            "QLabel": {
+                "followedApps": {
+                    "title": "Applications Suivies",
+                    "description": "Sélectionnez les applications à suivre qui apparaîtront dans le menu d'installation. Ces applications seront également vérifiées pour les mises à jour."
+                }
+            },
+            "SettingsListNamedItem": {
+                "QNamedLineEdit": {
+                    "url": "URL"
+                }
+            }
+        },
+        "categories": {
+            "title": "Catégories",
+            "QLabel": {
+                "categories": {
+                    "title": "Catégories",
+                    "description": "Sélectionnez les catégories qui apparaîtront dans la barre latérale. Vous pouvez modifier la catégorie d'une application dans ses paramètres."
+                }
+            },
+            "CategoryListNamedItem": {
+                "QNamedLineEdit": {
+                    "category": "Catégorie"
+                },
+                "EditCategoryIconDialog": {
+                    "title": "App Manager > Paramètres > Catégories > Modifier l'icône de la catégorie",
+                    "QPushButton": {
+                        "cancel": "Annuler",
+                        "apply": "Appliquer"
+                    },
+                    "QLabel": {
+                        "icon": {
+                            "title": "Icône",
+                            "description": "Sélectionnez une icône pour la catégorie. Vous pouvez utiliser une icône prédéfinie ou une icône personnalisée."
+                        },
+                        "predefinedIcons": {
+                            "title": "Icônes Prédéfinies",
+                            "description": "Une liste d'icônes prédéfinies disponibles pour l'application."
+                        },
+                        "currentIcon": "Icône actuelle"
+                    },
+                    "QFileButton": {
+                        "icon": {
+                            "title": "Icône",
+                            "dialog": "App Manager > Paramètres > Catégories > Modifier l'icône de la catégorie > Sélectionner une icône"
+                        }
+                    }
+                }
+            }
+        },
+        "data": {
+            "title": "Données",
+            "QLabel": {
+                "clearData": {
+                    "title": "Effacer les Données",
+                    "description": "Efface toutes les données et redémarre l'application."
+                },
+                "importData": {
+                    "title": "Importer les Données",
+                    "description": "Importe des données à partir d'un fichier et redémarre l'application."
+                },
+                "exportData": {
+                    "title": "Exporter les Données",
+                    "description": "Exporte les données vers un fichier."
+                }
+            },
+            "QPushButton": {
+                "clearData": "Effacer les Données",
+                "importData": "Importer les Données",
+                "exportData": "Exporter les Données"
+            },
+            "QFileDialog": {
+                "importData": "App Manager > Paramètres > Données > Importer les Données",
+                "exportData": "App Manager > Paramètres > Données > Exporter les Données"
+            }
+        }
+    },
+    "QPushButton": {
+        "cancel": "Annuler",
+        "apply": "Appliquer"
+    }
+}

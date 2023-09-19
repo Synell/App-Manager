@@ -1,0 +1,310 @@
+{
+    "title": "App Manager > Settings",
+    "QSidePanel": {
+        "appearance": {
+            "title": "Appearance",
+            "QLabel": {
+                "language": {
+                    "title": "Language",
+                    "description": "Select a display language for App Manager."
+                },
+                "theme": {
+                    "title": "Theme",
+                    "description": "Select a display theme for App Manager."
+                }
+            },
+            "QNamedComboBox": {
+                "language": "Language",
+                "theme": "Theme",
+                "themeVariant": "Theme Variant"
+            }
+        },
+        "installs": {
+            "title": "Installs",
+            "QLabel": {
+                "installsLocation": {
+                    "title": "Installs Location",
+                    "description": "Select a location for new installs. Existing installs will not be affected."
+                },
+                "downloadsLocation": {
+                    "title": "Downloads Location",
+                    "description": "Select a location for new downloads."
+                }
+            },
+            "QFileButton": {
+                "installsLocation": {
+                    "title": "Installs Location",
+                    "dialog": "App Manager > Settings > Installs > Installs Location"
+                },
+                "downloadsLocation": {
+                    "title": "Downloads Location",
+                    "dialog": "App Manager > Settings > Installs > Downloads Location"
+                }
+            }
+        },
+        "updates": {
+            "title": "Updates",
+            "QLabel": {
+                "checkForUpdates": {
+                    "title": "Check for Updates",
+                    "description": "Determines how often App Manager checks for updates."
+                },
+                "checkForAppsUpdates": {
+                    "title": "Check for Apps Updates",
+                    "description": "Determines how often App Manager checks for apps updates."
+                },
+                "newAppsCheckForUpdates": {
+                    "title": "Check for Updates Frequency Setting for New Apps",
+                    "description": "Determines the check for updates frequency setting for new apps."
+                },
+                "newAppsAutoUpdate": {
+                    "title": "Auto Update Setting for New Apps",
+                    "description": "Determines the auto update setting for new apps."
+                }
+            },
+            "QNamedComboBox": {
+                "checkForUpdates": {
+                    "title": "Check for Updates",
+                    "values": {
+                        "never": "Never",
+                        "daily": "Daily",
+                        "weekly": "Weekly",
+                        "monthly": "Monthly",
+                        "atLaunch": "At Launch"
+                    }
+                },
+                "checkForAppsUpdates": {
+                    "title": "Check for Apps Updates",
+                    "values": {
+                        "never": "Never",
+                        "daily": "Daily",
+                        "weekly": "Weekly",
+                        "monthly": "Monthly",
+                        "atLaunch": "At Launch"
+                    }
+                },
+                "newAppsCheckForUpdates": {
+                    "title": "Check for Updates",
+                    "values": {
+                        "never": "Never",
+                        "daily": "Daily",
+                        "weekly": "Weekly",
+                        "monthly": "Monthly",
+                        "atLaunch": "At Launch"
+                    }
+                }
+            },
+            "QToggleButton": {
+                "newAppsAutoUpdate": "Auto Update"
+            }
+        },
+        "interface": {
+            "title": "Interface",
+            "QLabel": {
+                "startAtLaunch": {
+                    "title": "Start at Launch",
+                    "description": "Determines whether App Manager starts at launch."
+                },
+                "minimizeToTray": {
+                    "title": "Minimize to Tray",
+                    "description": "Determines whether App Manager minimizes to the tray when closed."
+                },
+                "compactPaths": {
+                    "title": "Compact Paths",
+                    "description": "Determines whether App Manager compacts paths in the interface."
+                }
+            },
+            "QNamedComboBox": {
+                "compactPaths": {
+                    "title": "Compact Paths",
+                    "values": {
+                        "auto": "Auto",
+                        "disabled": "Disabled",
+                        "enabled": "Enabled"
+                    }
+                }
+            },
+            "QToggleButton": {
+                "startAtLaunch": "Start at Launch",
+                "minimizeToTray": "Minimize to Tray"
+            }
+        },
+        "notification": {
+            "title": "Notification",
+            "QLabel": {
+                "goesToTray": {
+                    "title": "Goes to Tray Notification",
+                    "description": "Determines if a notification will be sent when the app goes to the tray."
+                },
+                "exitDuringWork": {
+                    "title": "Exit During Work Notification",
+                    "description": "Determines if a notification will be sent when the app is exited during work."
+                },
+                "exitDuringAppRun": {
+                    "title": "Exit During App Run Notification",
+                    "description": "Determines if a notification will be sent when the app is exited during an app run."
+                },
+                "updateDone": {
+                    "title": "Update Done Notification",
+                    "description": "Determines if a notification will be sent when an update is done."
+                },
+                "updateFailed": {
+                    "title": "Update Failed Notification",
+                    "description": "Determines if a notification will be sent when an update fails."
+                },
+                "appInstallDone": {
+                    "title": "App Install Done Notification",
+                    "description": "Determines if a notification will be sent when an app install is done."
+                },
+                "appInstallFailed": {
+                    "title": "App Install Failed Notification",
+                    "description": "Determines if a notification will be sent when an app install fails."
+                },
+                "appUninstallDone": {
+                    "title": "App Uninstall Done Notification",
+                    "description": "Determines if a notification will be sent when an app uninstall is done."
+                },
+                "appUninstallFailed": {
+                    "title": "App Uninstall Failed Notification",
+                    "description": "Determines if a notification will be sent when an app uninstall fails."
+                },
+                "appExecFailed": {
+                    "title": "App Launch Failed Notification",
+                    "description": "Determines if a notification will be sent when an app launch fails."
+                },
+                "requestWorkerFailed": {
+                    "title": "Request Failed Notification",
+                    "description": "Determines if a notification will be sent when a request for getting updates or apps fails."
+                },
+                "processAlreadyRunning": {
+                    "title": "Process Already Running Notification",
+                    "description": "Determines if a notification will be sent when a process is already running."
+                },
+                "processEnded": {
+                    "title": "Process Ended Notification",
+                    "description": "Determines if a notification will be sent when a process ends."
+                },
+                "processKilled": {
+                    "title": "Process Killed Notification",
+                    "description": "Determines if a notification will be sent when a process is killed."
+                }
+            },
+            "QToggleButton": {
+                "goesToTray": "Goes to Tray",
+                "exitDuringWork": "Exit During Work",
+                "exitDuringAppRun": "Exit During App Run",
+                "updateDone": "Update Done",
+                "updateFailed": "Update Failed",
+                "appInstallDone": "App Install Done",
+                "appInstallFailed": "App Install Failed",
+                "appUninstallDone": "App Uninstall Done",
+                "appUninstallFailed": "App Uninstall Failed",
+                "appExecFailed": "App Launch Failed",
+                "requestWorkerFailed": "Request Failed",
+                "processAlreadyRunning": "Process Already Running",
+                "processEnded": "Process Ended",
+                "processKilled": "Process Killed"
+            },
+            "QPushButton": {
+                "checkAll": "Check All",
+                "uncheckAll": "Uncheck All",
+                "invertAll": "Invert All"
+            }
+        },
+        "token": {
+            "title": "Token",
+            "QLabel": {
+                "github": {
+                    "title": "GitHub Token",
+                    "description": "The GitHub token used to increase the rate limit.",
+                    "createToken": "Check out the documentation to learn how to create a token."
+                }
+            },
+            "QNamedLineEdit": {
+                "github": "GitHub Token"
+            }
+        },
+        "followedApps": {
+            "title": "Followed Apps",
+            "QLabel": {
+                "followedApps": {
+                    "title": "Followed Apps",
+                    "description": "Select apps to follow that will show in the install menu. These apps will also be checked for updates."
+                }
+            },
+            "SettingsListNamedItem": {
+                "QNamedLineEdit": {
+                    "url": "URL"
+                }
+            }
+        },
+        "categories": {
+            "title": "Categories",
+            "QLabel": {
+                "categories": {
+                    "title": "Categories",
+                    "description": "Select categories to show in the app side panel. You can edit the category of an application in its settings."
+                }
+            },
+            "CategoryListNamedItem": {
+                "QNamedLineEdit": {
+                    "category": "Category"
+                },
+                "EditCategoryIconDialog": {
+                    "title": "App Manager > Settings > Categories > Edit Icon",
+                    "QPushButton": {
+                        "cancel": "Cancel",
+                        "apply": "Apply"
+                    },
+                    "QLabel": {
+                        "icon": {
+                            "title": "Icon",
+                            "description": "The icon of the category."
+                        },
+                        "predefinedIcons": {
+                            "title": "Predefined Icons",
+                            "description": "A list of predefined icons available for the app."
+                        },
+                        "currentIcon": "Current Icon"
+                    },
+                    "QFileButton": {
+                        "icon": {
+                            "title": "Icon",
+                            "dialog": "App Manager > Settings > Categories > Edit Icon > Icon"
+                        }
+                    }
+                }
+            }
+        },
+        "data": {
+            "title": "Data",
+            "QLabel": {
+                "clearData": {
+                    "title": "Clear Data",
+                    "description": "Clears all data stored by App Manager and restarts the app."
+                },
+                "importData": {
+                    "title": "Import Data",
+                    "description": "Imports data from a file and restarts the app. This will overwrite all data."
+                },
+                "exportData": {
+                    "title": "Export Data",
+                    "description": "Exports data to a file."
+                }
+            },
+            "QPushButton": {
+                "clearData": "Clear Data",
+                "importData": "Import Data",
+                "exportData": "Export Data"
+            },
+            "QFileDialog": {
+                "importData": "App Manager > Settings > Data > Import Data",
+                "exportData": "App Manager > Settings > Data > Export Data"
+            }
+        }
+    },
+    "QPushButton": {
+        "cancel": "Cancel",
+        "apply": "Apply"
+    }
+}

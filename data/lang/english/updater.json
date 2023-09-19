@@ -1,0 +1,56 @@
+{
+    "QUpdater": {
+        "title": "App Manager Updater",
+        "QLabel": {
+            "downloading": "Downloading... (%s)",
+            "installing": "Installing... (%s)",
+            "calculatingRemainingTime": "Calculating remaining time...",
+            "remainingTime": "Remaining time: %s",
+            "waiting": "Waiting...",
+            "done": "Done",
+            "bytes": "%s/s",
+            "items": "%s packages/s",
+            "eta": "ETA: %s",
+            "days": "%s days",
+            "hours": "%s hours",
+            "minutes": "%s minutes",
+            "seconds": "%s seconds",
+            "day": "%s day",
+            "hour": "%s hour",
+            "minute": "%s minute",
+            "second": "%s second",
+            "undefined": "Undefined"
+        },
+        "QSlidingStackedWidget": {
+            "texts": [
+                "App Manager is being updated to the latest version.",
+                "App Manager allows you to update apps in a simple and intuitive way, without the need to use the command line or even having to manually download and install apps.",
+                "Don't forget that you can follow apps to show them in the install menu and to be notified when they are updated.\nThis way, you will always have the latest version of the apps you use.\n\nTo follow an app, just go into the settings and click on the \"Followed Apps\" tab. Then, click on the \"+\" button and paste the URL of the app you want to follow.",
+                "To uninstall an app, just click on the \"Uninstall\" button in the app settings popup.",
+                "You can choose how often App Manager checks for updates in the settings."
+            ]
+        },
+        "QMessageBox": {
+            "critical": {
+                "downloadFailed": {
+                    "title": "Download Failed",
+                    "text": "An error occurred while downloading the update."
+                },
+                "installFailed": {
+                    "title": "Install Failed",
+                    "text": "An error occurred while installing the update."
+                },
+                "openAppFailed": {
+                    "title": "Open App Failed",
+                    "text": "An error occurred while opening the app."
+                },
+                "appNotFound": {
+                    "title": "App Not Found",
+                    "text": "The app was not found."
+                }
+            },
+            "warning": {},
+            "information": {}
+        }
+    }
+}

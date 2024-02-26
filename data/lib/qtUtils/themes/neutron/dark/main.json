@@ -51,6 +51,12 @@
         "QToggleButton",
         "QNamedToggleButton",
         "QSystemTrayIcon",
-        "QAlert"
+        "QAlert",
+        "QBetterToolTip",
+        "QProgressIndicator",
+        "QBetterGraphicsView",
+        "QBetterGraphicsItemWidget",
+        "QNodeGraphicsItemWidgetField",
+        "QNodeGraphicsItemWidget"
     ]
 }

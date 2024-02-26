@@ -8,6 +8,7 @@ from PySide6.QtNetwork import QLocalSocket, QLocalServer
 from PySide6.QtGui import QIcon, QPixmap
 from typing import Union
 
+from .QLangDataManager import QLangData
 from .QSaveData import QSaveData
 
 from .QPlatform import QPlatform
@@ -23,6 +24,12 @@ from .QNamedHexSpinBox import QNamedHexSpinBox
 from .QToggleButton import QToggleButton
 from .QFileButton import QFileButton
 from .QLinkLabel import QLinkLabel
+from .QDropDownWidget import QDropDownWidget
+from .QLogsList import QLogsList
+from .QLogsDialog import QLogsDialog
+from .QWhatsNewWidget import QWhatsNewWidget
+from .QWhatsNewDialog import QWhatsNewDialog
+from .QBetterGraphicsView import QBetterGraphicsView
 from .QAppType import QAppType
 #----------------------------------------------------------------------
 
@@ -168,6 +175,12 @@ class QBaseApplication(QApplication):
         QNamedHexSpinBox.init(self)
         QFileButton.init(self)
         QToggleButton.init(self)
+        QDropDownWidget.init(self)
+        QLogsList.init(self)
+        QLogsDialog.init(self)
+        QWhatsNewWidget.init(self)
+        QWhatsNewDialog.init(self)
+        QBetterGraphicsView.init(self)
 
         return self._qss
 
@@ -187,7 +200,7 @@ class QBaseApplication(QApplication):
     def theme_variant(self) -> str:
         return self.save_data.theme_variant
 
-    def get_lang_data(self, path: str) -> Union[str, QSaveData.LangData, list[Union[str, QSaveData.LangData]]]:
+    def get_lang_data(self, path: str) -> Union[str, QLangData, list[Union[str, QLangData]]]:
         return self.save_data.get_lang_data(path)
 
     def get_icon_dir(self) -> str:

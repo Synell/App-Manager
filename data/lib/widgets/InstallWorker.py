@@ -9,7 +9,7 @@ from datetime import timedelta
 from time import sleep
 
 from .InstallButton import InstallButton
-from data.lib.qtUtils import QGridFrame, QGridWidget
+from data.lib.QtUtils import QGridFrame, QGridWidget
 #----------------------------------------------------------------------
 
     # Class

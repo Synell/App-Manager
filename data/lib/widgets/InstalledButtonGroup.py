@@ -6,7 +6,7 @@ from PySide6.QtCore import Signal, QObject
 from datetime import datetime
 import subprocess, json, os
 
-from data.lib.qtUtils import QIconWidget
+from data.lib.QtUtils import QIconWidget
 from data.lib.widgets import InstallButton, InstallWorker
 
 from .InstalledButton import InstalledButton

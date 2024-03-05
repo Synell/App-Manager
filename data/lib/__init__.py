@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from .qtUtils import *
+from .QtUtils import *
 from .widgets import *
 from .globalinfo import *
 #----------------------------------------------------------------------

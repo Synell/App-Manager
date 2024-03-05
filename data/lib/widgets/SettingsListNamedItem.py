@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QPushButton
 from PySide6.QtGui import QIcon
 from PySide6.QtCore import Qt
 
-from data.lib.qtUtils import QDragListItem, QNamedLineEdit
+from data.lib.QtUtils import QDragListItem, QNamedLineEdit
 #----------------------------------------------------------------------
 
     # Class

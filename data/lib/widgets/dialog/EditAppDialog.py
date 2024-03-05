@@ -4,7 +4,7 @@
 from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton, QSizePolicy
 from PySide6.QtCore import Qt, Signal, QSize
 from datetime import datetime
-from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QFlowScrollableWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
+from data.lib.QtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QSidePanelWidget, QSidePanelItem, QNamedLineEdit, QFlowScrollableWidget, QIconWidget, QNamedComboBox, QNamedToggleButton
 import json, os
 from data.lib.widgets import Category
 #----------------------------------------------------------------------

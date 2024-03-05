@@ -13,7 +13,7 @@ from datetime import datetime
 from contextlib import suppress
 import os
 
-from data.lib.qtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor, QDragList, QBaseApplication
+from data.lib.QtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor, QDragList, QBaseApplication
 #----------------------------------------------------------------------
 
     # Class

@@ -7,7 +7,7 @@ from PySide6.QtCore import Qt, Signal, QSize
 from PySide6.QtGui import QCursor, QIcon
 from .PlatformType import PlatformType
 
-from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget, QMoreButton
+from data.lib.QtUtils import QGridWidget, QGridFrame, QIconWidget, QMoreButton
 
 from .dialog import CustomizeInstallationDialog
 #----------------------------------------------------------------------

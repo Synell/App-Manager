@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QPushButton, QLabel, QMenu, QProgressBar
 from PySide6.QtGui import QAction, QMouseEvent, QIcon
 from PySide6.QtCore import Qt, Signal, QPoint, QSize, QThread
 
-from data.lib.qtUtils import QGridWidget, QGridFrame, QIconWidget
+from data.lib.QtUtils import QGridWidget, QGridFrame, QIconWidget
 #----------------------------------------------------------------------
 
     # Class

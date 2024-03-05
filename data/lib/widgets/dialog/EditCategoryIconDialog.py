@@ -3,7 +3,7 @@
     # Libraries
 from PySide6.QtWidgets import QDialog, QFrame, QLabel, QGridLayout, QWidget, QPushButton
 from PySide6.QtCore import Qt, QSize
-from data.lib.qtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QFlowScrollableWidget, QIconWidget
+from data.lib.QtUtils import QFileButton, QFiles, QGridFrame, QGridWidget, QScrollableGridWidget, QFlowScrollableWidget, QIconWidget
 import os
 #----------------------------------------------------------------------
 

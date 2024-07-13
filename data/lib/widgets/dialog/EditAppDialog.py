@@ -44,29 +44,29 @@ class EditAppDialog(QDialog):
         self.category = category
 
         right_buttons = QGridWidget()
-        right_buttons.grid_layout.setSpacing(16)
-        right_buttons.grid_layout.setContentsMargins(0, 0, 0, 0)
+        right_buttons.layout_.setSpacing(16)
+        right_buttons.layout_.setContentsMargins(0, 0, 0, 0)
 
         button = QPushButton(lang['QPushButton']['cancel'])
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.reject)
         button.setProperty('color', 'white')
         button.setProperty('transparent', True)
-        right_buttons.grid_layout.addWidget(button, 0, 0)
+        right_buttons.layout_.addWidget(button, 0, 0)
 
         button = QPushButton(lang['QPushButton']['apply'])
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.accept)
         button.setProperty('color', 'main')
-        right_buttons.grid_layout.addWidget(button, 0, 1)
+        right_buttons.layout_.addWidget(button, 0, 1)
 
         self.setWindowTitle(lang['title'].replace('%s', name))
 
         self.frame = QGridFrame()
-        self.frame.grid_layout.addWidget(right_buttons, 0, 0)
-        self.frame.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
-        self.frame.grid_layout.setSpacing(0)
-        self.frame.grid_layout.setContentsMargins(16, 16, 16, 16)
+        self.frame.layout_.addWidget(right_buttons, 0, 0)
+        self.frame.layout_.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
+        self.frame.layout_.setSpacing(0)
+        self.frame.layout_.setContentsMargins(16, 16, 16, 16)
         self.frame.setProperty('border-top', True)
         self.frame.setProperty('border-bottom', True)
         self.frame.setProperty('border-left', True)
@@ -96,7 +96,7 @@ class EditAppDialog(QDialog):
         for index, icon in enumerate(['../none.svg'] + os.listdir(self.icon_path)):
             if not icon.endswith('.svg'): continue
             b = self.generate_button(f'{self.icon_path}/{icon}')
-            w.bottom.scroll_layout.addWidget(b)
+            w.bottom.layout_.addWidget(b)
 
         w.bottom.setFixedHeight(w.bottom.heightMM() + 16) # Cuz weird things happen when resizing the window
 
@@ -106,35 +106,35 @@ class EditAppDialog(QDialog):
         lang = self.lang['QSidePanel']['general']
 
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = self.textGroup(lang['QLabel']['name']['title'], lang['QLabel']['name']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         app_name = QLabel(self.name)
         app_name.setProperty('title', True)
         app_name.setWordWrap(True)
         app_name.setFixedHeight(app_name.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_name, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(app_name, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(app_name, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(app_name, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['category']['title'], lang['QLabel']['category']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         self.app_category = QNamedComboBox(None, lang['QNamedComboBox']['category']['title'])
         self.app_category.setProperty('title', True)
@@ -142,76 +142,76 @@ class EditAppDialog(QDialog):
         if self.category:
             if self.category in [cat.keyword for cat in self.categories]:
                 self.app_category.combo_box.setCurrentText(self.category)
-        root_frame.grid_layout.addWidget(self.app_category, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(self.app_category, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(self.app_category, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(self.app_category, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['version']['title'], lang['QLabel']['version']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         app_version = QLabel(self.tag_name if self.tag_name else '???')
         app_version.setProperty('title', True)
         app_version.setWordWrap(True)
         app_version.setFixedHeight(app_version.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_version, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(app_version, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(app_version, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(app_version, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['release']['title'], lang['QLabel']['release']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         app_release = QLabel(lang['QLabel']['release'][self.release])
         app_release.setProperty('title', True)
         app_release.setWordWrap(True)
         app_release.setFixedHeight(app_release.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_release, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(app_release, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(app_release, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(app_release, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['releaseDate']['title'], lang['QLabel']['releaseDate']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         app_release_date = QLabel(self.created_at.strftime('%d/%m/%Y %H:%M:%S')) if self.created_at else QLabel('???')
         app_release_date.setProperty('title', True)
         app_release_date.setWordWrap(True)
         app_release_date.setFixedHeight(app_release_date.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_release_date, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(app_release_date, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(app_release_date, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(app_release_date, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['location']['title'], lang['QLabel']['location']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         app_location = QLabel(self.path)
         app_location.setProperty('title', True)
         app_location.setWordWrap(True)
         app_location.setFixedHeight(app_location.sizeHint().height())
-        root_frame.grid_layout.addWidget(app_location, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(app_location, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(app_location, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(app_location, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget, self.general_tab_icon
@@ -222,18 +222,18 @@ class EditAppDialog(QDialog):
         lang = self.lang['QSidePanel']['advanced']
 
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = self.textGroup(lang['QLabel']['cwd']['title'], lang['QLabel']['cwd']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         self.cwd_button = QFileButton(
             self, lang['QFileButton']['cwd'],
@@ -241,20 +241,20 @@ class EditAppDialog(QDialog):
             self.folder_file_button_icon,
             QFiles.Dialog.ExistingDirectory
         )
-        root_frame.grid_layout.addWidget(self.cwd_button, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(self.cwd_button, root_frame.layout_.count(), 0)
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['command']['title'], lang['QLabel']['command']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         self.command_lineedit = QNamedLineEdit(name = lang['QNamedLineEdit']['command'], placeholder = 'null')
         self.command_lineedit.setText(self.command)
-        root_frame.grid_layout.addWidget(self.command_lineedit, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(self.command_lineedit, root_frame.layout_.count(), 0)
 
 
         return widget, self.advanced_tab_icon
@@ -265,18 +265,18 @@ class EditAppDialog(QDialog):
         lang = self.lang['QSidePanel']['updates']
 
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = self.textGroup(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         self.check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForUpdates']['title'])
         self.check_for_updates_combobox.combo_box.addItems([
@@ -287,23 +287,23 @@ class EditAppDialog(QDialog):
             lang['QNamedComboBox']['checkForUpdates']['values']['atLaunch']
         ])
         self.check_for_updates_combobox.combo_box.setCurrentIndex(self.check_for_updates)
-        root_frame.grid_layout.addWidget(self.check_for_updates_combobox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(self.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(self.check_for_updates_combobox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(self.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['autoUpdate']['title'], lang['QLabel']['autoUpdate']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         self.auto_update_checkbox = QNamedToggleButton()
         self.auto_update_checkbox.setText(lang['QToggleButton']['autoUpdate'])
         self.auto_update_checkbox.setChecked(self.auto_update)
-        root_frame.grid_layout.addWidget(self.auto_update_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(self.auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(self.auto_update_checkbox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(self.auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget, self.updates_tab_icon
@@ -314,25 +314,25 @@ class EditAppDialog(QDialog):
         lang = self.lang['QSidePanel']['icon']
 
         widget = QGridFrame()
-        widget.grid_layout.setSpacing(16)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(16)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.grid_layout.addWidget(root_frame, 0, 0)
-        widget.grid_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
         widget.top = QGridFrame()
-        widget.top.grid_layout.setSpacing(16)
-        widget.top.grid_layout.setContentsMargins(0, 0, 0, 0)
-        root_frame.grid_layout.addWidget(widget.top, root_frame.grid_layout.count(), 0)
+        widget.top.layout_.setSpacing(16)
+        widget.top.layout_.setContentsMargins(0, 0, 0, 0)
+        root_frame.layout_.addWidget(widget.top, root_frame.layout_.count(), 0)
 
         label = self.textGroup(lang['QLabel']['icon']['title'], lang['QLabel']['icon']['description'])
-        widget.top.grid_layout.addWidget(label, 0, 0, 1, 2)
+        widget.top.layout_.addWidget(label, 0, 0, 1, 2)
 
         widget.top.icon_group = self.icon_with_text(self.raw_icon, lang['QLabel']['currentIcon'])
-        widget.top.grid_layout.addWidget(widget.top.icon_group, 1, 0)
+        widget.top.layout_.addWidget(widget.top.icon_group, 1, 0)
 
         self.icon_button = QFileButton(
             self, lang['QFileButton']['icon'],
@@ -343,23 +343,23 @@ class EditAppDialog(QDialog):
         )
         self.icon_button.path_changed.connect(self.icon_file_button_path_changed)
         self.icon_button.setMinimumWidth(int(self.icon_button.sizeHint().width() * 1.25))
-        widget.top.grid_layout.addWidget(self.icon_button, 1, 1)
+        widget.top.layout_.addWidget(self.icon_button, 1, 1)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = self.textGroup(lang['QLabel']['predefinedIcons']['title'], lang['QLabel']['predefinedIcons']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
 
         widget.bottom = QFlowScrollableWidget()
-        widget.bottom.scroll_layout.setSpacing(16)
-        widget.bottom.scroll_layout.setContentsMargins(0, 0, 0, 0)
-        root_frame.grid_layout.addWidget(widget.bottom, root_frame.grid_layout.count(), 0)
+        widget.bottom.layout_.setSpacing(16)
+        widget.bottom.layout_.setContentsMargins(0, 0, 0, 0)
+        root_frame.layout_.addWidget(widget.bottom, root_frame.layout_.count(), 0)
 
 
         return widget, self.icon_tab_icon
@@ -384,21 +384,21 @@ class EditAppDialog(QDialog):
 
     def textGroup(self, title: str = '', description: str = '') -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(0)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         label = QLabel(title)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('bigbrighttitle', True)
         label.setWordWrap(True)
-        widget.grid_layout.addWidget(label, 0, 0)
+        widget.layout_.addWidget(label, 0, 0)
 
         label = QLabel(description)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('brightnormal', True)
         label.setWordWrap(True)
-        widget.grid_layout.addWidget(label, 1, 0)
-        widget.grid_layout.setRowStretch(2, 1)
+        widget.layout_.addWidget(label, 1, 0)
+        widget.layout_.setRowStretch(2, 1)
 
         return widget
 
@@ -406,20 +406,20 @@ class EditAppDialog(QDialog):
 
     def icon_with_text(self, icon: str = None, text: str = '') -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(16)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(16)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         label = QLabel(text)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setProperty('title', True)
-        widget.grid_layout.addWidget(label, 0, 0)
-        widget.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
+        widget.layout_.addWidget(label, 0, 0)
+        widget.layout_.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
         widget.icon_widget = QIconWidget(None, icon, QSize(40, 40), True)
-        widget.grid_layout.addWidget(widget.icon_widget, 1, 0)
-        widget.grid_layout.setAlignment(widget.icon_widget, Qt.AlignmentFlag.AlignCenter)
+        widget.layout_.addWidget(widget.icon_widget, 1, 0)
+        widget.layout_.setAlignment(widget.icon_widget, Qt.AlignmentFlag.AlignCenter)
 
-        widget.grid_layout.setRowStretch(2, 1)
+        widget.layout_.setRowStretch(2, 1)
 
         return widget
 

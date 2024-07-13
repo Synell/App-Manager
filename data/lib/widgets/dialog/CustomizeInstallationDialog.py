@@ -37,21 +37,21 @@ class CustomizeInstallationDialog(QDialog):
         self.download_data = download_data
 
         right_buttons = QGridWidget()
-        right_buttons.grid_layout.setSpacing(16)
-        right_buttons.grid_layout.setContentsMargins(0, 0, 0, 0)
+        right_buttons.layout_.setSpacing(16)
+        right_buttons.layout_.setContentsMargins(0, 0, 0, 0)
 
         self._cancel_button = QPushButton(lang['QPushButton']['cancel'])
         self._cancel_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self._cancel_button.clicked.connect(self.reject)
         self._cancel_button.setProperty('color', 'white')
         self._cancel_button.setProperty('transparent', True)
-        right_buttons.grid_layout.addWidget(self._cancel_button, 0, 0)
+        right_buttons.layout_.addWidget(self._cancel_button, 0, 0)
 
         self._install_button = QPushButton(lang['QPushButton']['install'])
         self._install_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self._install_button.clicked.connect(self.accept)
         self._install_button.setProperty('color', 'main')
-        right_buttons.grid_layout.addWidget(self._install_button, 0, 1)
+        right_buttons.layout_.addWidget(self._install_button, 0, 1)
 
         self.setWindowTitle(lang['title'].replace('%s', download_data.name))
 
@@ -60,9 +60,9 @@ class CustomizeInstallationDialog(QDialog):
         self._pages = {}
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.addWidget(self._root, 0, 0)
-        root_frame.grid_layout.setSpacing(0)
-        root_frame.grid_layout.setContentsMargins(16, 16, 16, 16)
+        root_frame.layout_.addWidget(self._root, 0, 0)
+        root_frame.layout_.setSpacing(0)
+        root_frame.layout_.setContentsMargins(16, 16, 16, 16)
 
         self._pages['general'] = self._menu_general()
         self._root.addWidget(self._pages['general'])
@@ -75,10 +75,10 @@ class CustomizeInstallationDialog(QDialog):
             self._root.addWidget(self._pages['which_data'])
 
         self._frame = QGridFrame()
-        self._frame.grid_layout.addWidget(right_buttons, 0, 0)
-        self._frame.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
-        self._frame.grid_layout.setSpacing(0)
-        self._frame.grid_layout.setContentsMargins(16, 16, 16, 16)
+        self._frame.layout_.addWidget(right_buttons, 0, 0)
+        self._frame.layout_.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
+        self._frame.layout_.setSpacing(0)
+        self._frame.layout_.setContentsMargins(16, 16, 16, 16)
         self._frame.setProperty('border-top', True)
         self._frame.setProperty('border-bottom', True)
         self._frame.setProperty('border-left', True)
@@ -96,18 +96,18 @@ class CustomizeInstallationDialog(QDialog):
     def _menu_general(self) -> QWidget:
         lang = self._lang['QSlidingStackedWidget']
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 0, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = CustomizeInstallationDialog._text_group(lang['QLabel']['installLocation']['title'], lang['QLabel']['installLocation']['description'].replace('%s', self.download_data.name))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         l = {
             "title": lang['QFileButton']['installLocation']['title'],
@@ -122,18 +122,18 @@ class CustomizeInstallationDialog(QDialog):
             QFiles.Dialog.ExistingDirectory
         )
         widget.installs_folder_button.setFixedWidth(350)
-        root_frame.grid_layout.addWidget(widget.installs_folder_button, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.installs_folder_button, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.installs_folder_button, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.installs_folder_button, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = CustomizeInstallationDialog._text_group(lang['QLabel']['category']['title'], lang['QLabel']['category']['description'].replace('%s', self.download_data.name))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.category = QNamedComboBox(None, lang['QNamedComboBox']['category']['title'])
         widget.category.setProperty('title', True)
@@ -142,8 +142,8 @@ class CustomizeInstallationDialog(QDialog):
             if self.default_category in [cat.keyword for cat in self.categories]:
                 widget.category.combo_box.setCurrentText(self.default_category)
 
-        root_frame.grid_layout.addWidget(widget.category, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.category, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.category, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.category, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -153,19 +153,19 @@ class CustomizeInstallationDialog(QDialog):
     def settings_menu_updates(self):
         lang = self._lang['QSlidingStackedWidget']
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = CustomizeInstallationDialog._text_group(lang['QLabel']['checkForUpdates']['title'], lang['QLabel']['checkForUpdates']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.check_for_updates_combobox = QNamedComboBox(None, lang['QNamedComboBox']['checkForUpdates']['title'])
         widget.check_for_updates_combobox.combo_box.addItems([
@@ -176,24 +176,24 @@ class CustomizeInstallationDialog(QDialog):
             lang['QNamedComboBox']['checkForUpdates']['values']['atLaunch']
         ])
         widget.check_for_updates_combobox.combo_box.setCurrentIndex(self.default_check_for_updates)
-        root_frame.grid_layout.addWidget(widget.check_for_updates_combobox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.check_for_updates_combobox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = CustomizeInstallationDialog._text_group(lang['QLabel']['autoUpdate']['title'], lang['QLabel']['autoUpdate']['description'])
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.auto_update = QNamedToggleButton()
         widget.auto_update.setText(lang['QToggleButton']['autoUpdate'])
         widget.auto_update.setChecked(self.default_auto_update)
-        root_frame.grid_layout.addWidget(widget.auto_update, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.auto_update, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.auto_update, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.auto_update, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -203,18 +203,18 @@ class CustomizeInstallationDialog(QDialog):
     def _menu_which_data(self) -> QWidget:
         lang = self._lang['QSlidingStackedWidget']
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 0, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = CustomizeInstallationDialog._text_group(lang['QLabel']['whichData']['title'], lang['QLabel']['whichData']['description'].replace('%s', self.download_data.name))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         for fd in self.download_data.files_data:
             # TODO: add the ability to select which files to download
@@ -227,21 +227,21 @@ class CustomizeInstallationDialog(QDialog):
 
     def _text_group(title: str = '', description: str = '') -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(0)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         label = QLabel(title)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('bigbrighttitle', True)
         label.setWordWrap(True)
-        widget.grid_layout.addWidget(label, 0, 0)
+        widget.layout_.addWidget(label, 0, 0)
 
         label = QLabel(description)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('brightnormal', True)
         label.setWordWrap(True)
-        widget.grid_layout.addWidget(label, 1, 0)
-        widget.grid_layout.setRowStretch(2, 1)
+        widget.layout_.addWidget(label, 1, 0)
+        widget.layout_.setRowStretch(2, 1)
 
         return widget
 

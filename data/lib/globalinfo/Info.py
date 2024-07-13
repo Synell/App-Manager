@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------
 
     # Libraries
-from ..QtUtils import QSaveData, QUtilsColor
+from ..QtUtils import QUtilsColor, QColorSet
 import os
 #----------------------------------------------------------------------
 
@@ -17,14 +17,14 @@ class Info:
 
     save_path: str = os.path.abspath('./data/save.dat').replace('\\', '/')
 
-    main_color_set: QSaveData.ColorSet = QSaveData.ColorSet(
+    main_color_set: QColorSet = QColorSet(
         'cyan',
-        QUtilsColor.from_hex('#00D2A8'),
-        QUtilsColor.from_hex('#00BC99'),
-        QUtilsColor.from_hex('#07E8BC'),
-        QUtilsColor.from_hex('#236E61'),
+        QUtilsColor.from_hex('#00B4BE'),
+        QUtilsColor.from_hex('#009CA8'),
+        QUtilsColor.from_hex('#00C8D4'),
+        QUtilsColor.from_hex('#0F545A'),
     )
-    neutral_color_set: QSaveData.ColorSet = QSaveData.ColorSet(
+    neutral_color_set: QColorSet = QColorSet(
         'white',
         QUtilsColor.from_hex('#E3E3E3'),
         QUtilsColor.from_hex('#D7D7D7'),

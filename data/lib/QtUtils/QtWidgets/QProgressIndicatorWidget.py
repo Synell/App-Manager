@@ -6,6 +6,7 @@ from PySide6.QtCore import Qt
 from .QProgressIndicator import QProgressIndicator, QProgressIndicatorItem
 from .QSlidingStackedWidget import QSlidingStackedWidget
 from .QGridWidget import QGridWidget
+from ..QtCore.QDirection import QDirection
 #----------------------------------------------------------------------
 
     # Class
@@ -13,7 +14,7 @@ class QProgressIndicatorWidget(QWidget):
     def __init__(
         self,
         parent = None,
-        progress_direction: QProgressIndicator.Direction = QProgressIndicator.Direction.Left2Right,
+        progress_direction: QDirection = QDirection.Left2Right,
         compact: bool = True,
         progress_content_margins: tuple = (16, 16, 16, 16),
         direction: QSlidingStackedWidget.Direction = QSlidingStackedWidget.Direction.Bottom2Top,
@@ -25,25 +26,25 @@ class QProgressIndicatorWidget(QWidget):
 
         self._progress_indicator = QProgressIndicator(self, progress_direction, compact, progress_content_margins)
         match progress_direction:
-            case QProgressIndicator.Direction.Left2Right:
+            case QDirection.Left2Right:
                 self._progress_indicator.setProperty('border-bottom', True)
 
-            case QProgressIndicator.Direction.Right2Left:
+            case QDirection.Right2Left:
                 self._progress_indicator.setProperty('border-bottom', True)
 
-            case QProgressIndicator.Direction.Top2Bottom:
+            case QDirection.Top2Bottom:
                 self._progress_indicator.setProperty('border-right', True)
 
-            case QProgressIndicator.Direction.Bottom2Top:
+            case QDirection.Bottom2Top:
                 self._progress_indicator.setProperty('border-right', True)
 
         w = QGridWidget()
-        w.grid_layout.setSpacing(0)
-        w.grid_layout.setContentsMargins(*content_margins)
+        w.layout_.setSpacing(0)
+        w.layout_.setContentsMargins(*content_margins)
 
         self._widget = QSlidingStackedWidget()
         self._widget.set_orientation(Qt.Orientation.Vertical)
-        w.grid_layout.addWidget(self._widget, 0, 0)
+        w.layout_.addWidget(self._widget, 0, 0)
 
         self._layout.setSpacing(0)
         self._layout.setContentsMargins(0, 0, 0, 0)

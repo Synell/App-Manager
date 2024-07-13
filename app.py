@@ -39,7 +39,7 @@ class Application(QBaseApplication):
 
         self.another_instance_opened.connect(self.on_another_instance)
 
-        self.save_data = self.save_data = SaveData(
+        self._save_data = self._save_data = SaveData(
             app = self,
             save_path = Info.save_path,
             main_color_set = Info.main_color_set,
@@ -192,47 +192,47 @@ class Application(QBaseApplication):
         self.root.addWidget(self.main_page)
 
         self.main_page.left = QGridWidget()
-        self.main_page.left.grid_layout.setSpacing(0)
-        self.main_page.left.grid_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_page.grid_layout.addWidget(self.main_page.left, 0, 0)
-        self.main_page.grid_layout.setSpacing(0)
-        self.main_page.grid_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_page.grid_layout.setAlignment(self.main_page.left, Qt.AlignmentFlag.AlignLeft)
+        self.main_page.left.layout_.setSpacing(0)
+        self.main_page.left.layout_.setContentsMargins(0, 0, 0, 0)
+        self.main_page.layout_.addWidget(self.main_page.left, 0, 0)
+        self.main_page.layout_.setSpacing(0)
+        self.main_page.layout_.setContentsMargins(0, 0, 0, 0)
+        self.main_page.layout_.setAlignment(self.main_page.left, Qt.AlignmentFlag.AlignLeft)
 
         self.main_page.right = QSlidingStackedWidget()
         self.main_page.right.set_orientation(Qt.Orientation.Vertical)
-        self.main_page.grid_layout.addWidget(self.main_page.right, 0, 1)
+        self.main_page.layout_.addWidget(self.main_page.right, 0, 1)
 
         self.create_apps_widget()
         self.create_downloads_widget()
         self.main_page.right.slide_in_index(0)
 
         left_top = QFrame()
-        left_top.grid_layout = QGridLayout()
-        left_top.setLayout(left_top.grid_layout)
+        left_top.layout_ = QGridLayout()
+        left_top.setLayout(left_top.layout_)
         left_top.setProperty('border-top', True)
         left_top.setProperty('border-left', True)
         left_top.setProperty('border-right', True)
         left_top.setProperty('background', 'light')
-        self.main_page.left.grid_layout.addWidget(left_top, 0, 0)
+        self.main_page.left.layout_.addWidget(left_top, 0, 0)
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setIcon(self.save_data.get_icon('/pushbutton/note.png'))
         button.clicked.connect(self.about_menu_clicked)
-        left_top.grid_layout.addWidget(button, 0, 0)
-        left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
+        left_top.layout_.addWidget(button, 0, 0)
+        left_top.layout_.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setIcon(self.save_data.get_icon('/pushbutton/settings.png'))
         button.clicked.connect(self.settings_menu)
-        left_top.grid_layout.addWidget(button, 0, 1)
-        left_top.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
+        left_top.layout_.addWidget(button, 0, 1)
+        left_top.layout_.setAlignment(button, Qt.AlignmentFlag.AlignRight)
 
         self.main_page.side_panel = QSidePanel(width = 240)
         self.main_page.side_panel.setProperty('border-right', True)
-        self.main_page.left.grid_layout.addWidget(self.main_page.side_panel, 1, 0)
+        self.main_page.left.layout_.addWidget(self.main_page.side_panel, 1, 0)
         self.main_page.side_panel.add_items([
             QSidePanelItem(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.title'), f'{self.save_data.get_icon_dir()}/sidepanel/apps.png', self.panel_select_apps),
             QSidePanelItem(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.title'), f'{self.save_data.get_icon_dir()}/sidepanel/downloads.png', self.panel_select_downloads),
@@ -245,56 +245,56 @@ class Application(QBaseApplication):
         self.main_page.apps_widget = QGridWidget()
 
         self.main_page.apps_widget.top = QGridWidget()
-        self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.top, 0, 0)
-        self.main_page.apps_widget.grid_layout.setAlignment(self.main_page.apps_widget.top, Qt.AlignmentFlag.AlignTop)
+        self.main_page.apps_widget.layout_.addWidget(self.main_page.apps_widget.top, 0, 0)
+        self.main_page.apps_widget.layout_.setAlignment(self.main_page.apps_widget.top, Qt.AlignmentFlag.AlignTop)
 
         label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.title'))
         label.setProperty('h', '1')
-        self.main_page.apps_widget.top.grid_layout.addWidget(label, 0, 0)
-        self.main_page.apps_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
+        self.main_page.apps_widget.top.layout_.addWidget(label, 0, 0)
+        self.main_page.apps_widget.top.layout_.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
 
         right_buttons = QGridWidget()
-        self.main_page.apps_widget.top.grid_layout.addWidget(right_buttons, 0, 1, 2, 1)
-        self.main_page.apps_widget.top.grid_layout.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
+        self.main_page.apps_widget.top.layout_.addWidget(right_buttons, 0, 1, 2, 1)
+        self.main_page.apps_widget.top.layout_.setAlignment(right_buttons, Qt.AlignmentFlag.AlignRight)
 
         self.update_button = QPushButton(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QPushButton.update'))
         self.update_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.update_button.clicked.connect(self.update_click)
         self.update_button.setProperty('color', 'main')
         self.update_button.setProperty('transparent', True)
-        right_buttons.grid_layout.addWidget(self.update_button, 0, 0)
+        right_buttons.layout_.addWidget(self.update_button, 0, 0)
         self.update_button.setVisible(False)
 
         button = QPushButton(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QPushButton.locate'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.locate_app_click)
         button.setProperty('color', 'gray')
-        right_buttons.grid_layout.addWidget(button, 0, 1)
+        right_buttons.layout_.addWidget(button, 0, 1)
 
         button = QPushButton(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QPushButton.installApp'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.install_app_click)
         button.setProperty('color', 'main')
-        right_buttons.grid_layout.addWidget(button, 0, 2)
+        right_buttons.layout_.addWidget(button, 0, 2)
 
-        right_buttons.grid_layout.setRowStretch(2, 1)
-        right_buttons.grid_layout.setColumnStretch(2, 1)
+        right_buttons.layout_.setRowStretch(2, 1)
+        right_buttons.layout_.setColumnStretch(2, 1)
 
         self.main_page.apps_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
         self.main_page.apps_widget.searchbar.setPlaceholderText(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QLineEdit.search'))
         self.main_page.apps_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
-        right_buttons.grid_layout.addWidget(self.main_page.apps_widget.searchbar, 1, 1, 1, 2)
-        right_buttons.grid_layout.setAlignment(self.main_page.apps_widget.searchbar, Qt.AlignmentFlag.AlignTop)
+        right_buttons.layout_.addWidget(self.main_page.apps_widget.searchbar, 1, 1, 1, 2)
+        right_buttons.layout_.setAlignment(self.main_page.apps_widget.searchbar, Qt.AlignmentFlag.AlignTop)
 
         self.main_page.apps_widget.notebook = QTabWidget()
         self.main_page.apps_widget.notebook.tabBar().setProperty('color', 'main')
         self.main_page.apps_widget.notebook.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
         self.main_page.apps_widget.notebook.tabBar().setCursor(Qt.CursorShape.PointingHandCursor)
-        self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook, 2, 0)
+        self.main_page.apps_widget.layout_.addWidget(self.main_page.apps_widget.notebook, 2, 0)
 
         self.main_page.apps_widget.notebook_tabs = QSlidingStackedWidget()
         self.main_page.apps_widget.notebook_tabs.set_orientation(Qt.Orientation.Horizontal)
-        self.main_page.apps_widget.grid_layout.addWidget(self.main_page.apps_widget.notebook_tabs, 3, 0)
+        self.main_page.apps_widget.layout_.addWidget(self.main_page.apps_widget.notebook_tabs, 3, 0)
 
         for rel in self.APP_RELEASES:
             widget = QWidget()
@@ -303,8 +303,8 @@ class Application(QBaseApplication):
 
             sw = QScrollableGridWidget()
             self.main_page.apps_widget.notebook_tabs.addWidget(sw)
-            sw.scroll_layout.setAlignment(sw, Qt.AlignmentFlag.AlignTop)
-            sw.scroll_layout.setSpacing(1)
+            sw.layout_.setAlignment(sw, Qt.AlignmentFlag.AlignTop)
+            sw.layout_.setSpacing(1)
 
         self.main_page.apps_widget.notebook.currentChanged.connect(self.apps_switch_index)
 
@@ -315,16 +315,16 @@ class Application(QBaseApplication):
         self.main_page.downloads_widget = QGridWidget()
 
         self.main_page.downloads_widget.top = QGridWidget()
-        self.main_page.downloads_widget.grid_layout.addWidget(self.main_page.downloads_widget.top, 0, 0)
-        self.main_page.downloads_widget.grid_layout.setAlignment(self.main_page.downloads_widget.top, Qt.AlignmentFlag.AlignTop)
+        self.main_page.downloads_widget.layout_.addWidget(self.main_page.downloads_widget.top, 0, 0)
+        self.main_page.downloads_widget.layout_.setAlignment(self.main_page.downloads_widget.top, Qt.AlignmentFlag.AlignTop)
 
         label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.title'))
         label.setProperty('h', '1')
-        self.main_page.downloads_widget.top.grid_layout.addWidget(label, 0, 0)
-        self.main_page.downloads_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
+        self.main_page.downloads_widget.top.layout_.addWidget(label, 0, 0)
+        self.main_page.downloads_widget.top.layout_.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
 
         self.main_page.downloads_widget.list = QScrollableGridWidget()
-        self.main_page.downloads_widget.grid_layout.addWidget(self.main_page.downloads_widget.list, 1, 0, 1, 2)
+        self.main_page.downloads_widget.layout_.addWidget(self.main_page.downloads_widget.list, 1, 0, 1, 2)
         self.main_page.downloads_widget.list.setVisible(False)
 
 
@@ -335,25 +335,25 @@ class Application(QBaseApplication):
         label.setProperty('normal', True)
         label.setPixmap(QPixmap(f'{self.save_data.get_icon_dir()}/download/dl.png'))
         label.setPixmap(label.pixmap().scaledToHeight(64, Qt.TransformationMode.SmoothTransformation))
-        self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 0, 0)
-        self.main_page.downloads_widget.no_download.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
+        self.main_page.downloads_widget.no_download.layout_.addWidget(label, 0, 0)
+        self.main_page.downloads_widget.no_download.layout_.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
         label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.QLabel.noDownload.title'))
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setProperty('title', True)
-        self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 1, 0)
-        self.main_page.downloads_widget.no_download.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
+        self.main_page.downloads_widget.no_download.layout_.addWidget(label, 1, 0)
+        self.main_page.downloads_widget.no_download.layout_.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
         label = QLabel(self.get_lang_data('QMainWindow.mainPage.QSidePanel.downloads.QLabel.noDownload.text'))
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         label.setProperty('normal', True)
-        self.main_page.downloads_widget.no_download.grid_layout.addWidget(label, 2, 0)
-        self.main_page.downloads_widget.no_download.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
+        self.main_page.downloads_widget.no_download.layout_.addWidget(label, 2, 0)
+        self.main_page.downloads_widget.no_download.layout_.setAlignment(label, Qt.AlignmentFlag.AlignCenter)
 
-        self.main_page.downloads_widget.grid_layout.addWidget(self.main_page.downloads_widget.no_download, 1, 0, 1, 2)
-        self.main_page.downloads_widget.no_download.grid_layout.setSpacing(3)
-        self.main_page.downloads_widget.no_download.grid_layout.setContentsMargins(0, 0, 0, 0)
-        self.main_page.downloads_widget.no_download.grid_layout.setRowStretch(3, 1)
+        self.main_page.downloads_widget.layout_.addWidget(self.main_page.downloads_widget.no_download, 1, 0, 1, 2)
+        self.main_page.downloads_widget.no_download.layout_.setSpacing(3)
+        self.main_page.downloads_widget.no_download.layout_.setContentsMargins(0, 0, 0, 0)
+        self.main_page.downloads_widget.no_download.layout_.setRowStretch(3, 1)
 
         self.main_page.right.addWidget(self.main_page.downloads_widget)
 
@@ -385,31 +385,31 @@ class Application(QBaseApplication):
             root_widget = QGridWidget()
 
             root_widget.top = QGridWidget()
-            root_widget.grid_layout.addWidget(root_widget.top, 0, 0)
-            root_widget.grid_layout.setAlignment(root_widget.top, Qt.AlignmentFlag.AlignTop)
+            root_widget.layout_.addWidget(root_widget.top, 0, 0)
+            root_widget.layout_.setAlignment(root_widget.top, Qt.AlignmentFlag.AlignTop)
 
             label = QLabel(cat.keyword)
             label.setProperty('h', '1')
-            root_widget.top.grid_layout.addWidget(label, 0, 0)
-            root_widget.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
+            root_widget.top.layout_.addWidget(label, 0, 0)
+            root_widget.top.layout_.setAlignment(label, Qt.AlignmentFlag.AlignLeft)
 
             right_panel = QGridWidget()
-            root_widget.top.grid_layout.addWidget(right_panel, 0, 1, 2, 1)
-            root_widget.top.grid_layout.setAlignment(right_panel, Qt.AlignmentFlag.AlignRight)
+            root_widget.top.layout_.addWidget(right_panel, 0, 1, 2, 1)
+            root_widget.top.layout_.setAlignment(right_panel, Qt.AlignmentFlag.AlignRight)
 
             root_widget.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
             root_widget.searchbar.setPlaceholderText(self.get_lang_data('QMainWindow.mainPage.QSidePanel.apps.QLineEdit.search'))
             root_widget.searchbar.textChanged.connect(self.refresh_apps_visibility)
-            right_panel.grid_layout.addWidget(root_widget.searchbar, 1, 1, 1, 2)
-            right_panel.grid_layout.setAlignment(root_widget.searchbar, Qt.AlignmentFlag.AlignTop)
+            right_panel.layout_.addWidget(root_widget.searchbar, 1, 1, 1, 2)
+            right_panel.layout_.setAlignment(root_widget.searchbar, Qt.AlignmentFlag.AlignTop)
 
             root_widget.app_list = QScrollableGridWidget()
-            root_widget.grid_layout.addWidget(root_widget.app_list, 2, 0)
-            root_widget.app_list.scroll_layout.setAlignment(root_widget.app_list, Qt.AlignmentFlag.AlignTop)
-            root_widget.app_list.scroll_layout.setSpacing(1)
+            root_widget.layout_.addWidget(root_widget.app_list, 2, 0)
+            root_widget.app_list.layout_.setAlignment(root_widget.app_list, Qt.AlignmentFlag.AlignTop)
+            root_widget.app_list.layout_.setSpacing(1)
 
             send_param = lambda i: lambda: self.panel_select_categories(i + 2)
-            sp.add_item(QSidePanelItem(text= cat.keyword, icon = cat.icon, connect = send_param(index)))
+            sp.add_item(QSidePanelItem(text = cat.keyword, icon = cat.icon, connect = send_param(index)))
 
             sw.addWidget(root_widget)
 
@@ -417,44 +417,44 @@ class Application(QBaseApplication):
     def create_install_app_page(self) -> None:
         self.install_app_page = QGridWidget()
         self.root.addWidget(self.install_app_page)
-        self.install_app_page.grid_layout.setSpacing(0)
-        self.install_app_page.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.layout_.setSpacing(0)
+        self.install_app_page.layout_.setContentsMargins(0, 0, 0, 0)
 
         self.install_app_page.top = QGridFrame()
-        self.install_app_page.grid_layout.addWidget(self.install_app_page.top, 0, 0)
+        self.install_app_page.layout_.addWidget(self.install_app_page.top, 0, 0)
         self.install_app_page.top.setProperty('border-top', True)
         self.install_app_page.top.setProperty('border-left', True)
         self.install_app_page.top.setProperty('border-right', True)
-        self.install_app_page.top.grid_layout.setSpacing(0)
-        self.install_app_page.top.grid_layout.setContentsMargins(16, 16, 16, 0)
+        self.install_app_page.top.layout_.setSpacing(0)
+        self.install_app_page.top.layout_.setContentsMargins(16, 16, 16, 0)
 
         label = QLabel(self.get_lang_data('QMainWindow.installAppPage.QLabel.installApp'))
         label.setProperty('h', '4')
         label.setProperty('bigbrighttitle', True)
-        self.install_app_page.top.grid_layout.addWidget(label, 0, 0)
-        self.install_app_page.top.grid_layout.setAlignment(label, Qt.AlignmentFlag.AlignTop)
+        self.install_app_page.top.layout_.addWidget(label, 0, 0)
+        self.install_app_page.top.layout_.setAlignment(label, Qt.AlignmentFlag.AlignTop)
 
         frame = QGridFrame()
-        frame.grid_layout.setSpacing(20)
-        frame.grid_layout.setContentsMargins(0, 0, 0, 0)
-        self.install_app_page.top.grid_layout.addWidget(frame, 1, 1)
-        self.install_app_page.top.grid_layout.setAlignment(frame, Qt.AlignmentFlag.AlignRight)
+        frame.layout_.setSpacing(20)
+        frame.layout_.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.top.layout_.addWidget(frame, 1, 1)
+        self.install_app_page.top.layout_.setAlignment(frame, Qt.AlignmentFlag.AlignRight)
 
         button = QPushButton()
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setIcon(self.save_data.get_icon('pushbutton/refresh.png'))
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: self.install_app_page_refresh_template(True))
-        frame.grid_layout.addWidget(button, 0, 0)
+        frame.layout_.addWidget(button, 0, 0)
 
         self.install_app_page.top.searchbar = QIconLineEdit(icon = f'{self.save_data.get_icon_dir()}lineedit/search.png')
         self.install_app_page.top.searchbar.setPlaceholderText(self.get_lang_data('QMainWindow.installAppPage.QLineEdit.search'))
         self.install_app_page.top.searchbar.textChanged.connect(self.refresh_install_apps_list)
-        frame.grid_layout.addWidget(self.install_app_page.top.searchbar, 0, 1)
+        frame.layout_.addWidget(self.install_app_page.top.searchbar, 0, 1)
 
 
         self.install_app_page.middle = QGridFrame()
-        self.install_app_page.grid_layout.addWidget(self.install_app_page.middle, 1, 0)
+        self.install_app_page.layout_.addWidget(self.install_app_page.middle, 1, 0)
         self.install_app_page.middle.setProperty('border-bottom', True)
         self.install_app_page.middle.setProperty('border-left', True)
         self.install_app_page.middle.setProperty('border-right', True)
@@ -462,28 +462,28 @@ class Application(QBaseApplication):
         self.install_app_page.tab_widget = QTabWidget()
         self.install_app_page.tab_widget.tabBar().setProperty('color', 'main')
         self.install_app_page.tab_widget.tabBar().setCursor(Qt.CursorShape.PointingHandCursor)
-        self.install_app_page.middle.grid_layout.addWidget(self.install_app_page.tab_widget, 0, 0)
-        self.install_app_page.middle.grid_layout.setSpacing(0)
-        self.install_app_page.middle.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.middle.layout_.addWidget(self.install_app_page.tab_widget, 0, 0)
+        self.install_app_page.middle.layout_.setSpacing(0)
+        self.install_app_page.middle.layout_.setContentsMargins(0, 0, 0, 0)
 
 
         self.install_app_page.tab_widget.official = QGridFrame()
         self.install_app_page.tab_widget.official.setProperty('border-top', True)
-        self.install_app_page.tab_widget.official.grid_layout.setSpacing(0)
-        self.install_app_page.tab_widget.official.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.tab_widget.official.layout_.setSpacing(0)
+        self.install_app_page.tab_widget.official.layout_.setContentsMargins(0, 0, 0, 0)
         self.install_app_page.tab_widget.official.inside = QScrollableGridWidget()
-        self.install_app_page.tab_widget.official.grid_layout.addWidget(self.install_app_page.tab_widget.official.inside, 0, 0)
-        self.install_app_page.tab_widget.official.inside.scroll_layout.setSpacing(1)
-        self.install_app_page.tab_widget.official.inside.scroll_layout.setContentsMargins(16, 16, 16, 16)
+        self.install_app_page.tab_widget.official.layout_.addWidget(self.install_app_page.tab_widget.official.inside, 0, 0)
+        self.install_app_page.tab_widget.official.inside.layout_.setSpacing(1)
+        self.install_app_page.tab_widget.official.inside.layout_.setContentsMargins(16, 16, 16, 16)
 
         self.install_app_page.tab_widget.pre = QGridFrame()
         self.install_app_page.tab_widget.pre.setProperty('border-top', True)
-        self.install_app_page.tab_widget.pre.grid_layout.setSpacing(0)
-        self.install_app_page.tab_widget.pre.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.tab_widget.pre.layout_.setSpacing(0)
+        self.install_app_page.tab_widget.pre.layout_.setContentsMargins(0, 0, 0, 0)
         self.install_app_page.tab_widget.pre.inside = QScrollableGridWidget()
-        self.install_app_page.tab_widget.pre.grid_layout.addWidget(self.install_app_page.tab_widget.pre.inside, 0, 0)
-        self.install_app_page.tab_widget.pre.inside.scroll_layout.setSpacing(1)
-        self.install_app_page.tab_widget.pre.inside.scroll_layout.setContentsMargins(16, 16, 16, 16)
+        self.install_app_page.tab_widget.pre.layout_.addWidget(self.install_app_page.tab_widget.pre.inside, 0, 0)
+        self.install_app_page.tab_widget.pre.inside.layout_.setSpacing(1)
+        self.install_app_page.tab_widget.pre.inside.layout_.setContentsMargins(16, 16, 16, 16)
 
         self.install_app_page.tab_widget.addTab(self.install_app_page.tab_widget.official, self.get_lang_data('QMainWindow.installAppPage.QTabWidget.officialReleases.title'))
         self.install_app_page.tab_widget.addTab(self.install_app_page.tab_widget.pre, self.get_lang_data('QMainWindow.installAppPage.QTabWidget.preReleases.title'))
@@ -491,32 +491,32 @@ class Application(QBaseApplication):
 
 
         self.install_app_page.bottom = QGridFrame()
-        self.install_app_page.grid_layout.addWidget(self.install_app_page.bottom, 2, 0)
+        self.install_app_page.layout_.addWidget(self.install_app_page.bottom, 2, 0)
         self.install_app_page.bottom.setProperty('border-bottom', True)
         self.install_app_page.bottom.setProperty('border-left', True)
         self.install_app_page.bottom.setProperty('border-right', True)
         
-        self.install_app_page.bottom.grid_layout.setSpacing(0)
-        self.install_app_page.bottom.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.install_app_page.bottom.layout_.setSpacing(0)
+        self.install_app_page.bottom.layout_.setContentsMargins(0, 0, 0, 0)
 
         right_buttons = QGridWidget()
-        self.install_app_page.bottom.grid_layout.addWidget(right_buttons, 0, 0)
+        self.install_app_page.bottom.layout_.addWidget(right_buttons, 0, 0)
 
         button = QPushButton(self.get_lang_data('QMainWindow.installAppPage.QPushButton.goToDownloadPage'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.panel_select_downloads)
         button.setProperty('color', 'main')
         button.setProperty('transparent', True)
-        right_buttons.grid_layout.addWidget(button, 0, 0)
-        right_buttons.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
+        right_buttons.layout_.addWidget(button, 0, 0)
+        right_buttons.layout_.setAlignment(button, Qt.AlignmentFlag.AlignLeft)
 
         button = QPushButton(self.get_lang_data('QMainWindow.installAppPage.QPushButton.back'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.clicked.connect(self.main_page_click)
         button.setProperty('color', 'white')
         button.setProperty('transparent', True)
-        right_buttons.grid_layout.addWidget(button, 0, 1)
-        right_buttons.grid_layout.setAlignment(button, Qt.AlignmentFlag.AlignRight)
+        right_buttons.layout_.addWidget(button, 0, 1)
+        right_buttons.layout_.setAlignment(button, Qt.AlignmentFlag.AlignRight)
 
 
     def install_app_page_refresh_template(self, force: bool = False) -> None:
@@ -529,8 +529,8 @@ class Application(QBaseApplication):
                 self.install_page_worker.exit()
 
         self.install_page_buttons = [[], []]
-        self.clear_layout(self.install_app_page.tab_widget.official.inside.scroll_layout)
-        self.clear_layout(self.install_app_page.tab_widget.pre.inside.scroll_layout)
+        self.clear_layout(self.install_app_page.tab_widget.official.inside.layout_)
+        self.clear_layout(self.install_app_page.tab_widget.pre.inside.layout_)
 
         followed_apps_to_update = []
         followed_apps_not_installed = []
@@ -610,10 +610,10 @@ class Application(QBaseApplication):
         button.download_custom.connect(self.add_to_download_list)
 
         if rel['prerelease']:
-            self.install_app_page.tab_widget.pre.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.pre.inside.scroll_layout.count(), 0)
+            self.install_app_page.tab_widget.pre.inside.layout_.addWidget(button, self.install_app_page.tab_widget.pre.inside.layout_.count(), 0)
 
         else:
-            self.install_app_page.tab_widget.official.inside.scroll_layout.addWidget(button, self.install_app_page.tab_widget.official.inside.scroll_layout.count(), 0)
+            self.install_app_page.tab_widget.official.inside.layout_.addWidget(button, self.install_app_page.tab_widget.official.inside.layout_.count(), 0)
 
         self.install_page_buttons[int(rel['prerelease'])].append(button)
 
@@ -686,8 +686,8 @@ class Application(QBaseApplication):
             auto_update,
             category
         )
-        self.main_page.downloads_widget.list.scroll_layout.addWidget(iw, len(list(self.downloads.keys())), 0)
-        self.main_page.downloads_widget.list.scroll_layout.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
+        self.main_page.downloads_widget.list.layout_.addWidget(iw, len(list(self.downloads.keys())), 0)
+        self.main_page.downloads_widget.list.layout_.setAlignment(iw, Qt.AlignmentFlag.AlignTop)
         iw.done.connect(self.remove_from_download_list)
         iw.failed.connect(self.remove_from_download_list)
         self.downloads[name] = iw
@@ -695,7 +695,7 @@ class Application(QBaseApplication):
         iw.start()
 
     def remove_from_download_list(self, name: str, path: str = None, error: str = None) -> None:
-        self.main_page.downloads_widget.list.scroll_layout.removeWidget(self.downloads[name])
+        self.main_page.downloads_widget.list.layout_.removeWidget(self.downloads[name])
         self.save_data.apps['pre' if self.downloads[name].data.prerelease else 'official'].append(f'{path}/{name}')
         del self.downloads[name]
 
@@ -1078,14 +1078,14 @@ class Application(QBaseApplication):
             if b.has_update != has_update: b._set_update(has_update, self.updates[name] if has_update else None)
 
             w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index('all'))
-            w.scroll_layout.addWidget(b.get_button('all'), w.scroll_layout.count(), 0)
+            w.layout_.addWidget(b.get_button('all'), w.layout_.count(), 0)
 
             w: QScrollableGridFrame = self.main_page.apps_widget.notebook_tabs.widget(self.APP_RELEASES.index(b.release))
-            w.scroll_layout.addWidget(b.get_button(b.release), w.scroll_layout.count(), 0)
+            w.layout_.addWidget(b.get_button(b.release), w.layout_.count(), 0)
 
             if b.category in self.save_data.category_keywords:
                 sw: QScrollableGridFrame = self.main_page.right.widget(self.save_data.category_keywords.index(b.category) + 2).app_list
-                sw.scroll_layout.addWidget(b.get_button(b.category), sw.scroll_layout.count(), 0)
+                sw.layout_.addWidget(b.get_button(b.category), sw.layout_.count(), 0)
 
         self.refresh_apps_visibility(self.main_page.apps_widget.searchbar.text())
 

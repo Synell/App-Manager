@@ -53,16 +53,16 @@ class InstalledButton(QGridFrame):
         self.setProperty('color', 'main')
 
         self._icon_couple = self.widget_icon_couple(self._icon, self.generate_text(compact_mode, name, tag_name, path))
-        self.grid_layout.addWidget(self._icon_couple, 0, 0)
-        self.grid_layout.setAlignment(self._icon_couple, Qt.AlignmentFlag.AlignLeft)
+        self.layout_.addWidget(self._icon_couple, 0, 0)
+        self.layout_.setAlignment(self._icon_couple, Qt.AlignmentFlag.AlignLeft)
 
 
         self._progress_bar = QProgressBar()
         self._progress_bar.setRange(0, 100)
         self._progress_bar.setVisible(False)
 
-        self.grid_layout.addWidget(self._progress_bar, 0, 1)
-        self.grid_layout.setAlignment(self._progress_bar, Qt.AlignmentFlag.AlignRight)
+        self.layout_.addWidget(self._progress_bar, 0, 1)
+        self.layout_.setAlignment(self._progress_bar, Qt.AlignmentFlag.AlignRight)
 
 
         self._update_button = QPushButton()
@@ -82,8 +82,8 @@ class InstalledButton(QGridFrame):
 
         self.button_group = self.widget_couple(4, self._update_button, self._settings_button)
 
-        self.grid_layout.addWidget(self.button_group, 0, 1)
-        self.grid_layout.setAlignment(self.button_group, Qt.AlignmentFlag.AlignRight)
+        self.layout_.addWidget(self.button_group, 0, 1)
+        self.layout_.setAlignment(self.button_group, Qt.AlignmentFlag.AlignRight)
 
         self.setProperty('running', is_running)
 
@@ -150,47 +150,47 @@ class InstalledButton(QGridFrame):
 
     def generate_text(self, compact_mode: bool, name: str, tag_name: str, path: str) -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(4)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(4)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         widget.title = QLabel(f'{name} ({tag_name if tag_name else "Custom"})')
         widget.title.setProperty('brighttitle', True)
         widget.title.setFixedSize(widget.title.sizeHint())
-        widget.grid_layout.addWidget(widget.title, 0, 1)
+        widget.layout_.addWidget(widget.title, 0, 1)
 
         widget.desc = QLabel(self.small_path(path) if compact_mode else path)
         widget.desc.setProperty('smallbrightnormal', True)
-        widget.grid_layout.addWidget(widget.desc, 1, 1)
-        widget.grid_layout.setRowStretch(2, 1)
+        widget.layout_.addWidget(widget.desc, 1, 1)
+        widget.layout_.setRowStretch(2, 1)
 
         return widget
 
     def widget_icon_couple(self, icon: QIconWidget = None, text_widget: QGridWidget = None) -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(16)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(16)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         icon.setFixedSize(40, 40)
 
         widget.text_widget = text_widget
 
-        widget.grid_layout.addWidget(icon, 0, 0)
-        widget.grid_layout.addWidget(text_widget, 0, 1)
+        widget.layout_.addWidget(icon, 0, 0)
+        widget.layout_.addWidget(text_widget, 0, 1)
 
-        widget.grid_layout.setColumnStretch(2, 1)
+        widget.layout_.setColumnStretch(2, 1)
 
         return widget
 
     def widget_couple(self, spacing = 4, *widgets) -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(spacing)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(spacing)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         i = 0
         for i, widget_ in enumerate(widgets):
-            widget.grid_layout.addWidget(widget_, 0, i)
+            widget.layout_.addWidget(widget_, 0, i)
 
-        widget.grid_layout.setColumnStretch(i, 1)
+        widget.layout_.setColumnStretch(i, 1)
 
         return widget
 

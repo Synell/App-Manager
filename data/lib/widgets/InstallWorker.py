@@ -249,35 +249,35 @@ class Installer(QGridFrame):
 
         label = QLabel(self.data.name)
         label.setProperty('brighttitle', True)
-        self.grid_layout.addWidget(label, 0, 0)
+        self.layout_.addWidget(label, 0, 0)
 
         self.main_progress = QProgressBar()
         self.main_progress.setRange(0, 100)
-        self.grid_layout.addWidget(self.main_progress, 1, 0)
+        self.layout_.addWidget(self.main_progress, 1, 0)
 
 
         widget = QGridWidget()
 
         self.download_label = QLabel(f'{self.lang["QLabel"]["download"]} - {self.lang["QLabel"]["waiting"]}')
         self.download_label.setProperty('smallbrightnormal', True)
-        widget.grid_layout.addWidget(self.download_label, 0, 0)
+        widget.layout_.addWidget(self.download_label, 0, 0)
 
         self.download_progress = QProgressBar()
         self.download_progress.setProperty('small', True)
         self.download_progress.setFixedHeight(6)
         self.download_progress.setTextVisible(False)
         self.download_progress.setRange(0, 100)
-        widget.grid_layout.addWidget(self.download_progress, 1, 0)
+        widget.layout_.addWidget(self.download_progress, 1, 0)
 
-        widget.grid_layout.setRowStretch(2, 1)
-        self.grid_layout.addWidget(widget, 2, 0)
+        widget.layout_.setRowStretch(2, 1)
+        self.layout_.addWidget(widget, 2, 0)
 
 
         widget = QGridWidget()
 
         self.install_label = QLabel(f'{self.lang["QLabel"]["install"]} - {self.lang["QLabel"]["waiting"]}')
         self.install_label.setProperty('smallbrightnormal', True)
-        widget.grid_layout.addWidget(self.install_label, 0, 0)
+        widget.layout_.addWidget(self.install_label, 0, 0)
 
         self.install_progress = QProgressBar()
         self.install_progress.setProperty('small', True)
@@ -285,13 +285,13 @@ class Installer(QGridFrame):
         self.install_progress.setTextVisible(False)
         self.install_progress.setRange(0, 100)
         self.install_progress.setValue(0)
-        widget.grid_layout.addWidget(self.install_progress, 1, 0)
+        widget.layout_.addWidget(self.install_progress, 1, 0)
 
-        widget.grid_layout.setRowStretch(2, 1)
-        self.grid_layout.addWidget(widget, 3, 0)
+        widget.layout_.setRowStretch(2, 1)
+        self.layout_.addWidget(widget, 3, 0)
 
 
-        self.grid_layout.setRowStretch(4, 1)
+        self.layout_.setRowStretch(4, 1)
 
         self.setProperty('side', 'all')
 

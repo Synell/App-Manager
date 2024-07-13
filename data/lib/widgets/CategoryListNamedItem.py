@@ -22,35 +22,35 @@ class CategoryListNamedItem(QDragListItem):
 
         self.lang = lang
 
-        self.grid_layout.setContentsMargins(10, 10, 10, 10)
-        self.grid_layout.setSpacing(32)
+        self.layout_.setContentsMargins(10, 10, 10, 10)
+        self.layout_.setSpacing(32)
 
         self._keyword_lineedit = QNamedLineEdit(None, 'null', lang['QNamedLineEdit'][key])
         self._keyword_lineedit.setText(category.keyword)
-        self.grid_layout.addWidget(self._keyword_lineedit, 0, 0)
+        self.layout_.addWidget(self._keyword_lineedit, 0, 0)
 
         self._icon = category.icon
 
         widget = QGridWidget(None)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
-        widget.grid_layout.setSpacing(8)
-        self.grid_layout.addWidget(widget, 0, 1, Qt.AlignmentFlag.AlignRight)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(8)
+        self.layout_.addWidget(widget, 0, 1, Qt.AlignmentFlag.AlignRight)
 
         self._icon_button = QPushButton(None)
         self._icon_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self._icon_button.setIcon(QIcon(category.icon))
-        widget.grid_layout.addWidget(self._icon_button, 0, 0)
+        widget.layout_.addWidget(self._icon_button, 0, 0)
         self._icon_button.clicked.connect(self.icon_button_clicked)
         self._icon_button.setFixedWidth(int(self._icon_button.sizeHint().height() * 1.5))
 
         self._remove_button = QPushButton(None)
         self._remove_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self._remove_button.setIcon(QIcon(self.remove_icon))
-        widget.grid_layout.addWidget(self._remove_button, 0, 1)
+        widget.layout_.addWidget(self._remove_button, 0, 1)
         self._remove_button.clicked.connect(self.deleteLater)
         self._remove_button.setFixedWidth(int(self._remove_button.sizeHint().height() * 1.5))
 
-        widget.grid_layout.setColumnStretch(2, 1)
+        widget.layout_.setColumnStretch(2, 1)
 
     @property
     def keyword(self) -> str:

@@ -13,7 +13,7 @@ from datetime import datetime
 from contextlib import suppress
 import os
 
-from data.lib.QtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor, QDragList, QBaseApplication
+from data.lib.QtUtils import QFiles, QNamedLineEdit, QSaveData, QGridFrame, QScrollableGridWidget, QSettingsDialog, QFileButton, QNamedComboBox, QNamedToggleButton, QUtilsColor, QDragList, QBaseApplication, QColorSet
 #----------------------------------------------------------------------
 
     # Class
@@ -21,7 +21,7 @@ class SaveData(QSaveData):
     dateformat = '%Y-%m-%dT%H:%M:%SZ'
     COLOR_LINK = QUtilsColor()
 
-    def __init__(self, app: QBaseApplication, save_path: str = './data/save.dat', main_color_set: QSaveData.ColorSet = None, neutral_color_set: QSaveData.ColorSet = None) -> None:
+    def __init__(self, app: QBaseApplication, save_path: str = './data/save.dat', main_color_set: QColorSet = None, neutral_color_set: QColorSet = None) -> None:
         self.platform = PlatformType.from_qplatform(app.platform)
         self.apps_folder = os.path.abspath('./data/apps/').replace('\\', '/')
         self.downloads_folder = os.path.abspath('./data/downloads/').replace('\\', '/')
@@ -83,18 +83,18 @@ class SaveData(QSaveData):
     def settings_menu_installs(self):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.installs')
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.installsLocation.title'), lang.get_data('QLabel.installsLocation.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.installs_folder_button = QFileButton(
             None,
@@ -104,18 +104,18 @@ class SaveData(QSaveData):
             QFiles.Dialog.ExistingDirectory
         )
         widget.installs_folder_button.setFixedWidth(350)
-        root_frame.grid_layout.addWidget(widget.installs_folder_button, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.installs_folder_button, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.installs_folder_button, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.installs_folder_button, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.downloadsLocation.title'), lang.get_data('QLabel.downloadsLocation.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.downloads_folder_button = QFileButton(
             None,
@@ -125,8 +125,8 @@ class SaveData(QSaveData):
             QFiles.Dialog.ExistingDirectory
         )
         widget.downloads_folder_button.setFixedWidth(350)
-        root_frame.grid_layout.addWidget(widget.downloads_folder_button, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.downloads_folder_button, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.downloads_folder_button, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.downloads_folder_button, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -136,19 +136,19 @@ class SaveData(QSaveData):
     def settings_menu_updates(self):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.updates')
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.checkForUpdates.title'), lang.get_data('QLabel.checkForUpdates.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.check_for_updates_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.checkForUpdates.title'))
         widget.check_for_updates_combobox.combo_box.addItems([
@@ -159,18 +159,18 @@ class SaveData(QSaveData):
             lang.get_data('QNamedComboBox.checkForUpdates.values.atLaunch')
         ])
         widget.check_for_updates_combobox.combo_box.setCurrentIndex(self.check_for_updates)
-        root_frame.grid_layout.addWidget(widget.check_for_updates_combobox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.check_for_updates_combobox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.checkForAppsUpdates.title'), lang.get_data('QLabel.checkForAppsUpdates.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.check_for_apps_updates_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.checkForAppsUpdates.title'))
         widget.check_for_apps_updates_combobox.combo_box.addItems([
@@ -181,18 +181,18 @@ class SaveData(QSaveData):
             lang.get_data('QNamedComboBox.checkForAppsUpdates.values.atLaunch')
         ])
         widget.check_for_apps_updates_combobox.combo_box.setCurrentIndex(self.check_for_apps_updates)
-        root_frame.grid_layout.addWidget(widget.check_for_apps_updates_combobox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.check_for_apps_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.check_for_apps_updates_combobox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.check_for_apps_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.newAppsCheckForUpdates.title'), lang.get_data('QLabel.newAppsCheckForUpdates.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.new_apps_check_for_updates_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.newAppsCheckForUpdates.title'))
         widget.new_apps_check_for_updates_combobox.combo_box.addItems([
@@ -203,24 +203,24 @@ class SaveData(QSaveData):
             lang.get_data('QNamedComboBox.newAppsCheckForUpdates.values.atLaunch')
         ])
         widget.new_apps_check_for_updates_combobox.combo_box.setCurrentIndex(self.new_apps_check_for_updates)
-        root_frame.grid_layout.addWidget(widget.new_apps_check_for_updates_combobox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.new_apps_check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.new_apps_check_for_updates_combobox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.new_apps_check_for_updates_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.newAppsAutoUpdate.title'), lang.get_data('QLabel.newAppsAutoUpdate.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.new_apps_auto_update_checkbox = QNamedToggleButton()
         widget.new_apps_auto_update_checkbox.setText(lang.get_data('QToggleButton.newAppsAutoUpdate'))
         widget.new_apps_auto_update_checkbox.setChecked(self.new_apps_auto_update)
-        root_frame.grid_layout.addWidget(widget.new_apps_auto_update_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.new_apps_auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.new_apps_auto_update_checkbox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.new_apps_auto_update_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -230,50 +230,50 @@ class SaveData(QSaveData):
     def settings_menu_interface(self):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.interface')
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         # label = QSettingsDialog.textGroup(lang.get_data('QLabel.startAtLaunch.title'), lang.get_data('QLabel.startAtLaunch.description'))
-        # root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        # root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.start_at_launch_checkbox = QNamedToggleButton()
         widget.start_at_launch_checkbox.setText(lang.get_data('QToggleButton.startAtLaunch'))
         widget.start_at_launch_checkbox.setChecked(self.start_at_launch)
-        # root_frame.grid_layout.addWidget(widget.start_at_launch_checkbox, root_frame.grid_layout.count(), 0)
-        # root_frame.grid_layout.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
+        # root_frame.layout_.addWidget(widget.start_at_launch_checkbox, root_frame.layout_.count(), 0)
+        # root_frame.layout_.setAlignment(widget.start_at_launch_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         # frame = QFrame()
         # frame.setProperty('border-top', True)
         # frame.setFixedHeight(1)
-        # root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        # root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.minimizeToTray.title'), lang.get_data('QLabel.minimizeToTray.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.minimize_to_tray_checkbox = QNamedToggleButton()
         widget.minimize_to_tray_checkbox.setText(lang.get_data('QToggleButton.minimizeToTray'))
         widget.minimize_to_tray_checkbox.setChecked(self.minimize_to_tray)
-        root_frame.grid_layout.addWidget(widget.minimize_to_tray_checkbox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.minimize_to_tray_checkbox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.minimize_to_tray_checkbox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.minimize_to_tray_checkbox, Qt.AlignmentFlag.AlignLeft)
 
 
         frame = QFrame()
         frame.setProperty('border-top', True)
         frame.setFixedHeight(1)
-        root_frame.grid_layout.addWidget(frame, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(frame, root_frame.layout_.count(), 0)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.compactPaths.title'), lang.get_data('QLabel.compactPaths.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.compact_paths_combobox = QNamedComboBox(None, lang.get_data('QNamedComboBox.compactPaths.title'))
         widget.compact_paths_combobox.combo_box.addItems([
@@ -282,8 +282,8 @@ class SaveData(QSaveData):
             lang.get_data('QNamedComboBox.compactPaths.values.disabled')
         ])
         widget.compact_paths_combobox.combo_box.setCurrentIndex(self.compact_paths)
-        root_frame.grid_layout.addWidget(widget.compact_paths_combobox, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.compact_paths_combobox, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.compact_paths_combobox, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.compact_paths_combobox, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -293,14 +293,14 @@ class SaveData(QSaveData):
     def settings_menu_notification(self):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.notification')
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         all_checkboxes: list[QNamedToggleButton] = []
@@ -314,51 +314,51 @@ class SaveData(QSaveData):
                 checkbox.setChecked(not checkbox.isChecked())
 
         buttonframe = QGridFrame()
-        buttonframe.grid_layout.setSpacing(16)
-        buttonframe.grid_layout.setContentsMargins(0, 0, 0, 0)
-        root_frame.grid_layout.addWidget(buttonframe, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(buttonframe, Qt.AlignmentFlag.AlignTop)
+        buttonframe.layout_.setSpacing(16)
+        buttonframe.layout_.setContentsMargins(0, 0, 0, 0)
+        root_frame.layout_.addWidget(buttonframe, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(buttonframe, Qt.AlignmentFlag.AlignTop)
 
         button = QPushButton(lang.get_data('QPushButton.checkAll'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: check_all(True))
-        buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
+        buttonframe.layout_.addWidget(button, 0, buttonframe.layout_.count())
 
         button = QPushButton(lang.get_data('QPushButton.uncheckAll'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: check_all(False))
-        buttonframe.grid_layout.addWidget(button, 0, buttonframe.grid_layout.count())
+        buttonframe.layout_.addWidget(button, 0, buttonframe.layout_.count())
 
         button = QPushButton(lang.get_data('QPushButton.invertAll'))
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: invert_all())
-        buttonframe.grid_layout.addWidget(button, 1, 0, 1, 2)
+        buttonframe.layout_.addWidget(button, 1, 0, 1, 2)
 
 
         subframe = QGridFrame()
-        subframe.grid_layout.setSpacing(16)
-        subframe.grid_layout.setContentsMargins(0, 0, 0, 0)
-        root_frame.grid_layout.addWidget(subframe, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(subframe, Qt.AlignmentFlag.AlignTop)
+        subframe.layout_.setSpacing(16)
+        subframe.layout_.setContentsMargins(0, 0, 0, 0)
+        root_frame.layout_.addWidget(subframe, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(subframe, Qt.AlignmentFlag.AlignTop)
 
 
         def generate_notif(key: str, checked: bool) -> QNamedToggleButton:
             frame = QFrame()
             frame.setProperty('border-top', True)
             frame.setFixedHeight(1)
-            subframe.grid_layout.addWidget(frame, subframe.grid_layout.count(), 0)
+            subframe.layout_.addWidget(frame, subframe.layout_.count(), 0)
 
             label = QSettingsDialog._text_group(lang.get_data(f'QLabel.{key}.title'), lang.get_data(f'QLabel.{key}.description'))
-            subframe.grid_layout.addWidget(label, subframe.grid_layout.count(), 0)
+            subframe.layout_.addWidget(label, subframe.layout_.count(), 0)
 
             w = QNamedToggleButton()
             w.setText(lang.get_data('QToggleButton')[key])
             w.setChecked(checked)
-            subframe.grid_layout.addWidget(w, subframe.grid_layout.count(), 0)
-            subframe.grid_layout.setAlignment(w, Qt.AlignmentFlag.AlignLeft)
+            subframe.layout_.addWidget(w, subframe.layout_.count(), 0)
+            subframe.layout_.setAlignment(w, Qt.AlignmentFlag.AlignLeft)
 
             all_checkboxes.append(w)
 
@@ -387,32 +387,32 @@ class SaveData(QSaveData):
     def settings_menu_github(self):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.token')
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.github.title'), lang.get_data('QLabel.github.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         label = QLabel(f'<a href=\"https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token\" style=\"color: {self.COLOR_LINK.hex}; text-decoration: none;\">{lang["QLabel"]["github"]["createToken"]}</a>')
         label.setOpenExternalLinks(True)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         label.setProperty('brightnormal', True)
         label.setWordWrap(True)
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.github_token_lineedit = QNamedLineEdit(None, 'null', lang.get_data('QNamedLineEdit.github'))
         widget.github_token_lineedit.line_edit.setEchoMode(QLineEdit.EchoMode.Password)
         widget.github_token_lineedit.setText(self.token['github'])
         widget.github_token_lineedit.setFixedWidth(350)
-        root_frame.grid_layout.addWidget(widget.github_token_lineedit, root_frame.grid_layout.count(), 0)
-        root_frame.grid_layout.setAlignment(widget.github_token_lineedit, Qt.AlignmentFlag.AlignLeft)
+        root_frame.layout_.addWidget(widget.github_token_lineedit, root_frame.layout_.count(), 0)
+        root_frame.layout_.setAlignment(widget.github_token_lineedit, Qt.AlignmentFlag.AlignLeft)
 
 
         return widget
@@ -423,21 +423,21 @@ class SaveData(QSaveData):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.followedApps')
         key = 'url'
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.followedApps.title'), lang.get_data('QLabel.followedApps.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.followed_apps_list = QDragList()
-        root_frame.grid_layout.addWidget(widget.followed_apps_list, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(widget.followed_apps_list, root_frame.layout_.count(), 0)
 
         for app in self.followed_apps:
             widget.followed_apps_list.add_item(SettingsListNamedItem(lang.get_data('SettingsListNamedItem'), key, app))
@@ -447,7 +447,7 @@ class SaveData(QSaveData):
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: widget.followed_apps_list.add_item(SettingsListNamedItem(lang.get_data('SettingsListNamedItem'), key, '')))
-        root_frame.grid_layout.addWidget(button, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(button, root_frame.layout_.count(), 0)
 
 
         return widget
@@ -458,21 +458,21 @@ class SaveData(QSaveData):
         lang = self.get_lang_data('QSettingsDialog.QSidePanel.categories')
         key = 'category'
         widget = QScrollableGridWidget()
-        widget.scroll_layout.setSpacing(0)
-        widget.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(0)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         root_frame = QGridFrame()
-        root_frame.grid_layout.setSpacing(16)
-        root_frame.grid_layout.setContentsMargins(0, 0, 16, 0)
-        widget.scroll_layout.addWidget(root_frame, 0, 0)
-        widget.scroll_layout.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
+        root_frame.layout_.setSpacing(16)
+        root_frame.layout_.setContentsMargins(0, 0, 16, 0)
+        widget.layout_.addWidget(root_frame, 0, 0)
+        widget.layout_.setAlignment(root_frame, Qt.AlignmentFlag.AlignTop)
 
 
         label = QSettingsDialog._text_group(lang.get_data('QLabel.categories.title'), lang.get_data('QLabel.categories.description'))
-        root_frame.grid_layout.addWidget(label, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(label, root_frame.layout_.count(), 0)
 
         widget.categories_list = QDragList()
-        root_frame.grid_layout.addWidget(widget.categories_list, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(widget.categories_list, root_frame.layout_.count(), 0)
 
         for cat in self.categories:
             widget.categories_list.add_item(CategoryListNamedItem(lang.get_data('CategoryListNamedItem'), key, cat))
@@ -482,7 +482,7 @@ class SaveData(QSaveData):
         button.setCursor(Qt.CursorShape.PointingHandCursor)
         button.setProperty('color', 'main')
         button.clicked.connect(lambda: widget.categories_list.add_item(CategoryListNamedItem(lang.get_data('CategoryListNamedItem'), key, Category('', './data/icons/questionMark.svg'))))
-        root_frame.grid_layout.addWidget(button, root_frame.grid_layout.count(), 0)
+        root_frame.layout_.addWidget(button, root_frame.layout_.count(), 0)
 
 
         return widget

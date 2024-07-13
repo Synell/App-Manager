@@ -39,45 +39,45 @@ class InstallButton(QGridFrame):
         self._create_popup_menu()
 
         widget = self.widget_couple(icon, self.generate_text(f'{name} ({tag_name})'))
-        self.grid_layout.addWidget(widget, 0, 0)
-        self.grid_layout.setAlignment(widget, Qt.AlignmentFlag.AlignLeft)
+        self.layout_.addWidget(widget, 0, 0)
+        self.layout_.setAlignment(widget, Qt.AlignmentFlag.AlignLeft)
 
         self.push_button = QMoreButton(lang['QPushButton']['install'],)
         self.push_button.clicked.connect(self.install_click)
         self.push_button.more_clicked.connect(self._popup_menu_clicked)
-        self.grid_layout.addWidget(self.push_button, 0, 1)
-        self.grid_layout.setAlignment(self.push_button, Qt.AlignmentFlag.AlignRight)
+        self.layout_.addWidget(self.push_button, 0, 1)
+        self.layout_.setAlignment(self.push_button, Qt.AlignmentFlag.AlignRight)
         self.set_disabled(disabled)
 
     def generate_text(self, title) -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(4)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(4)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         label = QLabel(title)
         label.setProperty('brighttitle', True)
         label.setFixedSize(label.sizeHint())
-        widget.grid_layout.addWidget(label, 0, 1)
+        widget.layout_.addWidget(label, 0, 1)
 
         label = QLabel(f'by {self._data["author"]["login"]}')
         label.setProperty('smallbrightnormal', True)
         label.setFixedSize(label.sizeHint())
-        widget.grid_layout.addWidget(label, 1, 1)
-        widget.grid_layout.setRowStretch(2, 1)
+        widget.layout_.addWidget(label, 1, 1)
+        widget.layout_.setRowStretch(2, 1)
 
         return widget
 
     def widget_couple(self, icon: str = None, text_widget: QGridWidget = None) -> QGridWidget:
         widget = QGridWidget()
-        widget.grid_layout.setSpacing(16)
-        widget.grid_layout.setContentsMargins(0, 0, 0, 0)
+        widget.layout_.setSpacing(16)
+        widget.layout_.setContentsMargins(0, 0, 0, 0)
 
         iw = QIconWidget(None, icon, QSize(40, 40))
 
-        widget.grid_layout.addWidget(iw, 0, 0)
-        widget.grid_layout.addWidget(text_widget, 0, 1)
+        widget.layout_.addWidget(iw, 0, 0)
+        widget.layout_.addWidget(text_widget, 0, 1)
 
-        widget.grid_layout.setColumnStretch(2, 1)
+        widget.layout_.setColumnStretch(2, 1)
 
         return widget
 
